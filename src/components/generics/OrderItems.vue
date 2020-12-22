@@ -1,20 +1,42 @@
 <template>
     <div class="order_items">
-        <div class="item_row">
-           <div class="item">Qty</div>
-           <div class="item">Item name</div>
-           <div class="item">Amount</div>
-        </div>
-        <div class="item_row" v-for="item in items" :key="item.id">
-            <div class="item">{{ item.quantity }} </div>
-            <div class="item text-left">{{ item.item_name }}</div>
-            <div class="item">{{ item.amount }}</div>
-        </div>
-        <div class="item_row">
-           <div class="item"></div>
-           <div class="item">TOTAL</div>
-           <div class="item"><strong>{{ total }}</strong></div>
-        </div>
+        <v-expansion-panels accordion>
+        <v-expansion-panel
+            v-for="item in items" :key="item.id"
+        >
+            <v-expansion-panel-header>
+                {{ item.quantity }} {{ item.item_name.toUpperCase() }}
+                <v-spacer></v-spacer>
+                {{ item.amount }}
+            </v-expansion-panel-header>
+            <v-expansion-panel-content class="items_expanded">
+            <div class="item_lists">
+                <div class="items" v-for="menuItem in item.items_list" :key="menuItem.id">
+                    <div class="item_name">
+                        {{ menuItem.quantity }}
+                        {{ menuItem.name.toUpperCase() }}
+                        {{ menuItem.notes }}
+                    </div>
+                    <v-spacer></v-spacer><div class="item_amount">
+                        {{ menuItem.amount }}
+                    </div>
+                    <v-btn small text v-if="item.status == 1" color="red">
+                        <v-icon>mdi-delete</v-icon> Cancel item
+                    </v-btn>
+                    <template v-else>
+                        <v-btn small dark color="orange">
+                            <v-icon>mdi-cart</v-icon> KOT
+                        </v-btn>
+                        <v-btn small dark color="orange">
+                            <v-icon>mdi-close</v-icon> Delete item
+                        </v-btn>
+
+                    </template>
+                </div>
+            </div>
+            </v-expansion-panel-content>
+        </v-expansion-panel>
+        </v-expansion-panels>
     </div>
 </template>
 <script>
@@ -32,6 +54,29 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+    .items_expanded {
+        background-color: #ebe8e8;
+        padding: 5px;
+    }
+    .item_lists {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .items {
+            display: inline-flex;
+            flex-direction: row;
+            justify-items: left;
+            gap: 5px;
+            background-color: rgb(255, 255, 255);
+            border: 0.3px solid #c9c9c9;
+            width: 100%;
+            padding: 5px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+    }
+
     .order_items {
         display: flex;
         flex-direction: column;
@@ -59,7 +104,7 @@ export default {
             .item:last-child {
                 width: 200px;
                 justify-content: right;
-                // font-weight: bold;
+                border: none;
             }
 
             .item {

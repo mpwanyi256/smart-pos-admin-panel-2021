@@ -11,6 +11,9 @@
                 <div v-if="order.client_name">
                     <div class="item_title">Client:</div> <span>{{ order.client_name }}</span>
                 </div>
+                <div><div class="item_title">Total Bill:</div>
+                  <span><strong color="red">{{ items.total_amount_display }}</strong></span>
+                </div>
             </div>
             <div class="order-items">
               <OrderItems :total="items.total_amount_display" :items="items ? items.data : []" />

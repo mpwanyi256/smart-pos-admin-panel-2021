@@ -13,6 +13,7 @@
             >
                 <template v-slot:item.action="{ item }">
                     <v-btn small @click="$emit('view', item)">View</v-btn>
+                    <v-btn class="ml-1" small @click="$emit('bill', item)">Bill</v-btn>
                 </template>
             </v-data-table>
         </v-card>
@@ -62,7 +63,7 @@ export default {
 <style scoped lang="scss">
     .orders {
         width: 100%;
-        min-height: 300px;
-        background-color: inherit;
+        min-height: 100%;
+        background-color: red;
     }
 </style>

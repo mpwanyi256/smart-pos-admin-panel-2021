@@ -32,9 +32,10 @@ export default {
 </script>
 <style scoped>
     .sales {
-        max-height: 100%;
-        width: 100%;
-        display: grid;
-        grid-template-columns: 30% 70%;
+      margin-top: 50px;
+      height: 100vh;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 30% 70%;
     }
 </style>
