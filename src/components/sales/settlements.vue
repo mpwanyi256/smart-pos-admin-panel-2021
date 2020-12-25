@@ -7,7 +7,7 @@
             <div class="settled-orders" v-for="(payment, i) in settlements" :key="i">
                 <div class="display">
                     <h1>{{ payment.amount }}</h1>
-                    <span>{{ payment.name }}</span>
+                    <span>{{ payment.settlement_name }}</span>
                 </div>
             </div>
         </div>
@@ -24,51 +24,101 @@
         </div>
 
         <div class="all-orders">
-            <Orders @view="viewOrderDetails" />
+            <Orders @view="viewOrderDetails" @bill="viewBill" />
             <OrderDetailsModal
-            v-if="showOrderDetails"
-            :order="selectedOrder && selectedOrder"
-            @close="showOrderDetails = false" />
+              ref="orderdetails"
+              v-if="showOrderDetails && selectedOrder"
+              :order="selectedOrder"
+              @cancel="cancelOrderItem"
+              @close="showOrderDetails = false"
+            />
+            <CancelOrderItemModal
+              v-if="showCancelItemModal && itemToCancel"
+              :orderItem="itemToCancel"
+              @cancelItem="cancelItemOnOrder"
+              @close="showCancelItemModal = false"
+            />
+            <BillModal
+                v-if="showBill"
+                :order="selectedOrder"
+                @close="showBill = false"
+            />
         </div>
     </div>
 </template>
 <script>
 import Orders from '@/components/sales/allOrders.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
+import BillModal from '@/components/sales/modals/Bill.vue';
+import CancelOrderItemModal from '@/components/sales/modals/cancelItem.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Settlements',
   components: {
     Orders,
     OrderDetailsModal,
+    BillModal,
+    CancelOrderItemModal,
     // SalesGraph,
   },
   data() {
     return {
       showOrderDetails: false,
+      showBill: false,
+      showCancelItemModal: false,
       selectedOrder: null,
-      settlements: [
-        { name: 'CASH', amount: 50000 },
-        { name: 'VISA', amount: 3000 },
-        { name: 'Mob Mo.', amount: 7000 },
-        { name: 'Company', amount: 0 },
-        { name: 'Cancelled', amount: 7000 },
-        { name: 'NC', amount: 0 },
-      ],
-      departments: [
-        { name: 'BAR', amount: 50000 },
-        { name: 'KITCHEN', amount: 3000 },
-        { name: 'OPEN D', amount: 7000 },
-        { name: 'ACCOM.', amount: 0 },
-      ],
+      itemToCancel: null,
+      settlements: [],
+      departments: [],
     };
   },
+  computed: {
+    ...mapGetters('auth', ['user']),
+    company() {
+      return this.user ? this.user.company_info : null;
+    },
+  },
+  watch: {
+    company(val) {
+      if (val) this.loadSettlements(val.day_open);
+    },
+  },
   methods: {
+    ...mapActions('sales', ['getSettlementAmounts', 'CancelOrderItem']),
+
+    async cancelItemOnOrder(data) {
+      // console.log('cancel', data);
+      const Drop = await this.CancelOrderItem(data);
+      console.log(Drop);
+      this.showCancelItemModal = false;
+      this.$refs.orderdetails.fetchOrderItems();
+    },
+
+    cancelOrderItem(item) {
+      this.itemToCancel = item;
+      this.showCancelItemModal = true;
+    },
+
     viewOrderDetails(order) {
       this.showOrderDetails = true;
       this.selectedOrder = order;
-    //   console.log('Order', order);
     },
+    viewBill(order) {
+      this.selectedOrder = order;
+      this.showBill = true;
+    },
+    async loadSettlements(dayOpen) {
+      const Settlements = await this.getSettlementAmounts(dayOpen);
+      if (!Settlements.error) {
+        this.settlements = Settlements.data.settlements;
+        this.departments = Settlements.data.departments;
+      }
+    },
+  },
+  created() {
+    const Company = this.company;
+    if (Company) this.loadSettlements(Company.day_open);
   },
 };
 </script>

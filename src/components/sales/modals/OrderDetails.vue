@@ -1,8 +1,7 @@
 <template>
     <Basemodal :size="700" :title="modalTitle" @close="$emit('close')">
         <div class="order-details">
-            <CompanyInfo v-if="false" />
-            <div class="bill_info text-left mb-3" v-if="true">
+            <div class="bill_info text-left mb-3">
                 <div><div class="item_title">Date:</div> <span>{{ order.date }}</span></div>
                 <div><div class="item_title">BILL #:</div> <span>{{ order.bill_no }}</span></div>
                 <div><div class="item_title">Served By:</div> <span>{{ order.waiter }}</span></div>
@@ -12,18 +11,22 @@
                     <div class="item_title">Client:</div> <span>{{ order.client_name }}</span>
                 </div>
                 <div><div class="item_title">Total Bill:</div>
-                  <span><strong color="red">{{ items.total_amount_display }}</strong></span>
+                  <span><strong color="red">{{ order.bill_sum_display }}</strong></span>
                 </div>
             </div>
+            <div class="settlement-options" v-if="false">
+              <v-btn small>Settle Order</v-btn>
+              <v-btn small>Cancel Order</v-btn>
+              <v-btn small>Discount Order</v-btn>
+            </div>
             <div class="order-items">
-              <OrderItems :total="items.total_amount_display" :items="items ? items.data : []" />
+              <OrderItems @cancel="cancelOrderItem" :items="items ? items.data : []" />
             </div>
         </div>
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import CompanyInfo from '@/components/generics/CompanyDetails.vue';
 import OrderItems from '@/components/generics/OrderItems.vue';
 import { mapActions } from 'vuex';
 
@@ -31,7 +34,6 @@ export default {
   name: 'OrderDetailsModal',
   components: {
     Basemodal,
-    CompanyInfo,
     OrderItems,
   },
   props: {
@@ -44,20 +46,34 @@ export default {
     return {
       modalTitle: 'Order details',
       items: [],
+      loading: true,
     };
   },
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+    cancelOrderItem(item) {
+      this.$emit('cancel', { ...item, order_id: this.order.order_id, order_date: this.order.date });
+    },
+    async fetchOrderItems() {
+      const orderItems = await this.getOrderItems(this.order.order_id);
+      if (!orderItems.error) {
+        this.items = orderItems;
+      }
+      this.loading = false;
+    },
   },
-  async created() {
-    const orderItems = await this.getOrderItems(this.order.order_id);
-    if (!orderItems.error) {
-      this.items = orderItems;
-    }
+  mounted() {
+    this.fetchOrderItems();
   },
 };
 </script>
 <style scoped lang="scss">
+    .settlement-options {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      margin: 16px;
+    }
     .bill_info {
         display: flex;
         flex-direction: column;

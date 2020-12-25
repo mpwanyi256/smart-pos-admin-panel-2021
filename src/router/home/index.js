@@ -9,9 +9,14 @@ export default {
       component: () => import('@/views/dashboard/sales/sales.vue'),
       children: [
         {
-          path: '',
+          path: 'overview',
           name: 'overview',
           component: () => import('@/views/dashboard/sales/reports/salesOverview.vue'),
+        },
+        {
+          path: 'findbill',
+          name: 'findbill',
+          component: () => import('@/views/dashboard/sales/reports/findBill.vue'),
         },
       ],
     },

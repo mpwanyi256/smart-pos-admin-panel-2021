@@ -58,7 +58,7 @@ export default {
 
         if (userInfo.role === 5) {
           commit('setUser', userInfo);
-          router.push({ name: 'sales' });
+          router.push({ name: 'overview' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
@@ -88,7 +88,7 @@ export default {
 
         if (userInfo.role === 5) {
           commit('setUser', userInfo);
-          router.push({ name: 'sales' });
+          router.push({ name: 'overview' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');

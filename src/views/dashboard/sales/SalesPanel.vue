@@ -1,14 +1,20 @@
 <template>
     <div class="panel-sales">
         <TotalSale class="panel-item" />
-        <RunningOrders class="panel-item" />
-        <CreditorsList class="panel-item" />
+        <RunningOrders class="panel-item" @vieworder="viewBill" />
+        <CreditorsList class="panel-item" @vieworder="viewBill" />
+        <BillModal
+            v-if="showBill"
+            :order="selectedOrder"
+            @close="showBill = false"
+        />
     </div>
 </template>
 <script>
 import CreditorsList from '@/components/sales/Creditors.vue';
 import RunningOrders from '@/components/sales/RunningOrders.vue';
 import TotalSale from '@/components/sales/TotalSale.vue';
+import BillModal from '@/components/sales/modals/Bill.vue';
 
 export default {
   name: 'SalesPanel',
@@ -16,6 +22,7 @@ export default {
     CreditorsList,
     RunningOrders,
     TotalSale,
+    BillModal,
   },
   props: {
     user: {
@@ -24,9 +31,21 @@ export default {
       default: null,
     },
   },
+  data() {
+    return {
+      showBill: false,
+      selectedOrder: null,
+    };
+  },
   computed: {
     companyInfo() {
       return this.user ? this.user.company_info : null;
+    },
+  },
+  methods: {
+    viewBill(order) {
+      this.selectedOrder = order;
+      this.showBill = true;
     },
   },
 };

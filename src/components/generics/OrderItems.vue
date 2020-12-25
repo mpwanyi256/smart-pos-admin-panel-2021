@@ -20,14 +20,16 @@
                     <v-spacer></v-spacer><div class="item_amount">
                         {{ menuItem.amount }}
                     </div>
-                    <v-btn small text v-if="item.status == 1" color="red">
+                    <v-btn v-if="false"
+                        @click="$emit('cancel', menuItem)"
+                        small text color="red">
                         <v-icon>mdi-delete</v-icon> Cancel item
                     </v-btn>
-                    <template v-else>
+                    <template v-if="false">
                         <v-btn small dark color="orange">
                             <v-icon>mdi-cart</v-icon> KOT
                         </v-btn>
-                        <v-btn small dark color="orange">
+                        <v-btn @click="$emit('cancel', menuItem)" small dark color="orange">
                             <v-icon>mdi-close</v-icon> Delete item
                         </v-btn>
 
@@ -46,9 +48,6 @@ export default {
     items: {
       type: Array,
       required: true,
-    },
-    total: {
-      type: Object,
     },
   },
 };

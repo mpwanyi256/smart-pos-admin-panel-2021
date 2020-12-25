@@ -9,10 +9,12 @@
                 :headers="headers"
                 :items="ordersFiltered"
                 :items-per-page="5"
-                class="elevation-1"
+                class="elevation-0"
             >
                 <template v-slot:item.action="{ item }">
                     <v-btn small @click="$emit('view', item)">View</v-btn>
+                </template>
+                <template v-slot:item.bill="{ item }">
                     <v-btn class="ml-1" small @click="$emit('bill', item)">Bill</v-btn>
                 </template>
             </v-data-table>
@@ -35,6 +37,9 @@ export default {
           text: 'Date', value: 'date', sortable: false, align: 'start',
         },
         {
+          text: 'Time', value: 'time', sortable: false, align: 'start',
+        },
+        {
           text: 'Table', value: 'table', sortable: false, align: 'start',
         },
         {
@@ -44,10 +49,16 @@ export default {
           text: 'Amount', value: 'bill_sum_display', sortable: false, align: 'start',
         },
         {
+          text: 'Discount', value: 'discount', sortable: false, align: 'start',
+        },
+        {
           text: 'Client', value: 'client_name', sortable: false, align: 'start',
         },
         {
           text: '', value: 'action', sortable: false, align: 'start',
+        },
+        {
+          text: '', value: 'bill', sortable: false, align: 'start',
         },
       ],
     };
@@ -56,14 +67,16 @@ export default {
     ...mapGetters('sales', ['orders']),
     ordersFiltered() {
       return this.orders.filter((Order) => Order.bill_no.match(this.searchOrder));
+      // || Order.client_name.toLowerCase().match(this.searchOrder.toLowerCase()));
     },
   },
 };
 </script>
 <style scoped lang="scss">
+@import '../../styles/constants.scss';
     .orders {
         width: 100%;
         min-height: 100%;
-        background-color: red;
+        font-family: $font-style;
     }
 </style>

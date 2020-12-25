@@ -11,8 +11,19 @@
                 <v-icon small color="black">mdi-calendar</v-icon>
                 {{ companyInfo.day_open_display }}
             </h6>
-            <h6 class="text-center days-left">
+            <h6 :class="companyInfo.days_left > 10 ? 'days-okay' : 'days-left'" class="text-center">
                 {{ `${companyInfo.days_left }`}} Days left
+                <br>
+                <div class="options">
+                    <v-btn small block class="mr-1">
+                        <v-icon>mdi-cart</v-icon>
+                        Items sold
+                    </v-btn>
+                    <v-btn small block class="ml-1" :to="{ name: 'findbill' }">
+                        <v-icon>mdi-magnify</v-icon>
+                        Find a bill
+                    </v-btn>
+                </div>
             </h6>
         </template>
     </div>
@@ -59,10 +70,21 @@ export default {
                 font-weight: bold;
                 font-size: 16px;
                 line-height: 1.5!important;
+
+                .options {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 50% 50%;
+                    margin-top: 10px;
+                }
             }
 
             .days-left {
                 color: $red;
+            }
+
+            .days-okay {
+                color: green;
             }
 
             .total-sale {

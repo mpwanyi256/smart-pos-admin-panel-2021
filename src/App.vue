@@ -12,3 +12,6 @@ export default {
   name: 'App',
 };
 </script>
+<style scoped lang="scss">
+@import 'styles/main.scss';
+</style>

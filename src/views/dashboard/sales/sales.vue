@@ -4,20 +4,21 @@
             <SalesPanel v-if="user" :user="user" />
         </div>
         <div>
-          <SalesOverview />
+          <router-view></router-view>
+          <!-- <SalesOverview /> -->
         </div>
     </div>
 </template>
 <script>
 import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
-import SalesOverview from '@/views/dashboard/sales/reports/salesOverview.vue';
+// import SalesOverview from '@/views/dashboard/sales/reports/salesOverview.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Sales',
   components: {
     SalesPanel,
-    SalesOverview,
+    // SalesOverview,
   },
   computed: {
     ...mapGetters('auth', ['user']),

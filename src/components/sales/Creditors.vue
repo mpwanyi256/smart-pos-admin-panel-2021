@@ -2,9 +2,9 @@
     <div class="creditors">
         <div class="header">
             {{ `${ creditOrders.length } Credit Bills` }}
-            <v-btn x-small class="float-right">
+            <!-- <v-btn x-small class="float-right">
                 View all
-            </v-btn>
+            </v-btn> -->
         </div>
         <div class="creditors-list">
             <div class="creditor-item">
@@ -18,7 +18,11 @@
                     Total
                 </div>
             </div>
-            <div class="creditor-item" v-for="order in creditOrders" :key="order.order_id">
+            <div class="creditor-item"
+                v-for="order in creditOrders"
+                :key="order.order_id"
+                @click="$emit('vieworder', order)"
+            >
                 <div class="name">
                     {{ order.table }}
                 </div>
