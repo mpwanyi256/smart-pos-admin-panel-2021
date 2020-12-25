@@ -2,7 +2,7 @@
     <v-data-table
         :headers="headers ? headers : defaultHeader"
         :items="orders"
-        :items-per-page="10"
+        :items-per-page="6"
         class="elevation-0"
     >
         <template v-slot:item.action="{ item }">
@@ -49,6 +49,12 @@ export default {
         },
         {
           text: 'Discount', value: 'discount', sortable: false, align: 'start',
+        },
+        {
+          text: 'SETTLED', value: 'final_amount', sortable: false, align: 'start',
+        },
+        {
+          text: 'PAY MODE', value: 'settlement', sortable: false, align: 'start',
         },
         {
           text: 'Client', value: 'client_name', sortable: false, align: 'start',

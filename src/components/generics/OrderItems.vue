@@ -15,7 +15,9 @@
                     <div class="item_name">
                         {{ menuItem.quantity }}
                         {{ menuItem.name.toUpperCase() }}
-                        {{ menuItem.notes }}
+                        <span class="item_notes" v-if="menuItem.notes">
+                            <br><strong>Notes: </strong>{{ menuItem.notes }}
+                        </span>
                     </div>
                     <v-spacer></v-spacer><div class="item_amount">
                         {{ menuItem.amount }}
@@ -53,6 +55,18 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '../../styles/constants.scss';
+
+    .item_notes {
+        font-family: $font-style;
+        font-size: 12px;
+        font-style: italic;
+        color: $red;
+        background-color: $light-grey;
+        padding: 6px;
+        border-radius: 5px;
+        line-height: 1.5;
+    }
     .items_expanded {
         background-color: #ebe8e8;
         padding: 5px;

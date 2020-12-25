@@ -17,7 +17,7 @@ export default {
   data: () => ({
     drawer: false,
     routes: [
-      { icon: 'mdi-sale', name: 'Sales', path: 'sales' },
+      { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
       { icon: 'mdi-webhook', name: 'Accounts', path: 'accounting' },
       { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
       { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
@@ -34,5 +34,7 @@ export default {
   width: 100vw;
   height: 100vh;
   background-color: $body-bg;
+  display: flex;
+  flex-direction: column;
 }
 </style>

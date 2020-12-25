@@ -2,15 +2,15 @@
     <Basemodal :size="700" :title="modalTitle" @close="$emit('close')">
         <div class="order-details">
             <div class="bill_info text-left mb-3">
-                <div><div class="item_title">Date:</div> <span>{{ order.date }}</span></div>
-                <div><div class="item_title">BILL #:</div> <span>{{ order.bill_no }}</span></div>
-                <div><div class="item_title">Served By:</div> <span>{{ order.waiter }}</span></div>
-                <div><div class="item_title">Table:</div> <span>{{ order.table }}</span></div>
-                <div><div class="item_title">Time:</div> <span>{{ order.time }}</span></div>
+                <div><div class="item_title">Date</div> <span>{{ order.date }}</span></div>
+                <div><div class="item_title">BILL</div> <span>{{ order.bill_no }}</span></div>
+                <div><div class="item_title">Served By</div> <span>{{ order.waiter }}</span></div>
+                <div><div class="item_title">Table</div> <span>{{ order.table }}</span></div>
+                <div><div class="item_title">Time</div> <span>{{ order.time }}</span></div>
                 <div v-if="order.client_name">
-                    <div class="item_title">Client:</div> <span>{{ order.client_name }}</span>
+                    <div class="item_title">Client</div> <span>{{ order.client_name }}</span>
                 </div>
-                <div><div class="item_title">Total Bill:</div>
+                <div><div class="item_title">Total Bill</div>
                   <span><strong color="red">{{ order.bill_sum_display }}</strong></span>
                 </div>
             </div>
@@ -20,7 +20,7 @@
               <v-btn small>Discount Order</v-btn>
             </div>
             <div class="order-items">
-              <OrderItems @cancel="cancelOrderItem" :items="items ? items.data : []" />
+              <OrderItems @cancel="cancelOrderItem" :items="items ? items : []" />
             </div>
         </div>
     </Basemodal>
@@ -51,13 +51,14 @@ export default {
   },
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+
     cancelOrderItem(item) {
       this.$emit('cancel', { ...item, order_id: this.order.order_id, order_date: this.order.date });
     },
     async fetchOrderItems() {
       const orderItems = await this.getOrderItems(this.order.order_id);
       if (!orderItems.error) {
-        this.items = orderItems;
+        this.items = orderItems.data;
       }
       this.loading = false;
     },

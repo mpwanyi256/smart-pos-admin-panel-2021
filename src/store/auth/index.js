@@ -100,6 +100,8 @@ export default {
       localStorage.removeItem('smart_user_id');
       localStorage.removeItem('smart_user_name');
       localStorage.removeItem('smart_user_role');
+      localStorage.removeItem('smart_company_day_open');
+      localStorage.removeItem('smart_company_id');
       commit('setUser', null);
       router.push({ name: 'login' });
     },

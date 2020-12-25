@@ -39,6 +39,14 @@
         </div>
         <div class="orders_table">
             <LinearLoader v-if="loading" />
+            <v-btn
+              v-if="orders.length > 0"
+              small
+              @click="exportToExcel"
+              class="mt-2 ml-2 green--text darken-3">
+              <v-icon left color="green darken-4">mdi-file-excel</v-icon>
+              Export to csv
+            </v-btn>
             <BaseTable @view="showOrderItems" @bill="showBill" :orders="orders" />
             <OrderDetailsModal
                 v-if="showOrderDetails && selectedOrder"
@@ -59,15 +67,13 @@ import BaseTable from '@/components/generics/BaseTable.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
-
-// Export data to excel
-// https://www.npmjs.com/package/export-to-excel
-// ExportToExcelMixin.js
+import ExcelExportMixin from '@/mixins/excelMixin';
 
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FindBill',
+  mixins: [ExcelExportMixin],
   components: {
     DatePickerBeta,
     BaseTable,
@@ -93,7 +99,23 @@ export default {
   },
   methods: {
     ...mapActions('sales', ['getClients', 'filterOrders']),
-
+    exportToExcel() {
+      const dataCleaned = this.orders.map((Order) => (
+        {
+          bill: Order.bill_no,
+          date: Order.date,
+          time: Order.time,
+          table: Order.table,
+          amount: Order.bill_sum,
+          discount: Order.discount,
+          amount_paid: Order.final_amount,
+          settlement: Order.settlement,
+          waiter: Order.waiter,
+          client: Order.client_name || '',
+          description: Order.discount_reason ? Order.discount_reason : Order.description,
+        }));
+      this.exportDataToExcel(dataCleaned, 'OrdersExport_smart_pos');
+    },
     async findBill() {
       const filters = {
         from: this.dateFrom,

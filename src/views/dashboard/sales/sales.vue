@@ -33,7 +33,7 @@ export default {
 </script>
 <style scoped>
     .sales {
-      margin-top: 50px;
+      margin-top: 52px;
       height: 100vh;
       width: 100%;
       display: grid;

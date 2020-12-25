@@ -12,6 +12,22 @@ axios.defaults.baseURL = 'http://localhost:80/papi/'; // 'http://192.168.0.101:8
 
 Vue.config.productionTip = false;
 
+// eslint-disable-next-line consistent-return
+router.beforeEach((to, from, next) => {
+  const loggedUser = localStorage.getItem('smart_user_id');
+  console.log('Logged in', loggedUser);
+  if (to.meta.authrequired && !loggedUser) {
+    return next({ replace: true, name: 'login' });
+  } if (to.meta.authrequired && loggedUser) {
+    return next();
+  } if (!to.meta.authrequired) {
+    return next();
+  } if (to.path === from.path) {
+    return null;
+  }
+  next();
+});
+
 new Vue({
   router,
   store,
