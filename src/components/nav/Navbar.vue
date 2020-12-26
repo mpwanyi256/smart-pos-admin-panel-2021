@@ -11,6 +11,7 @@
             <div
             :class="activeRoute === link.path ? 'active' : 'item'"
               v-for="(link, index) in links" :key="index"
+              :to="{ name: link.path }"
               @click="gotTopage(link)">
               <v-icon small class="icon" left>
                 {{ link.icon }}

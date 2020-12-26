@@ -95,6 +95,24 @@ export default {
       commit('toggleLoading', false);
       return Orders;
     },
+
+    async getMenuItems({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('get_menu_items', payload.item_id);
+      const menuItems = await API.smart(PATH, filters);
+      commit('toggleLoading', true);
+      return menuItems;
+    },
+
+    async getDepartments({ commit }) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('get_departments', 'all');
+      const departments = await API.smart(PATH, filters);
+      commit('toggleLoading', true);
+      return departments;
+    },
   },
   getters: {
     orders: (state) => state.orders,

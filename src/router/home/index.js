@@ -30,6 +30,14 @@ export default {
           },
           component: () => import('@/views/dashboard/sales/reports/findBill.vue'),
         },
+        {
+          path: 'itemwisesale',
+          name: 'itemwisesale',
+          meta: {
+            authrequired: true,
+          },
+          component: () => import('@/views/dashboard/sales/reports/ItemsSold.vue'),
+        },
       ],
     },
   ],

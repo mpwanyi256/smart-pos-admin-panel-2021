@@ -14,6 +14,14 @@
                   <span><strong color="red">{{ order.bill_sum_display }}</strong></span>
                 </div>
             </div>
+            <div class="discount_section" v-if="order.discount > 0">
+              <div class="discount_amount">
+                Discount: {{ order.discount }}
+              </div>
+              <div class="discount_reason">
+                {{ order.discount_reason }}
+              </div>
+            </div>
             <div class="settlement-options" v-if="false">
               <v-btn small>Settle Order</v-btn>
               <v-btn small>Cancel Order</v-btn>
@@ -69,6 +77,8 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '../../../styles/constants.scss';
+
     .settlement-options {
       display: flex;
       flex-direction: row;
@@ -105,5 +115,32 @@ export default {
         border: 0.5px solid #b6b6b6;
         display: flex;
         flex-direction: column;
+    }
+
+    .discount_section {
+      padding: 5px;
+      display: inline-flex;
+      flex-direction: row;
+      width: auto;
+      gap: 10px;
+      border: 0.5px solid $dark-grey;
+      margin: 5px;
+      border-radius: 16px;
+      justify-items: center;
+      font-size: 14px;
+
+      .discount_amount {
+        font-weight: bold;
+      }
+
+      .discount_reason {
+        font-weight: 200;
+        background-color: $red;
+        color: $white;
+        border-radius: 16px;
+        border: 0.5px solid $red;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
     }
 </style>

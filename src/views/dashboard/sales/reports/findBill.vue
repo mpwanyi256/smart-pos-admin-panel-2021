@@ -43,7 +43,7 @@
               v-if="orders.length > 0"
               small
               @click="exportToExcel"
-              class="mt-2 ml-2 green--text darken-3">
+              class="mt-2 ml-2 green--text darken-4">
               <v-icon left color="green darken-4">mdi-file-excel</v-icon>
               Export to csv
             </v-btn>
@@ -68,7 +68,6 @@ import LinearLoader from '@/components/generics/Loading.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import ExcelExportMixin from '@/mixins/excelMixin';
-
 import { mapActions, mapGetters } from 'vuex';
 
 export default {

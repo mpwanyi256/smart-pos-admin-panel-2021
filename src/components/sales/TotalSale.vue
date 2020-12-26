@@ -15,7 +15,7 @@
                 {{ `${companyInfo.days_left }`}} Days left
                 <br>
                 <div class="options">
-                    <v-btn small block class="mr-1">
+                    <v-btn small block class="mr-1" :to="{ name: 'itemwisesale' }">
                         <v-icon>mdi-cart</v-icon>
                         Items sold
                     </v-btn>
