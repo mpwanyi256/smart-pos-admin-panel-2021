@@ -15,14 +15,24 @@
                 {{ `${companyInfo.days_left }`}} Days left
                 <br>
                 <div class="options">
-                    <v-btn small block class="mr-1" :to="{ name: 'itemwisesale' }">
-                        <v-icon>mdi-cart</v-icon>
-                        Items sold
-                    </v-btn>
-                    <v-btn small block class="ml-1" :to="{ name: 'findbill' }">
-                        <v-icon>mdi-magnify</v-icon>
-                        Find a bill
-                    </v-btn>
+                    <div>
+                        <v-btn small block class="mr-1" :to="{ name: 'itemwisesale' }">
+                            <v-icon>mdi-cart</v-icon>
+                            Items
+                        </v-btn>
+                    </div>
+                    <div>
+                        <v-btn small block class="ml-1" :to="{ name: 'findbill' }">
+                            <v-icon>mdi-magnify</v-icon>
+                            bill
+                        </v-btn>
+                    </div>
+                    <div>
+                        <v-btn small block class="ml-1" :to="{ name: 'salessammary' }">
+                            <v-icon>mdi-book</v-icon>
+                            Sales
+                        </v-btn>
+                    </div>
                 </div>
             </h6>
         </template>
@@ -51,7 +61,7 @@ export default {
         font-family: $font-style;
         font-size: 1em;
         line-height: 1.47059;
-        overflow: auto!important;
+        overflow: auto;
 
         .panel-item {
             min-height: 33.3%!important;
@@ -73,9 +83,16 @@ export default {
 
                 .options {
                     width: 100%;
-                    display: grid;
-                    grid-template-columns: 50% 50%;
-                    margin-top: 10px;
+                    padding-right: 5px;
+                    display: inline-flex;
+                    flex-direction: row;
+                    gap: 5px;
+                    margin-top: 5px;
+                    > div {
+                        width: 100%;
+                    }
+                    // grid-template-columns: 50% 50%;
+                    // margin-top: 10px;
                 }
             }
 

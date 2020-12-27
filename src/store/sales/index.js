@@ -38,8 +38,8 @@ export default {
         commit('setOrders', orders.orders);
       } else {
         commit('setError', 'No day open found');
-        commit('toggleLoading', false);
       }
+      commit('toggleLoading', false);
     },
     async getOrderItems({ commit }, orderId) {
       commit('toggleLoading', true);
@@ -56,6 +56,7 @@ export default {
       data.append('settlement_date', payload);
       data.append('get_settlements', payload);
       const settlements = await API.smart(PATH, data);
+      commit('toggleLoading', false);
       return settlements;
     },
     async CancelOrderItem({ commit, dispatch }, payload) {
@@ -91,7 +92,6 @@ export default {
       filters.append('client_id', payload.client_id);
 
       const Orders = await API.smart(PATH, filters);
-      // console.log(Orders);
       commit('toggleLoading', false);
       return Orders;
     },
@@ -101,7 +101,7 @@ export default {
       const filters = new FormData();
       filters.append('get_menu_items', payload.item_id);
       const menuItems = await API.smart(PATH, filters);
-      commit('toggleLoading', true);
+      commit('toggleLoading', false);
       return menuItems;
     },
 
@@ -110,8 +110,34 @@ export default {
       const filters = new FormData();
       filters.append('get_departments', 'all');
       const departments = await API.smart(PATH, filters);
-      commit('toggleLoading', true);
+      commit('toggleLoading', false);
       return departments;
+    },
+
+    async fetchItemsSold({ commit }, payload) {
+      if (!payload) return null;
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('fetch_items_sold', payload.menu_item);
+      filters.append('department_id', payload.department);
+      filters.append('from', payload.date_from);
+      filters.append('to', payload.date_to);
+      const items = await API.smart(PATH, filters);
+
+      commit('toggleLoading', false);
+      return items;
+    },
+
+    async fetchSalesSummary({ commit }, payload) {
+      if (!payload) return null;
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('fetch_sales_summary', payload.from);
+      filters.append('sales_from', payload.from);
+      filters.append('sales_to', payload.to);
+      const Sales = await API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return Sales;
     },
   },
   getters: {

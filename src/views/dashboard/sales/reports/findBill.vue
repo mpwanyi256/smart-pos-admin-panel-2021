@@ -116,6 +116,7 @@ export default {
       this.exportDataToExcel(dataCleaned, 'OrdersExport_smart_pos');
     },
     async findBill() {
+      if (this.loading) return;
       const filters = {
         from: this.dateFrom,
         to: this.dateTo,

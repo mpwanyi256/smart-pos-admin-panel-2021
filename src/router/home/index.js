@@ -38,6 +38,14 @@ export default {
           },
           component: () => import('@/views/dashboard/sales/reports/ItemsSold.vue'),
         },
+        {
+          path: 'salesSammary',
+          name: 'salessammary',
+          meta: {
+            authrequired: true,
+          },
+          component: () => import('@/views/dashboard/sales/reports/SalesSammary.vue'),
+        },
       ],
     },
   ],

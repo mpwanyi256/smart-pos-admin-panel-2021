@@ -5,29 +5,43 @@
         </div>
         <div>
           <router-view></router-view>
-          <!-- <SalesOverview /> -->
         </div>
     </div>
 </template>
 <script>
 import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
-// import SalesOverview from '@/views/dashboard/sales/reports/salesOverview.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Sales',
   components: {
     SalesPanel,
-    // SalesOverview,
+  },
+  data() {
+    return {
+      polling: null,
+    };
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    routePath() {
+      return this.$route.name;
+    },
   },
   methods: {
     ...mapActions('sales', ['getOrders']),
   },
   mounted() {
-    this.getOrders();
+    const setPolling = () => {
+      if (!this.user) {
+        clearInterval(this.polling);
+      } else {
+        this.getOrders();
+      }
+    };
+    this.polling = setInterval(() => {
+      setPolling();
+    }, 3000);
   },
 };
 </script>
