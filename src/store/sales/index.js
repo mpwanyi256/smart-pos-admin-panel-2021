@@ -24,7 +24,7 @@ export default {
   },
   actions: {
     async getOrders({ commit }, dayOpen) {
-      commit('toggleLoading', true);
+      // commit('toggleLoading', true);
       const DayOpen = dayOpen || localStorage.getItem('smart_company_day_open');
       if (DayOpen) {
         const data = new FormData();
@@ -39,7 +39,7 @@ export default {
       } else {
         commit('setError', 'No day open found');
       }
-      commit('toggleLoading', false);
+      // commit('toggleLoading', false);
     },
     async getOrderItems({ commit }, orderId) {
       commit('toggleLoading', true);
