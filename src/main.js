@@ -9,7 +9,7 @@ import './styles/main.scss';
 
 // Api setup
 const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
-axios.defaults.baseURL = `http://${IPAddress}/papi/` || 'http://localhost:80/papi/';
+axios.defaults.baseURL = IPAddress ? `http://${IPAddress}/papi/` : 'http://localhost:80/papi/';
 // 'http://192.168.0.101:80/papi/';
 
 Vue.config.productionTip = false;
