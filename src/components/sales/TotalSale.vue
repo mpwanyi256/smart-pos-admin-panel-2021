@@ -5,7 +5,7 @@
                 {{ companyInfo.company_name }}
             </div>
             <div class="sale-value display-1 text-center">
-                {{ `${companyInfo.total_sale} ${companyInfo.company_currency}` }}
+                {{ `${sale.total_sale ? sale.total_sale : 0} ${companyInfo.company_currency}` }}
             </div>
             <h6 class="text-center">
                 <v-icon small color="black">mdi-calendar</v-icon>
@@ -17,20 +17,26 @@
                 <div class="options">
                     <div>
                         <v-btn small block class="mr-1" :to="{ name: 'itemwisesale' }">
-                            <v-icon>mdi-cart</v-icon>
+                            <!-- <v-icon>mdi-cart</v-icon> -->
                             Items
                         </v-btn>
                     </div>
                     <div>
                         <v-btn small block class="ml-1" :to="{ name: 'findbill' }">
-                            <v-icon>mdi-magnify</v-icon>
+                            <!-- <v-icon>mdi-magnify</v-icon> -->
                             bill
                         </v-btn>
                     </div>
                     <div>
                         <v-btn small block class="ml-1" :to="{ name: 'salessammary' }">
-                            <v-icon>mdi-book</v-icon>
+                            <!-- <v-icon>mdi-book</v-icon> -->
                             Sales
+                        </v-btn>
+                    </div>
+                    <div>
+                        <v-btn small block class="ml-1" :to="{ name: 'salessammary' }">
+                            <!-- <v-icon>mdi-book</v-icon> -->
+                            Menu
                         </v-btn>
                     </div>
                 </div>
@@ -45,6 +51,7 @@ export default {
   name: 'TotalSale',
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('sales', ['sale']),
     companyInfo() {
       return this.user ? this.user.company_info : null;
     },

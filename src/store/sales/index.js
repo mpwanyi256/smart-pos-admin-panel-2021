@@ -6,12 +6,16 @@ const PATH = 'scylla/';
 export default {
   namespaced: true,
   state: {
+    currentSale: '',
     orders: [],
     salesSammary: null,
     loading: false,
     error: null,
   },
   mutations: {
+    setSale(state, payload) {
+      state.currentSale = payload;
+    },
     setError(state, payload) {
       state.error = { status: true, message: payload };
     },
@@ -24,7 +28,6 @@ export default {
   },
   actions: {
     async getOrders({ commit }, dayOpen) {
-      // commit('toggleLoading', true);
       const DayOpen = dayOpen || localStorage.getItem('smart_company_day_open');
       if (DayOpen) {
         const data = new FormData();
@@ -36,10 +39,10 @@ export default {
         if (orders.error) return commit('setError', orders.message);
 
         commit('setOrders', orders.orders);
+        commit('setSale', orders);
       } else {
         commit('setError', 'No day open found');
       }
-      // commit('toggleLoading', false);
     },
     async getOrderItems({ commit }, orderId) {
       commit('toggleLoading', true);
@@ -143,5 +146,6 @@ export default {
   getters: {
     orders: (state) => state.orders,
     loading: (state) => state.loading,
+    sale: (state) => state.currentSale,
   },
 };

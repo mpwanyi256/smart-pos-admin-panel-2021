@@ -10,7 +10,7 @@
           <div class="tray">
             <div
             :class="activeRoute === link.path ? 'active' : 'item'"
-              v-for="(link, index) in links" :key="index"
+              v-for="(link, index) in routes" :key="index"
               :to="{ name: link.path }"
               @click="gotTopage(link)">
               <v-icon small class="icon" left>

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    <NavBar :links="routes" />
+    <NavBar />
     <div>
       <router-view></router-view>
     </div>
@@ -14,17 +14,6 @@ export default {
   components: {
     NavBar,
   },
-  data: () => ({
-    drawer: false,
-    routes: [
-      { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
-      // { icon: 'mdi-webhook', name: 'Accounts', path: 'accounting' },
-      // { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
-      // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
-      // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      // { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
-    ],
-  }),
 };
 </script>
 <style lang="scss">

@@ -3,6 +3,7 @@ export default {
   name: 'home',
   meta: {
     authrequired: true,
+    title: 'Home',
   },
   component: () => import('@/views/dashboard/home.vue'),
   children: [
@@ -11,6 +12,7 @@ export default {
       name: 'sales',
       meta: {
         authrequired: true,
+        title: 'SmartPOS :: Sales',
       },
       component: () => import('@/views/dashboard/sales/sales.vue'),
       children: [
@@ -19,6 +21,7 @@ export default {
           name: 'overview',
           meta: {
             authrequired: true,
+            title: 'Sales :: Dashboard',
           },
           component: () => import('@/views/dashboard/sales/reports/salesOverview.vue'),
         },
@@ -27,6 +30,7 @@ export default {
           name: 'findbill',
           meta: {
             authrequired: true,
+            title: 'SmartPOS :: Find bill',
           },
           component: () => import('@/views/dashboard/sales/reports/findBill.vue'),
         },
@@ -35,6 +39,7 @@ export default {
           name: 'itemwisesale',
           meta: {
             authrequired: true,
+            title: 'SmartPOS :: Items sold',
           },
           component: () => import('@/views/dashboard/sales/reports/ItemsSold.vue'),
         },
@@ -43,6 +48,7 @@ export default {
           name: 'salessammary',
           meta: {
             authrequired: true,
+            title: 'SmartPOS :: Sales summary',
           },
           component: () => import('@/views/dashboard/sales/reports/SalesSammary.vue'),
         },

@@ -3,6 +3,7 @@ export default {
   name: 'login',
   meta: {
     authrequired: false,
+    title: 'Login',
   },
   component: () => import('@/views/auth/login.vue'),
 };

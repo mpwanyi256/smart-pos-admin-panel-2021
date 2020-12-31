@@ -9,6 +9,14 @@ export default {
     user: {},
     loading: false,
     error: { status: false, message: '' },
+    routes: [
+      { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
+      { icon: 'mdi-webhook', name: 'Accounting', path: 'accountingDashboard' },
+      // { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
+      // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
+      // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
+      // { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
+    ],
   },
   mutations: {
     setRoles(state, payload) {
@@ -47,6 +55,7 @@ export default {
       commit('toggleLoading', true);
       const authData = await API.auth(payload);
       if (authData.error) {
+        commit('toggleLoading', false);
         dispatch('setError', authData.message);
       } else {
         const userInfo = authData.data;
@@ -110,5 +119,6 @@ export default {
     error: (state) => state.error,
     loading: (state) => state.loading,
     user: (state) => state.user,
+    routes: (state) => state.routes,
   },
 };

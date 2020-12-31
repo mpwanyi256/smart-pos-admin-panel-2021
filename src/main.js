@@ -10,8 +10,7 @@ import './styles/main.scss';
 // Api setup
 const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
 axios.defaults.baseURL = IPAddress ? `http://${IPAddress}/papi/` : 'http://localhost:80/papi/';
-// 'http://192.168.0.101:80/papi/';
-
+// axios.defaults.baseURL = 'http://localhost:80/papi/';
 Vue.config.productionTip = false;
 
 // eslint-disable-next-line consistent-return
@@ -37,7 +36,6 @@ new Vue({
     const LoggedInUser = localStorage.getItem('smart_user_id');
     if (LoggedInUser) {
       store.dispatch('auth/getUserById');
-      // this.getUserById();
     }
   },
   render: (h) => h(App),

@@ -4,7 +4,10 @@
             <h3>Settlements</h3>
         </div>
         <div class="sales-overview">
-            <div class="settled-orders" v-for="(payment, i) in settlements" :key="i">
+            <div class="settled-orders"
+              v-for="payment in settlements"
+              :key="payment.settlement_id"
+            >
                 <div class="display">
                     <h1>{{ payment.amount }}</h1>
                     <span>{{ payment.settlement_name }}</span>
@@ -15,10 +18,13 @@
             <h3>Departmentwise sales</h3>
         </div>
         <div class="sales-overview">
-            <div class="settled-orders" v-for="(payment, i) in departments" :key="i">
+            <div class="settled-orders" v-for="(payment, i) in departmentSales" :key="i">
                 <div class="display">
                     <h1>{{ payment.amount }}</h1>
                     <span>{{ payment.name }}</span>
+                    <i class="red--text darken-3" v-if="payment.name == 'OPEN DISH'">
+                      <small>Is included in BAR & Kitchen</small>
+                    </i>
                 </div>
             </div>
         </div>
@@ -69,26 +75,25 @@ export default {
       showCancelItemModal: false,
       selectedOrder: null,
       itemToCancel: null,
-      settlements: [],
-      departments: [],
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('sales', ['sale']),
     company() {
       return this.user ? this.user.company_info : null;
     },
-  },
-  watch: {
-    company(val) {
-      if (val) this.loadSettlements(val.day_open);
+    settlements() {
+      return this.sale.settlements ? this.sale.settlements : [];
+    },
+    departmentSales() {
+      return this.sale.departments_settlement ? this.sale.departments_settlement : [];
     },
   },
   methods: {
-    ...mapActions('sales', ['getSettlementAmounts', 'CancelOrderItem']),
+    ...mapActions('sales', ['CancelOrderItem']),
 
     async cancelItemOnOrder(data) {
-      // console.log('cancel', data);
       const Drop = await this.CancelOrderItem(data);
       console.log(Drop);
       this.showCancelItemModal = false;
@@ -108,17 +113,6 @@ export default {
       this.selectedOrder = order;
       this.showBill = true;
     },
-    async loadSettlements(dayOpen) {
-      const Settlements = await this.getSettlementAmounts(dayOpen);
-      if (!Settlements.error) {
-        this.settlements = Settlements.data.settlements;
-        this.departments = Settlements.data.departments;
-      }
-    },
-  },
-  created() {
-    const Company = this.company;
-    if (Company) this.loadSettlements(Company.day_open);
   },
 };
 </script>
@@ -211,6 +205,8 @@ export default {
         width: inherit;
         background-color: white;
         min-height: 200px;
+        max-height: 100%;
+        overflow-y: auto;
         margin: 5px;
         overflow: hidden;
     }

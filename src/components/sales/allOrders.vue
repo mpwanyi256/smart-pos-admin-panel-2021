@@ -67,7 +67,6 @@ export default {
     ...mapGetters('sales', ['orders']),
     ordersFiltered() {
       return this.orders.filter((Order) => Order.bill_no.match(this.searchOrder));
-      // || Order.client_name.toLowerCase().match(this.searchOrder.toLowerCase()));
     },
   },
 };
