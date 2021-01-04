@@ -3,6 +3,8 @@
 import API from '@/api';
 import router from '../../router';
 
+const PATH = 'auth/';
+
 export default {
   namespaced: true,
   state: {
@@ -11,7 +13,7 @@ export default {
     error: { status: false, message: '' },
     routes: [
       { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
-      { icon: 'mdi-webhook', name: 'Accounting', path: 'accountingDashboard' },
+      { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       // { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
       // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
@@ -53,7 +55,11 @@ export default {
     },
     async performLogin({ dispatch, commit }, payload) {
       commit('toggleLoading', true);
-      const authData = await API.auth(payload);
+      const params = new FormData();
+      params.append('username', payload.username);
+      params.append('password', payload.password);
+
+      const authData = await API.smart(PATH, params);
       if (authData.error) {
         commit('toggleLoading', false);
         dispatch('setError', authData.message);
@@ -83,7 +89,9 @@ export default {
         dispatch('setError', 'no login information found');
         return router.push({ name: 'login' });
       }
-      const authData = await API.authId(loggedinUser);
+      const params = new FormData();
+      params.append('auth_by_id', loggedinUser);
+      const authData = await API.smart(PATH, params);
       if (authData.error) {
         dispatch('setError', authData.message);
         router.push({ name: 'login' });

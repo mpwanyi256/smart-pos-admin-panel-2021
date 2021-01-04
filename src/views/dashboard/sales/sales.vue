@@ -32,6 +32,7 @@ export default {
     ...mapActions('sales', ['getOrders']),
   },
   mounted() {
+    window.scroll(0, 0);
     const setPolling = () => {
       if (!this.user) {
         clearInterval(this.polling);

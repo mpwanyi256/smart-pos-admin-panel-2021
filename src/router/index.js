@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Meta from 'vue-meta';
 import auth from './auth';
+import error from './error';
 import home from './home';
 import setup from './setup';
 import Accounting from './accounting';
@@ -13,6 +14,7 @@ Vue.use(Meta, {
 
 const routes = [
   auth,
+  error,
   home,
   Accounting,
   setup,

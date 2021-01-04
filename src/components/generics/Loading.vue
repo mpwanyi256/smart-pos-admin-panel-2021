@@ -1,5 +1,5 @@
 <template>
-    <v-progress-linear indeterminate color="cyan"></v-progress-linear>
+    <v-progress-linear indeterminate color="black"></v-progress-linear>
 </template>
 <script>
 export default {

@@ -14,7 +14,7 @@ export default {
         authrequired: false,
         title: 'SmartPOS :: Accounting dashboard',
       },
-      component: () => import('@/views/dashboard/Accounting/pages/Dasshboard.vue'),
+      component: () => import('@/views/dashboard/Accounting/pages/Dashboard.vue'),
     },
   ],
 };

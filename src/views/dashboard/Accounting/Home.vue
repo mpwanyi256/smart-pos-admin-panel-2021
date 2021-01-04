@@ -21,6 +21,9 @@ export default {
     NavBar,
     AccountingNavPane,
   },
+  mounted() {
+    window.scroll(0, 0);
+  },
 };
 </script>
 <style scoped lang="scss">
