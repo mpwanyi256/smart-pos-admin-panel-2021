@@ -48,8 +48,8 @@ export default {
 </script>
 <style scoped>
     .sales {
-      margin-top: 52px;
-      height: 100vh;
+      /* margin-top: 52px; */
+      height: 100%;
       width: 100%;
       display: grid;
       grid-template-columns: 30% 70%;

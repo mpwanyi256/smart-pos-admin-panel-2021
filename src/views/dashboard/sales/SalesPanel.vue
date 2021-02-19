@@ -1,28 +1,18 @@
 <template>
     <div class="panel-sales">
-        <TotalSale class="panel-item" />
-        <RunningOrders class="panel-item" @vieworder="viewBill" />
-        <CreditorsList class="panel-item" @vieworder="viewBill" />
-        <BillModal
-            v-if="showBill"
-            :order="selectedOrder"
-            @close="showBill = false"
-        />
+        <TotalSale/>
+        <SalesNavBar />
     </div>
 </template>
 <script>
-import CreditorsList from '@/components/sales/Creditors.vue';
-import RunningOrders from '@/components/sales/RunningOrders.vue';
 import TotalSale from '@/components/sales/TotalSale.vue';
-import BillModal from '@/components/sales/modals/Bill.vue';
+import SalesNavBar from '@/components/nav/SalesNavBar.vue';
 
 export default {
   name: 'SalesPanel',
   components: {
-    CreditorsList,
-    RunningOrders,
     TotalSale,
-    BillModal,
+    SalesNavBar,
   },
   props: {
     user: {
@@ -33,19 +23,12 @@ export default {
   },
   data() {
     return {
-      showBill: false,
       selectedOrder: null,
     };
   },
   computed: {
     companyInfo() {
       return this.user ? this.user.company_info : null;
-    },
-  },
-  methods: {
-    viewBill(order) {
-      this.selectedOrder = order;
-      this.showBill = true;
     },
   },
 };
@@ -55,18 +38,16 @@ export default {
     .panel-sales {
         width: 100%;
         height: 100%;
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
-        // gap: 10px;
         font-family: $font-style;
         font-size: 1em;
-        line-height: 1.47059;
+        line-height: 1.5;
         overflow: auto!important;
 
         .panel-item {
-            min-height: 33.3%!important;
-            max-height: 33.3%!important;
-            // height: auto;
+            // height: 33.3%!important;
+            // min-height: 100px;
             background-color: $white;
             color: $grey;
             box-shadow: $shadow;

@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard">
-    <NavBar />
     <div>
+      <NavBar />
+    </div>
+    <div div class="smart_pane">
       <router-view></router-view>
     </div>
   </div>
@@ -20,10 +22,15 @@ export default {
 @import '../../styles/constants.scss';
 
 .dashboard {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   background-color: $body-bg;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
+
+  // .smart_pane {
+  //   min-height: calc(100vh - 52px);
+  //   width: 100vw;
+  // }
 }
 </style>

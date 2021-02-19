@@ -13,33 +13,6 @@
             </h6>
             <h6 :class="companyInfo.days_left > 10 ? 'days-okay' : 'days-left'" class="text-center">
                 {{ `${companyInfo.days_left }`}} Days left
-                <br>
-                <div class="options">
-                    <div>
-                        <v-btn small block class="mr-1" :to="{ name: 'itemwisesale' }">
-                            <!-- <v-icon>mdi-cart</v-icon> -->
-                            Items
-                        </v-btn>
-                    </div>
-                    <div>
-                        <v-btn small block class="ml-1" :to="{ name: 'findbill' }">
-                            <!-- <v-icon>mdi-magnify</v-icon> -->
-                            bill
-                        </v-btn>
-                    </div>
-                    <div>
-                        <v-btn small block class="ml-1" :to="{ name: 'salessammary' }">
-                            <!-- <v-icon>mdi-book</v-icon> -->
-                            Sales
-                        </v-btn>
-                    </div>
-                    <div>
-                        <v-btn small block class="ml-1" :to="{ name: 'salessammary' }">
-                            <!-- <v-icon>mdi-book</v-icon> -->
-                            Menu
-                        </v-btn>
-                    </div>
-                </div>
             </h6>
         </template>
     </div>
@@ -67,12 +40,11 @@ export default {
         flex-direction: column;
         font-family: $font-style;
         font-size: 1em;
-        line-height: 1.47059;
+        line-height: 1.5;
         overflow: auto;
 
         .panel-item {
-            min-height: 33.3%!important;
-            max-height: 33.3%!important;
+            height: auto;
             background-color: $white;
             color: $grey;
             box-shadow: $shadow;
@@ -80,6 +52,8 @@ export default {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            padding-bottom: 5px;
+            border: 0.5px solid $light-grey;
 
             h6 {
                 color: $black;

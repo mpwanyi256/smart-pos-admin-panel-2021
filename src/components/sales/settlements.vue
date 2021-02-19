@@ -50,6 +50,13 @@
                 @close="showBill = false"
             />
         </div>
+        <RunningOrders class="panel-item" @vieworder="viewBill" />
+        <CreditorsList class="panel-item" @vieworder="viewBill" />
+        <BillModal
+            v-if="showBill"
+            :order="selectedOrder"
+            @close="showBill = false"
+        />
     </div>
 </template>
 <script>
@@ -57,6 +64,9 @@ import Orders from '@/components/sales/allOrders.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import CancelOrderItemModal from '@/components/sales/modals/cancelItem.vue';
+import CreditorsList from '@/components/sales/Creditors.vue';
+import RunningOrders from '@/components/sales/RunningOrders.vue';
+// import BillModal from '@/components/sales/modals/Bill.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -66,6 +76,8 @@ export default {
     OrderDetailsModal,
     BillModal,
     CancelOrderItemModal,
+    CreditorsList,
+    RunningOrders,
     // SalesGraph,
   },
   data() {
@@ -117,6 +129,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '../../styles/constants.scss';
 
 .sales-div {
     display: grid;
@@ -209,6 +222,20 @@ export default {
         overflow-y: auto;
         margin: 5px;
         overflow: hidden;
+    }
+
+    .pending {
+        min-height: 150px;
+        border: 1px solid $light-grey;
+        padding-top: 5px;
+
+        .header {
+            background-color: $dark-grey;
+            padding: 10px;
+            color: $white;
+            text-align: left;
+            font-weight: bold;
+        }
     }
 
 }
