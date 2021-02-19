@@ -1,9 +1,9 @@
 <template>
     <div class="sales">
         <div>
-            <SalesPanel v-if="user" :user="user" />
+            <SalesPanel class="dashboard_pane" v-if="user" :user="user" />
         </div>
-        <div>
+        <div class="sales_pane">
           <router-view></router-view>
         </div>
     </div>
@@ -46,12 +46,18 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
     .sales {
-      /* margin-top: 52px; */
-      height: 100%;
-      width: 100%;
+      height: inherit;
+      width: inherit;
       display: grid;
       grid-template-columns: 30% 70%;
+      // overflow: auto;
+
+      .dashboard_pane {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
     }
 </style>

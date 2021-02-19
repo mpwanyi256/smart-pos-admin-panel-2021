@@ -13,16 +13,11 @@
 <script>
 export default {
   name: 'SalesNavBar',
-  data() {
-    return {
-      links: [
-        { name: 'Dashboard', icon: 'mdi-home', path: 'overview' },
-        { name: 'Sales', icon: 'mdi-sale', path: 'salessammary' },
-        { name: 'Find A Bill', icon: 'mdi-magnify', path: 'findbill' },
-        { name: 'Menu Items', icon: 'mdi-book', path: 'salessammary' },
-        { name: 'Menu Item Sales', icon: 'mdi-cart', path: 'itemwisesale' },
-      ],
-    };
+  props: {
+    links: {
+      type: Array,
+      required: true,
+    },
   },
   computed: {
     activePath() {
@@ -73,12 +68,23 @@ export default {
             margin-bottom: 5px;
         }
 
+        > div:first-child {
+            border-radius: 0;
+            // background-color: #f3f2f2;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
         .active {
           background-color: #dbdbdb;
         }
 
         > div:hover {
             border: 1px solid #7e8182;
+        }
+
+        > div:first-child:hover {
+            border: none;
         }
     }
 </style>

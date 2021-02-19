@@ -2,9 +2,6 @@
     <div class="creditors">
         <div class="header">
             {{ `${runningOrders.length} Running orders` }}
-            <!-- <v-btn x-small class="float-right">
-                View all
-            </v-btn> -->
         </div>
         <div class="creditors-list">
             <div class="creditor-item">
@@ -62,7 +59,7 @@ export default {
         flex-direction: column;
         gap: 0;
         color: inherit;
-        overflow: auto;
+        overflow-y: auto;
 
         .header {
             font-weight: 500;

@@ -50,8 +50,10 @@
                 @close="showBill = false"
             />
         </div>
-        <RunningOrders class="panel-item" @vieworder="viewBill" />
-        <CreditorsList class="panel-item" @vieworder="viewBill" />
+        <div class="running_orders">
+          <RunningOrders class="panel-item" @vieworder="viewBill" />
+          <CreditorsList class="panel-item" @vieworder="viewBill" />
+        </div>
         <BillModal
             v-if="showBill"
             :order="selectedOrder"
@@ -135,9 +137,17 @@ export default {
     display: grid;
     flex-direction: column;
     gap: 5px;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
+    width: inherit;
+    height: inherit;
+    overflow-y: auto;
+
+    .running_orders {
+      max-height: 200px;
+      display: grid;
+      grid-template-columns: 50% 50%;
+      gap: 10px;
+      padding: 10px 0 10px 0;
+    }
 
     .sales-overview {
         max-width: 100%;

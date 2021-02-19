@@ -52,6 +52,15 @@ export default {
           },
           component: () => import('@/views/dashboard/sales/reports/SalesSammary.vue'),
         },
+        {
+          path: 'menu_items',
+          name: 'menu_items',
+          meta: {
+            authrequired: true,
+            title: 'Sales :: Menu Items',
+          },
+          component: () => import('@/views/dashboard/sales/MenuItems.vue'),
+        },
       ],
     },
   ],

@@ -1,7 +1,7 @@
 <template>
     <div class="panel-sales">
         <TotalSale/>
-        <SalesNavBar />
+        <SalesNavBar :links="links" />
     </div>
 </template>
 <script>
@@ -24,6 +24,13 @@ export default {
   data() {
     return {
       selectedOrder: null,
+      links: [
+        { name: 'Dashboard', icon: 'mdi-home', path: 'overview' },
+        { name: 'Sales', icon: 'mdi-sale', path: 'salessammary' },
+        { name: 'Find A Bill', icon: 'mdi-magnify', path: 'findbill' },
+        { name: 'Menu Items', icon: 'mdi-book', path: 'menu_items' },
+        { name: 'Menu Item Sales', icon: 'mdi-cart', path: 'itemwisesale' },
+      ],
     };
   },
   computed: {
@@ -37,13 +44,13 @@ export default {
 @import '../../../styles/constants.scss';
     .panel-sales {
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         display: inline-flex;
         flex-direction: column;
         font-family: $font-style;
         font-size: 1em;
         line-height: 1.5;
-        overflow: auto!important;
+        overflow: hidden!important;
 
         .panel-item {
             // height: 33.3%!important;
