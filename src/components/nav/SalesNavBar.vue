@@ -42,7 +42,7 @@ export default {
     .nav_section {
         width: 100%;
         height: 100%;
-        background-color: $white;
+        background-color: inherit;
         margin: 10px;
         overflow: hidden;
         display: flex;

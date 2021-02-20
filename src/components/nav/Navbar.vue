@@ -9,7 +9,7 @@
         <div class="menu">
           <div class="tray">
             <div
-            :class="activeRoute === link.path ? 'active' : 'item'"
+            :class="isActiveRoute(link.name) ? 'active' : 'item'"
               v-for="(link, index) in routes" :key="index"
               :to="{ name: link.path }"
               @click="gotTopage(link)">
