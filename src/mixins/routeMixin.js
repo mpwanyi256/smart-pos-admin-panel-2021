@@ -12,13 +12,17 @@ export default {
     ...mapGetters('auth', ['routes']),
 
     activeRoute() {
-      return this.$route.name;
+      return this.$route.path;
     },
   },
   methods: {
     ...mapActions('auth', ['performLogout']),
     gotTopage(route) {
       this.$router.push({ name: route.path });
+    },
+    isActiveRoute(path) {
+      const link = path.toLowerCase();
+      return this.activeRoute.toLowerCase().split(`${link}/`).length > 1;
     },
   },
 };

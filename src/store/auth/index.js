@@ -17,7 +17,7 @@ export default {
       // { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
       // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      // { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
+      { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
     ],
   },
   mutations: {
