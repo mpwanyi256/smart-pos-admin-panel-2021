@@ -24,7 +24,7 @@
                 />
             </div>
             <v-text-field label="Search items"
-            :v-model="itemSearch"
+            v-model="itemSearch"
             dense outlined placeholder="Search" />
         </div>
         <LinearLoader v-if="loading" />
@@ -34,10 +34,20 @@
                 <MenuItem v-for="(item, i) in menuItemsFiltered" :key="i"
                     :menu-item="item"
                     @changeStatus="updateMenuItemStatus"
+                    @update="updateItem"
                 />
             </div>
         </template>
-        <UpdateMenuItem v-if="updateModal" @close="updateModal = false" />
+        <UpdateMenuItem
+          v-if="updateModal"
+          @close="updateModal = false"
+        />
+        <ConfirmModal
+          v-if="openConfirmModal"
+          :title="confirmTitle"
+          @yes="updateStatus"
+          @close="openConfirmModal = false"
+        />
     </div>
 </template>
 <script>
@@ -45,6 +55,7 @@ import MenuItem from '@/components/menu/MenuItem.vue';
 import MenuItemsDisplayHeader from '@/components/menu/MenuItemsDisplayHeader.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -54,49 +65,61 @@ export default {
     MenuItemsDisplayHeader,
     LinearLoader,
     UpdateMenuItem,
+    ConfirmModal,
   },
   data() {
     return {
-      menuItems: [],
-      departments: [{ id: 0, name: 'ALL' }],
       departmentSelected: 0,
       itemSearch: '',
       updateModal: false,
+      menuItemSelected: null,
+      openConfirmModal: false,
+      confirmTitle: '',
+      selectedDepartmentId: 0,
     };
   },
+  watch: {
+    async departmentSelected(val) {
+      const filters = { department_id: val };
+      await this.getMenuItems(filters);
+    },
+  },
   computed: {
-    ...mapGetters('sales', ['loading']),
+    ...mapGetters('menu', ['menuItems', 'departments', 'loading']),
+
     menuItemsFiltered() {
-      if (this.itemSearch.length > 2) {
-        return this.menuItems.filter((Item) => Item.name.toLowerCase()
-          .match(this.itemSearch.toLowerCase()));
-      }
-      const filtered = this.menuItems.filter((Item) => Item.display === this.departmentSelected);
-      return parseInt(this.departmentSelected, 10) === 0 ? this.menuItems : filtered;
+      return this.menuItems.filter((Item) => Item.name.toLowerCase()
+        .match(this.itemSearch.toLowerCase()));
     },
   },
   methods: {
-    ...mapActions('sales', ['getMenuItems', 'getDepartments', 'fetchItemsSold']),
+    ...mapActions('menu', ['getMenuItems', 'getDepartments', 'toggleLoad', 'updateItemStatus']),
 
-    async fetchMenuDepartments() {
-      const departments = await this.getDepartments();
-      if (!departments.error) {
-        this.departments = [
-          { id: 0, name: 'ALL' },
-          ...departments.data,
-        ];
-      }
+    updateItem(item) {
+      console.log('Update', item);
+    },
+
+    fetchMenuDepartments() {
+      this.getDepartments(this.selectedDepartmentId);
     },
     async fetchMenuItems() {
-      const filters = { item_id: this.menuItemSelected };
-      const menuItems = await this.getMenuItems(filters);
-      if (!menuItems.error) this.menuItems = menuItems.data;
+      const filters = { item_id: this.selectedDepartmentId };
+      await this.getMenuItems(filters);
     },
-    async updateMenuItemStatus(item) {
-      console.log('Update status', item);
-    }
+    updateMenuItemStatus(item) {
+      this.menuItemSelected = item;
+      if (item.status === 1) {
+        this.confirmTitle = 'Show Item';
+      } else this.confirmTitle = 'Hide item';
+      this.openConfirmModal = true;
+    },
+    async updateStatus() {
+      this.openConfirmModal = false;
+      await this.updateItemStatus(this.menuItemSelected);
+      await this.fetchMenuItems();
+    },
   },
-  mounted() {
+  async mounted() {
     this.fetchMenuDepartments();
     this.fetchMenuItems();
   },

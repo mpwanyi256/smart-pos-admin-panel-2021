@@ -4,10 +4,14 @@
             {{ menuItem.name }}
         </div>
         <div class="item_price">
-            {{ menuItem.price }}
+            {{ menuItem.price_display }}
         </div>
         <div class="item_action">
-            <v-btn icon small class="update_button"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn icon small class="update_button"
+                @click="$emit('update', menuItem)"
+            >
+                <v-icon>mdi-pencil</v-icon>
+            </v-btn>
             <v-btn small dark @click="$emit('changeStatus', menuItem)"
                 :color="isHidden ? 'red darken-3' : 'green darken-3'">
                 <v-icon>mdi-eye</v-icon>
@@ -38,7 +42,7 @@ export default {
 @import '../../styles/constants.scss';
 
     .menu_item {
-        height: 60px;
+        min-height: 50px;
         background-color: $white;
         border: 0.5px solid $light-grey;
         display: grid;
@@ -47,6 +51,7 @@ export default {
         align-items: center;
         text-align: left;
         padding-left: 15px;
+        padding-right: 15px;
         color: $black-text;
         size: 14px;
 

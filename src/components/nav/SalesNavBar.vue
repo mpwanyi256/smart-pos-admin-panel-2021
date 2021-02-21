@@ -26,7 +26,6 @@ export default {
   },
   methods: {
     gotToPage(link) {
-      console.log(link);
       this.$router.push({ name: link.path });
     },
     isActivePath(path) {

@@ -1,5 +1,6 @@
 <template>
-    <Basemodal @close="$emit('close')" :title="'Are you sure you want to delete item?'" :size="500">
+    <Basemodal @close="$emit('close')"
+        :title=" title ? title : 'Are you sure you want to delete item?'" :size="500">
         <div class="confirm_options">
             <div class="confirm_no text-center" @click="$emit('close')">
                 <p>NO</p>
@@ -15,6 +16,12 @@ import Basemodal from '@/components/generics/Basemodal.vue';
 
 export default {
   name: 'ConfirmModal',
+  props: {
+    title: {
+      type: String,
+      required: false,
+    },
+  },
   components: {
     Basemodal,
   },

@@ -27,6 +27,7 @@ export default {
   background-color: $body-bg;
   display: inline-flex;
   flex-direction: column;
+  font-family: $font-style;
 
   .smart_pane {
     overflow-y: auto;
