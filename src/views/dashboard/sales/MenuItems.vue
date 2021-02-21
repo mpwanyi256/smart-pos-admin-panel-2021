@@ -134,6 +134,7 @@ export default {
         min-height: 100%;
         display: flex;
         flex-direction: column;
+        // font-size: 17px;
 
         .header_section {
             height: 60px;
