@@ -1,7 +1,18 @@
 <template>
     <div class="menu_items_section">
         <div class="header_section">
-            <div class="head_title"><h2>Menu Items</h2></div>
+            <div class="head_title">
+                <h2>
+                    <span>
+                        <v-btn
+                            icon
+                            class="create_menu_item_icon"
+                            dark @click="updateModal = true">
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </span>
+                    Menu Items</h2>
+            </div>
             <div class="search_area">
                 <v-select
                     outlined
@@ -22,15 +33,18 @@
             <div class="menu_items_display_section">
                 <MenuItem v-for="(item, i) in menuItemsFiltered" :key="i"
                     :menu-item="item"
+                    @changeStatus="updateMenuItemStatus"
                 />
             </div>
         </template>
+        <UpdateMenuItem v-if="updateModal" @close="updateModal = false" />
     </div>
 </template>
 <script>
 import MenuItem from '@/components/menu/MenuItem.vue';
 import MenuItemsDisplayHeader from '@/components/menu/MenuItemsDisplayHeader.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
+import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -39,6 +53,7 @@ export default {
     MenuItem,
     MenuItemsDisplayHeader,
     LinearLoader,
+    UpdateMenuItem,
   },
   data() {
     return {
@@ -46,6 +61,7 @@ export default {
       departments: [{ id: 0, name: 'ALL' }],
       departmentSelected: 0,
       itemSearch: '',
+      updateModal: false,
     };
   },
   computed: {
@@ -76,6 +92,9 @@ export default {
       const menuItems = await this.getMenuItems(filters);
       if (!menuItems.error) this.menuItems = menuItems.data;
     },
+    async updateMenuItemStatus(item) {
+      console.log('Update status', item);
+    }
   },
   mounted() {
     this.fetchMenuDepartments();
@@ -115,5 +134,9 @@ export default {
             display: flex;
             flex-direction: column;
         }
+    }
+
+    .create_menu_item_icon {
+      background-color: $dark-grey;
     }
 </style>

@@ -7,9 +7,12 @@
             {{ menuItem.price }}
         </div>
         <div class="item_action">
-            <v-btn icon small><v-icon>mdi-pencil</v-icon></v-btn>
-            <v-btn small color="orange" dark><v-icon left>mdi-plus</v-icon>Recipe</v-btn>
-            <v-btn icon small color="red darken-3" dark><v-icon>mdi-delete</v-icon></v-btn>
+            <v-btn icon small class="update_button"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn small dark @click="$emit('changeStatus', menuItem)"
+                :color="isHidden ? 'red darken-3' : 'green darken-3'">
+                <v-icon>mdi-eye</v-icon>
+                {{ isHidden ? 'Show item' : 'Hide item' }}
+            </v-btn>
         </div>
     </div>
 </template>
@@ -23,13 +26,19 @@ export default {
       required: true,
     },
   },
+  computed: {
+    isHidden() {
+      // eslint-disable-next-line eqeqeq
+      return this.menuItem ? this.menuItem.status == 1 : false;
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
 @import '../../styles/constants.scss';
 
     .menu_item {
-        height: 50px;
+        height: 60px;
         background-color: $white;
         border: 0.5px solid $light-grey;
         display: grid;
@@ -55,6 +64,16 @@ export default {
             display: inline-flex;
             justify-content: right;
             gap: 5px;
+
+            .recipe_button {
+                background-color: $light-grey;
+            }
+
+            .update_button {
+                background-color: $dark-grey;
+                color: $white !important;
+                padding: 3px;
+            }
         }
     }
 
