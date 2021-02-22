@@ -13,9 +13,9 @@
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn small dark @click="$emit('changeStatus', menuItem)"
+                class="toggle_hide_button"
                 :color="isHidden ? 'red darken-3' : 'green darken-3'">
-                <v-icon>mdi-eye</v-icon>
-                {{ isHidden ? 'Show item' : 'Hide item' }}
+                {{ isHidden ? 'Show' : 'Hide' }}
             </v-btn>
         </div>
     </div>
@@ -68,6 +68,7 @@ export default {
         .item_action {
             display: inline-flex;
             justify-content: right;
+            direction: rtl;
             gap: 5px;
 
             .recipe_button {
@@ -78,6 +79,10 @@ export default {
                 background-color: $dark-grey;
                 color: $white !important;
                 padding: 3px;
+            }
+
+            .toggle_hide_button {
+                width: 50px;
             }
         }
     }

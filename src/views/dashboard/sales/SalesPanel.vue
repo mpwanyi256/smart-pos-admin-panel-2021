@@ -51,14 +51,11 @@ export default {
         font-size: 1em;
         line-height: 1.5;
         overflow: hidden!important;
+        background-color: inherit;
 
         .panel-item {
-            // height: 33.3%!important;
-            // min-height: 100px;
-            background-color: $white;
             color: $grey;
             box-shadow: $shadow;
-            // border-radius: 5px;
             font-family: inherit;
             display: flex;
             flex-direction: column;

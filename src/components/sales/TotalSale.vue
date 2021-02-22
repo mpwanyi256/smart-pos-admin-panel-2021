@@ -45,7 +45,7 @@ export default {
 
         .panel-item {
             height: auto;
-            background-color: $white;
+            background-color: inherit;
             color: $grey;
             box-shadow: $shadow;
             font-family: inherit;
