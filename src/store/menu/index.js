@@ -85,6 +85,21 @@ export default {
       return itemUpdate;
     },
 
+    async createNewItem({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('create_new_item', true);
+      filters.append('item_name', payload.name);
+      filters.append('category_id', payload.category_id);
+      filters.append('display', payload.display);
+      filters.append('item_price', payload.price);
+      filters.append('company_id', payload.company_id);
+
+      const create = API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return create;
+    },
+
   },
   getters: {
     loading: (state) => state.loading,
