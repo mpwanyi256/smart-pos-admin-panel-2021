@@ -4,6 +4,9 @@
             ITEM NAME
         </div>
         <div class="item_price">
+            CATEGORY
+        </div>
+        <div class="item_price">
             PRICE
         </div>
         <div class="item_action" />
@@ -22,15 +25,15 @@ export default {
         background-color: inherit;
         border: 0.5px solid $light-grey;
         display: grid;
-        grid-template-columns: 50% 10% 40%;
+        grid-template-columns: 50% 20% 20% 10%;
         justify-content: left;
         align-items: center;
-        text-align: left;
         padding-left: 15px;
         color: $black;
         size: 16px;
+        font-weight: bold;
 
-        .item_name {
+        .item_name, .item_price {
             padding-right: 15px;
             max-lines: 1;
             line-height: 1.5;
@@ -39,6 +42,7 @@ export default {
             width: 100%;
             height: 1.2em;
             white-space: nowrap;
+            text-align: left;
         }
 
         .item_action {

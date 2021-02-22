@@ -7,7 +7,7 @@
                         <v-btn
                             icon
                             class="create_menu_item_icon"
-                            dark @click="updateModal = true">
+                            dark @click="createModal = true">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </span>
@@ -39,14 +39,20 @@
             </div>
         </template>
         <UpdateMenuItem
-          v-if="updateModal"
+          v-if="updateModal && selectedMenuItem"
+          :item="selectedMenuItem"
           @close="updateModal = false"
+          @reload="reloadMenu"
         />
         <ConfirmModal
           v-if="openConfirmModal"
           :title="confirmTitle"
           @yes="updateStatus"
           @close="openConfirmModal = false"
+        />
+        <CreateNewMenuItem
+          v-if="createModal"
+          @close="createModal = false"
         />
     </div>
 </template>
@@ -55,6 +61,7 @@ import MenuItem from '@/components/menu/MenuItem.vue';
 import MenuItemsDisplayHeader from '@/components/menu/MenuItemsDisplayHeader.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
+import CreateNewMenuItem from '@/components/menu/CreateNewMenuItem.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -66,6 +73,7 @@ export default {
     LinearLoader,
     UpdateMenuItem,
     ConfirmModal,
+    CreateNewMenuItem,
   },
   data() {
     return {
@@ -76,6 +84,8 @@ export default {
       openConfirmModal: false,
       confirmTitle: '',
       selectedDepartmentId: 0,
+      selectedMenuItem: null,
+      createModal: false,
     };
   },
   watch: {
@@ -95,8 +105,15 @@ export default {
   methods: {
     ...mapActions('menu', ['getMenuItems', 'getDepartments', 'toggleLoad', 'updateItemStatus']),
 
+    async reloadMenu() {
+      this.fetchMenuItems();
+      this.selectedMenuItem = null;
+      this.updateModal = false;
+    },
+
     updateItem(item) {
-      console.log('Update', item);
+      this.selectedMenuItem = item;
+      this.updateModal = true;
     },
 
     fetchMenuDepartments() {

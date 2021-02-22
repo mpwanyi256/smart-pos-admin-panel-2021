@@ -71,6 +71,20 @@ export default {
       commit('toggleLoading', false);
     },
 
+    async updateItem({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('update_item', true);
+      filters.append('item_id', payload.item_id);
+      filters.append('item_name', payload.name);
+      filters.append('price', payload.price);
+      filters.append('category_id', payload.category_id);
+      filters.append('display', payload.display);
+      const itemUpdate = await API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return itemUpdate;
+    },
+
   },
   getters: {
     loading: (state) => state.loading,

@@ -1,7 +1,7 @@
 <template>
     <Basemodal :title="'Update menu item'" :size="700" @close="$emit('close')">
       <div class="update_area">
-        <v-form @submit.prevent="updateMenuItem">
+        <v-form @submit.prevent="createNewMenuItem">
           <v-text-field dense outlined label="Item name" v-model="name" />
           <v-select
             dense outlined
@@ -22,7 +22,7 @@
           <v-text-field dense outlined label="Item price" v-model="price" />
           <v-btn block type="submit" dense>Update</v-btn>
         </v-form>
-      </div>
+      </div>{{ user }}
       <LinearLoader v-if="loading" />
     </Basemodal>
 </template>
@@ -32,13 +32,7 @@ import LinearLoader from '@/components/generics/Loading.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'UpdateMenuItem',
-  props: {
-    item: {
-      type: Object,
-      required: true,
-    },
-  },
+  name: 'CreateNewMenuItem',
   components: {
     Basemodal,
     LinearLoader,
@@ -54,6 +48,7 @@ export default {
   },
   computed: {
     ...mapGetters('menu', ['categories', 'departments']),
+    ...mapGetters('auth', ['user']),
 
     filteredDepartments() {
       return this.departments.filter((Dep) => Dep.name !== 'ALL');
@@ -61,36 +56,20 @@ export default {
   },
   created() {
     this.getMenuCategories();
-    if (!this.item) this.$emit('close');
-    this.name = this.item.name;
-    this.categoryId = parseInt(this.item.category_id, 10);
-    this.display = String(this.item.display);
-    this.price = this.item.price;
   },
   methods: {
     ...mapActions('menu', ['getMenuCategories', 'updateItem']),
     ...mapActions('auth', ['setError']),
 
-    async updateMenuItem() {
-      if (this.name.trim().length <= 0) {
-        alert('Item name is required');
-      // eslint-disable-next-line eqeqeq
-      } else if (this.price.trim().lengh == 0) {
-        alert('Item price is required');
-      } else {
-        const itemUpdate = {
-          name: this.name,
-          category_id: this.categoryId,
-          display: this.display,
-          price: parseInt(this.price, 10),
-          item_id: this.item.id,
-        };
-        this.loading = true;
-        const update = await this.updateItem(itemUpdate);
-        if (update.error) alert(update.message);
-        this.loading = false;
-        this.$emit('reload');
-      }
+    createNewMenuItem() {
+      const menuItem = {
+        name: this.name,
+        category_id: this.categoryId,
+        display: this.display,
+        price: parseInt(this.price, 10),
+        company_id: this.user.company_id,
+      };
+      console.log('new itemm', menuItem);
     },
   },
 };
