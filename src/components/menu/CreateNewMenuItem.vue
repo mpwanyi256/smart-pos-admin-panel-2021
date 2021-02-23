@@ -1,7 +1,7 @@
 <template>
     <Basemodal :title="'Create new menu item'" :size="700" @close="$emit('close')">
       <div class="update_area">
-        <v-form @submit.prevent="createNewMenuItem">
+        <v-form ref="addItemForm" @submit.prevent="createNewMenuItem">
           <v-text-field dense outlined label="Item name" v-model="name" />
           <v-select
             dense outlined
@@ -23,12 +23,14 @@
           <v-btn block type="submit" dense>Update</v-btn>
         </v-form>
       </div>
+      <BaseAlert v-if="error" :alert="alert" :message="errorMessage" />
       <LinearLoader v-if="loading" />
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
+import BaseAlert from '@/components/generics/BaseAlert.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -36,6 +38,7 @@ export default {
   components: {
     Basemodal,
     LinearLoader,
+    BaseAlert,
   },
   data() {
     return {
@@ -44,6 +47,9 @@ export default {
       display: '',
       price: '',
       loading: false,
+      error: false,
+      errorMessage: '',
+      alert: 'error',
     };
   },
   computed: {
@@ -57,11 +63,27 @@ export default {
   created() {
     this.getMenuCategories();
   },
+  watch: {
+    error(val) {
+      if (val) {
+        setTimeout(() => {
+          this.error = false;
+        }, 3000);
+      }
+    },
+  },
   methods: {
     ...mapActions('menu', ['getMenuCategories', 'updateItem', 'createNewItem']),
     ...mapActions('auth', ['setError']),
 
     async createNewMenuItem() {
+      if (!this.name || !this.categoryId || !this.display || !this.price) {
+        this.alert = 'error';
+        this.errorMessage = 'Please fill in all fields';
+        this.error = true;
+        return;
+      }
+      this.loading = true;
       const menuItem = {
         name: this.name.toUpperCase(),
         category_id: this.categoryId,
@@ -70,7 +92,18 @@ export default {
         company_id: this.user.company_id,
       };
       const create = await this.createNewItem(menuItem);
+      if (create.error) {
+        this.alert = 'error';
+        this.errorMessage = create.message;
+        this.error = true;
+        return;
+      }
+      this.$refs.addItemForm.reset();
+      this.alert = 'success';
+      this.errorMessage = create.message;
+      this.error = true;
       console.log('new itemm', create);
+      this.loading = false;
     },
   },
 };

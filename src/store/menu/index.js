@@ -35,6 +35,7 @@ export default {
       filters.append('get_menu_items', payload.department_id);
       const menuItems = await API.smart(PATH, filters);
       if (!menuItems.error) commit('setMenuItems', menuItems.data);
+      if (payload.department_id !== 'download') commit('toggleLoading', false);
       commit('toggleLoading', false);
       return menuItems;
     },

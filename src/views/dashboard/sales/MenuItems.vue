@@ -3,15 +3,9 @@
         <div class="header_section">
             <div class="head_title">
                 <h2>
-                    <span>
-                        <v-btn
-                            icon
-                            class="create_menu_item_icon"
-                            dark @click="createModal = true">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                    </span>
-                    Menu Items</h2>
+                <BaseTooltip @button="downloadModal = true"
+                message="Download items" icon="cloud-download" />
+                Menu Items</h2>
             </div>
             <div class="search_area">
                 <v-select
@@ -22,10 +16,11 @@
                     item-value="id"
                     :items="departments"
                 />
+                <v-text-field :label="`Search ${selectedDepartmentName} items`"
+                  v-model="itemSearch" dense outlined placeholder="Search" />
+                <BaseTooltip message="Upload items" icon="cloud-upload" />
+                <BaseTooltip message="Add new item" icon="plus" @button="createModal = true" />
             </div>
-            <v-text-field label="Search items"
-            v-model="itemSearch"
-            dense outlined placeholder="Search" />
         </div>
         <LinearLoader v-if="loading" />
         <template v-else>
@@ -50,6 +45,7 @@
           @yes="updateStatus"
           @close="openConfirmModal = false"
         />
+        <DownloadMenu v-if="downloadModal" @close="downloadModal = false" />
         <CreateNewMenuItem
           v-if="createModal"
           @close="createModal = false"
@@ -63,6 +59,8 @@ import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
 import CreateNewMenuItem from '@/components/menu/CreateNewMenuItem.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import DownloadMenu from '@/components/menu/DownloadMenu.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -74,6 +72,8 @@ export default {
     UpdateMenuItem,
     ConfirmModal,
     CreateNewMenuItem,
+    BaseTooltip,
+    DownloadMenu,
   },
   data() {
     return {
@@ -86,6 +86,7 @@ export default {
       selectedDepartmentId: 0,
       selectedMenuItem: null,
       createModal: false,
+      downloadModal: false,
     };
   },
   watch: {
@@ -100,6 +101,11 @@ export default {
     menuItemsFiltered() {
       return this.menuItems.filter((Item) => Item.name.toLowerCase()
         .match(this.itemSearch.toLowerCase()));
+    },
+
+    selectedDepartmentName() {
+      // eslint-disable-next-line eqeqeq
+      return this.departments.find((dept) => dept.id == this.departmentSelected).name.toLowerCase();
     },
   },
   methods: {
@@ -157,13 +163,23 @@ export default {
             height: 60px;
             width: 100%;
             display: grid;
-            grid-template-columns: 50% 25% 25%;
+            grid-template-columns: 30% 70%;
             background-color: $white;
             gap: 5px;
             // justify-items: left;
             text-align: left;
             padding: 15px;
             overflow: hidden;
+
+            .head_title h2 span {
+              display: inline-flex;
+              gap: 5px;
+            }
+
+            .search_area {
+              display: inline-flex;
+              gap: 5px;
+            }
         }
 
         .menu_items_display_section {
@@ -178,6 +194,6 @@ export default {
     }
 
     .create_menu_item_icon {
-      background-color: $dark-grey;
+      background-color: $blue;
     }
 </style>
