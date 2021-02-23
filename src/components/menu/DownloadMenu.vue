@@ -3,7 +3,7 @@
         <div class="download_pane">
             <BaseLoaderCirclular v-show="loading" />
             <div class="d_button">
-                <v-btn block large class="btn_download">
+                <v-btn @click="downloadCSV" block large class="btn_download">
                     <v-icon left>mdi-cloud-download</v-icon>
                     {{ `Download ${menuItems.length} items` }}
                 </v-btn>
@@ -14,10 +14,12 @@
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseLoaderCirclular from '@/components/generics/BaseLoaderCirclular.vue';
+import DownloadCSVMixin from '@/mixins/DownloadCSVMixin';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'DownloadMenu',
+  mixins: [DownloadCSVMixin],
   components: {
     Basemodal,
     BaseLoaderCirclular,
@@ -33,6 +35,10 @@ export default {
   },
   methods: {
     ...mapActions('menu', ['getMenuItems']),
+
+    downloadCSV() {
+      this.download(this.menuItems, 'Menu items');
+    },
   },
   async created() {
     // this.loading = true;
