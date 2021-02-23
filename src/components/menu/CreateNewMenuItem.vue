@@ -20,7 +20,7 @@
             v-model="display"
           />
           <v-text-field dense outlined label="Item price" v-model="price" />
-          <v-btn block type="submit" dense>Update</v-btn>
+          <v-btn block type="submit" dense>Add item</v-btn>
         </v-form>
       </div>
       <BaseAlert v-if="error" :alert="alert" :message="errorMessage" />
