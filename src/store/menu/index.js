@@ -72,6 +72,24 @@ export default {
       commit('toggleLoading', false);
     },
 
+    async updateMenuItemCategory({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('update_menu_category', true);
+      filters.append('category_id', payload.id);
+      filters.append('category_status', payload.status);
+      return API.smart(PATH, filters);
+    },
+
+    async updateMenuItemCategoryName({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('update_menu_category_name', true);
+      filters.append('category_id', payload.id);
+      filters.append('category_name', payload.name);
+      return API.smart(PATH, filters);
+    },
+
     async updateItem({ commit }, payload) {
       commit('toggleLoading', true);
       const filters = new FormData();

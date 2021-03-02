@@ -22,18 +22,18 @@ export default {
 @import '../../styles/constants.scss';
 
 .dashboard {
-  width: 100vw;
+  width: 100vw !important;
   height: 100vh;
+  margin: 0;
   background-color: $body-bg;
   display: inline-flex;
   flex-direction: column;
   font-family: $font-style !important;
 
   .smart_pane {
-    overflow-y: auto;
-    overflow-x: hidden !important;
+    overflow: auto;
     padding-bottom: 15px;
-    max-height: 1020px;
+    height: calc(100vh - 52px);
   }
 }
 </style>

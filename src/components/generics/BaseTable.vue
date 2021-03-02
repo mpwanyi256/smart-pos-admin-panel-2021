@@ -8,7 +8,7 @@
         <template v-slot:item.action="{ item }">
             <v-btn small @click="$emit('view', item)">View</v-btn>
         </template>
-        <template v-slot:item.bill="{ item }">
+        <template v-if="showDefault" v-slot:item.bill="{ item }">
             <v-btn class="ml-1" small @click="$emit('bill', item)">Bill</v-btn>
         </template>
     </v-data-table>
@@ -24,6 +24,11 @@ export default {
       type: Array,
       rquired: true,
       default: () => [],
+    },
+    showDefault: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
   },
   data() {

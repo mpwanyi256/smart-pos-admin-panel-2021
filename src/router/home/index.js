@@ -61,6 +61,15 @@ export default {
           },
           component: () => import('@/views/dashboard/sales/MenuItems.vue'),
         },
+        {
+          path: 'menu_categories',
+          name: 'menu_categories',
+          meta: {
+            authrequired: true,
+            title: 'Sales | Menu Item categories',
+          },
+          component: () => import('@/views/dashboard/sales/MenuCategories.vue'),
+        },
       ],
     },
   ],

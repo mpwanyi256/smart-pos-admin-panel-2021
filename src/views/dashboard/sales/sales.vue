@@ -48,11 +48,15 @@ export default {
 </script>
 <style scoped lang="scss">
     .sales {
-      height: inherit;
-      width: inherit;
+      height: calc(100vh - 52px);
+      width: 100%;
       display: grid;
       grid-template-columns: 30% 70%;
-      // overflow: auto;
+
+      .sales_pane {
+        height: 100%;
+        overflow-y: auto;
+      }
 
       .dashboard_pane {
         overflow-y: auto;

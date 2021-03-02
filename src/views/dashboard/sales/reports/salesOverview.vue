@@ -20,8 +20,7 @@ export default {
         width: 100%;
         min-height: 100%;
         background-color: inherit;
-        overflow-x: hidden;
-        overflow-y: auto;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         gap: 10px;

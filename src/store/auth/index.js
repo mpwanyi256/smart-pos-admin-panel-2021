@@ -105,7 +105,7 @@ export default {
 
         if (userInfo.role === 5) {
           commit('setUser', userInfo);
-          router.push({ name: 'overview' });
+          if (router.name.match('login')) router.push({ name: 'overview' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');

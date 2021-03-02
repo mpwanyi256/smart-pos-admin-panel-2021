@@ -28,6 +28,7 @@ export default {
         { name: 'Dashboard', icon: 'mdi-home', path: 'overview' },
         { name: 'Sales', icon: 'mdi-sale', path: 'salessammary' },
         { name: 'Find A Bill', icon: 'mdi-magnify', path: 'findbill' },
+        { name: 'Menu Categories', icon: 'mdi-all-inclusive', path: 'menu_categories' },
         { name: 'Menu Items', icon: 'mdi-book', path: 'menu_items' },
         { name: 'Menu Item Sales', icon: 'mdi-cart', path: 'itemwisesale' },
       ],

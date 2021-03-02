@@ -1,5 +1,6 @@
 <template>
     <div class="sales-div">
+      <template>
         <div class="section-title ma-2">
             <h3>Settlements</h3>
         </div>
@@ -59,6 +60,7 @@
             :order="selectedOrder"
             @close="showBill = false"
         />
+      </template>
     </div>
 </template>
 <script>
@@ -68,7 +70,7 @@ import BillModal from '@/components/sales/modals/Bill.vue';
 import CancelOrderItemModal from '@/components/sales/modals/cancelItem.vue';
 import CreditorsList from '@/components/sales/Creditors.vue';
 import RunningOrders from '@/components/sales/RunningOrders.vue';
-// import BillModal from '@/components/sales/modals/Bill.vue';
+// import BaseLoading from '@/components/generics/BaseLoading.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -89,6 +91,7 @@ export default {
       showCancelItemModal: false,
       selectedOrder: null,
       itemToCancel: null,
+      loading: true,
     };
   },
   computed: {
@@ -108,8 +111,7 @@ export default {
     ...mapActions('sales', ['CancelOrderItem']),
 
     async cancelItemOnOrder(data) {
-      const Drop = await this.CancelOrderItem(data);
-      console.log(Drop);
+      await this.CancelOrderItem(data);
       this.showCancelItemModal = false;
       this.$refs.orderdetails.fetchOrderItems();
     },
@@ -139,7 +141,7 @@ export default {
     gap: 5px;
     width: inherit;
     height: inherit;
-    overflow-y: auto;
+    // overflow-y: auto;
 
     .running_orders {
       max-height: 200px;
