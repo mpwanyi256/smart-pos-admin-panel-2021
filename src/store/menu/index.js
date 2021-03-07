@@ -64,12 +64,12 @@ export default {
     },
 
     async getMenuCategories({ commit }) {
-      commit('toggleLoading', true);
+      // commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_menu_categories', true);
       const categories = await API.smart(PATH, filters);
       if (!categories.error) commit('setCategories', categories.data);
-      commit('toggleLoading', false);
+      // commit('toggleLoading', false);
     },
 
     async updateMenuItemCategory({ commit }, payload) {
@@ -112,6 +112,17 @@ export default {
       filters.append('category_id', payload.category_id);
       filters.append('display', payload.display);
       filters.append('item_price', payload.price);
+      filters.append('company_id', payload.company_id);
+
+      const create = API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return create;
+    },
+
+    async CreateMenuCategory({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('new_category_name', payload.name);
       filters.append('company_id', payload.company_id);
 
       const create = API.smart(PATH, filters);

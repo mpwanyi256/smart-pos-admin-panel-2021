@@ -10,15 +10,40 @@
 </template>
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'home',
   components: {
     NavBar,
   },
+  data() {
+    return {
+      dayOpenPoll: null,
+    };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+  },
+  created() {
+    const setPolling = () => {
+      if (!this.user) {
+        clearInterval(this.polling);
+      } else {
+        this.getDayOpen(11);
+      }
+    };
+    this.polling = setInterval(() => {
+      setPolling();
+    }, 3000);
+  },
+  methods: {
+    ...mapActions('auth', ['getDayOpen']),
+  },
+
 };
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 @import '../../styles/constants.scss';
 
 .dashboard {
@@ -32,7 +57,8 @@ export default {
 
   .smart_pane {
     overflow: auto;
-    padding-bottom: 15px;
+    top: 0;
+    bottom: 0;
     height: calc(100vh - 52px);
   }
 }

@@ -52,12 +52,15 @@ export default {
     userId() {
       return localStorage.getItem('smart_user_id');
     },
+    routeOn() {
+      return this.$route.name;
+    },
   },
 
-  mounted() {
+  created() {
     const LoggedInUser = localStorage.getItem('smart_user_id');
     if (LoggedInUser) {
-      this.getUserById();
+      this.getUserById(this.routeOn);
     }
   },
 

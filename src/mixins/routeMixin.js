@@ -22,7 +22,7 @@ export default {
     },
     isActiveRoute(path) {
       const link = path.toLowerCase();
-      return this.activeRoute.toLowerCase().split(`${link}/`).length > 1;
+      return this.activeRoute.toLowerCase().split(`${link}`).length > 1;
     },
   },
 };

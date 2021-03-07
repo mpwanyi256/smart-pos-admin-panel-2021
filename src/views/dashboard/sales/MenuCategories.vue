@@ -8,7 +8,8 @@
         <div class="search_area">
             <v-text-field :label="`Search`"
               v-model="key" dense outlined placeholder="Search" />
-            <BaseTooltip message="Create new category" icon="plus" @button="createModal = true" />
+            <BaseTooltip message="Create new category" icon="plus"
+              @button="createCategory = true" />
         </div>
     </div>
     <LinearLoader v-if="loading" />
@@ -21,13 +22,18 @@
         />
       </div>
     </div>
+    <CreateNewCategoryModal
+      v-if="createCategory"
+      @close="createCategory = false"
+      @refresh="refresh"
+    />
   </div>
 </template>
 <script>
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import MenuCategoryItem from '@/components/menu/MenuCategoryItem.vue';
-// import BaseTable from '@/components/generics/BaseTable.vue';
+import CreateNewCategoryModal from '@/components/menu/CreateNewCategoryModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -36,12 +42,13 @@ export default {
     BaseTooltip,
     LinearLoader,
     MenuCategoryItem,
-    // BaseTable,
+    CreateNewCategoryModal,
   },
   data() {
     return {
       loading: true,
       key: '',
+      createCategory: false,
     };
   },
   computed: {
@@ -56,6 +63,11 @@ export default {
     async updateCategoryStatus(cat) {
       this.loading = true;
       await this.updateMenuItemCategory(cat);
+      await this.getMenuCategories();
+      this.loading = false;
+    },
+
+    async refresh() {
       await this.getMenuCategories();
       this.loading = false;
     },

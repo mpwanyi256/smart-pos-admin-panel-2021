@@ -5,6 +5,7 @@ import auth from './auth';
 import error from './error';
 import home from './home';
 import setup from './setup';
+import inventory from './inventory';
 import Accounting from './accounting';
 
 Vue.use(VueRouter);
@@ -18,6 +19,7 @@ const routes = [
   home,
   Accounting,
   setup,
+  inventory,
 ];
 
 const router = new VueRouter({

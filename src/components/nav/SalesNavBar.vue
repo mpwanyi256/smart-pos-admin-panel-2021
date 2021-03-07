@@ -1,7 +1,7 @@
 <template>
     <div class="nav_section">
         <div>
-            <p>Quick links</p>
+            <p>{{ title ? title : 'Quick links' }}</p>
         </div>
         <div v-for="(link, i) in links" :key="i" @click="gotToPage(link)"
             class="link" :class="{ 'active': isActivePath(link.path) }">
@@ -17,6 +17,10 @@ export default {
     links: {
       type: Array,
       required: true,
+    },
+    title: {
+      type: String,
+      required: false,
     },
   },
   computed: {

@@ -13,14 +13,19 @@ export default {
     error: { status: false, message: '' },
     routes: [
       { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
-      { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
-      // { icon: 'mdi-shopping', name: 'Inventory', path: 'inventory' },
+      // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
+      { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
       // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
       { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
     ],
   },
   mutations: {
+    setCompanyDay(state, dayOpen) {
+      state.user.company_info.day_open = dayOpen.day;
+      localStorage.setItem('smart_company_day_open', dayOpen.day);
+      state.user.company_info.day_open_display = dayOpen.display;
+    },
     setRoles(state, payload) {
       state.roles = payload;
     },
@@ -81,14 +86,14 @@ export default {
       }
       commit('toggleLoading', false);
     },
-    async getUserById({ dispatch, commit }) {
-      commit('toggleLoading', true);
+    async getUserById({ dispatch, commit }, payload = null) {
       const loggedinUser = localStorage.getItem('smart_user_id');
       if (!loggedinUser) {
-        commit('toggleLoading', false);
         dispatch('setError', 'no login information found');
         return router.push({ name: 'login' });
       }
+
+      commit('toggleLoading', true);
       const params = new FormData();
       params.append('auth_by_id', loggedinUser);
       const authData = await API.smart(PATH, params);
@@ -105,7 +110,7 @@ export default {
 
         if (userInfo.role === 5) {
           commit('setUser', userInfo);
-          if (router.name.match('login')) router.push({ name: 'overview' });
+          if (payload && payload.match('login')) router.push({ name: 'overview' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
@@ -121,6 +126,13 @@ export default {
       localStorage.removeItem('smart_company_id');
       commit('setUser', null);
       router.push({ name: 'login' });
+    },
+    async getDayOpen({ commit }, companyId) {
+      const params = new FormData();
+      params.append('day_open', companyId);
+      const companyDay = await API.smart(PATH, params);
+      console.log('Day open', companyDay.data);
+      commit('setCompanyDay', { day: companyDay.data, display: companyDay.day_display });
     },
   },
   getters: {

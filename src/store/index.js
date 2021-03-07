@@ -4,6 +4,7 @@ import auth from './auth';
 import sales from './sales';
 import accounts from './accounts';
 import menu from './menu';
+import inventory from './inventory';
 
 Vue.use(Vuex);
 
@@ -13,5 +14,6 @@ export default new Vuex.Store({
     sales,
     accounts,
     menu,
+    inventory,
   },
 });
