@@ -73,10 +73,10 @@ export default {
 
     async updateMenuItem() {
       if (this.name.trim().length <= 0) {
-        alert('Item name is required');
+        this.setError('Item name is required');
       // eslint-disable-next-line eqeqeq
       } else if (this.price.trim().lengh == 0) {
-        alert('Item price is required');
+        this.setError('Item price is required');
       } else {
         const itemUpdate = {
           name: this.name,
@@ -87,7 +87,7 @@ export default {
         };
         this.loading = true;
         const update = await this.updateItem(itemUpdate);
-        if (update.error) alert(update.message);
+        if (update.error) this.setError(update.message);
         this.loading = false;
         this.$emit('reload');
       }
