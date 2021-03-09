@@ -52,7 +52,13 @@ export default {
       height: calc(100vh - 52px);
       width: 100%;
       display: grid;
-      grid-template-columns: 30% 70%;
+      @media only screen and (min-width: 1600px) {
+        grid-template-columns: 20% 80%;
+      }
+
+      @media only screen and (max-width: 1600px) {
+        grid-template-columns: 30% 70%;
+      }
 
       .sales_pane {
         height: 100%;
