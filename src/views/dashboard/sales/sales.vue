@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       polling: null,
+      loading: false,
     };
   },
   computed: {

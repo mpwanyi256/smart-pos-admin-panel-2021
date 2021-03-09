@@ -131,7 +131,6 @@ export default {
       const params = new FormData();
       params.append('day_open', companyId);
       const companyDay = await API.smart(PATH, params);
-      console.log('Day open', companyDay.data);
       commit('setCompanyDay', { day: companyDay.data, display: companyDay.day_display });
     },
   },

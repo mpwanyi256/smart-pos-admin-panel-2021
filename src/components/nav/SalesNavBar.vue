@@ -5,8 +5,8 @@
         </div>
         <div v-for="(link, i) in links" :key="i" @click="gotToPage(link)"
             class="link" :class="{ 'active': isActivePath(link.path) }">
-            <v-icon>{{ link.icon }}</v-icon>
-            <div class="name">{{ link.name }}</div>
+            <v-icon class="black--text">{{ link.icon }}</v-icon>
+            <div class="name black--text">{{ link.name }}</div>
         </div>
     </div>
 </template>
@@ -50,7 +50,6 @@ export default {
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding-right: 150px;
         padding-top: 10px;
         padding-left: 10px;
         font-size: 14px;
@@ -69,11 +68,11 @@ export default {
             cursor: pointer;
             padding-left: 15px;
             margin-bottom: 5px;
+            color: $black !important;
         }
 
         > div:first-child {
             border-radius: 0;
-            // background-color: #f3f2f2;
             font-weight: bold;
             font-size: 16px;
         }
@@ -83,7 +82,7 @@ export default {
         }
 
         > div:hover {
-            border: 1px solid #7e8182;
+            background-color:#dddddd;
         }
 
         > div:first-child:hover {

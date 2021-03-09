@@ -53,7 +53,6 @@ export default {
 
     async updateItemStatus({ commit }, payload) {
       commit('toggleLoading', true);
-      console.log('Update', payload);
       const filters = new FormData();
       filters.append('update_item_status', true);
       filters.append('item_id', payload.id);

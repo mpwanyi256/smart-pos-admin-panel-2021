@@ -35,7 +35,6 @@ export default {
       };
       const createCat = await this.CreateMenuCategory(newCat);
       if (!createCat.error) this.$emit('refresh');
-      console.log('Cat', createCat);
     },
   },
 };

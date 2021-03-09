@@ -27,6 +27,6 @@ export default {
 <style scoped lang="scss">
 @import '../../styles/constants.scss';
     .create_menu_item_icon {
-      background-color: $blue;
+      background-color: $black-text;
     }
 </style>

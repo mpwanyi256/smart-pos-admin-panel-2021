@@ -18,7 +18,6 @@ export default {
       params.append('get_store_items', 'all');
       params.append('company_id', payload.company_id);
       const items = await API.smart(PATH, params);
-      console.log('Store items', items);
       if (!items.error) commit('setStoreItems', items.data);
     },
   },

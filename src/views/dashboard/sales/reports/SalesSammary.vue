@@ -10,7 +10,7 @@
         </div>
         <div class="search_filter">
             <div class="bill_no">
-                <h3>Select date range</h3>
+                <h3>Filter sales</h3>
             </div>
             <div class="bill_no">
                 <DatePickerBeta @picked="setDateFrom" :message="'From'" />
@@ -107,7 +107,6 @@ export default {
           visa: Sale.settlement[8].amount,
         }));
       }
-      console.log('Filter', SALES);
     },
   },
 };
