@@ -9,7 +9,7 @@
       <div class="item" v-for="item in filteredItems" :key="item.id">
         <div>{{ item.name }}</div>
         <div>{{ item.category }}</div>
-        <div>{{ item.unit_price }}</div>
+        <div>{{ item.unit_price_display }}</div>
         <div>{{ item.pack_size }}</div>
         <div>{{ item.unit_measure }}</div>
         <div>{{ item.min_stock }}</div>

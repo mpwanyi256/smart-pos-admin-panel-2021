@@ -3,11 +3,11 @@
     <div class="header_section">
       <div class="title">Store Items</div>
       <div class="options">
-        <div><v-text-field dense outlined label="Search" v-model="search" /> </div>
         <div>
           <BaseTooltip @button="downloadModal = true"
           message="Create Item" icon="plus" />
         </div>
+        <div><v-text-field dense outlined label="Search" v-model="search" /> </div>
       </div>
     </div>
     <div class="items_list">
@@ -72,17 +72,25 @@ export default {
   .header_section {
     height: 52px;
     background-color: $white;
-    padding-left: 16px;
+    padding-left: 15px;
     border-bottom: 1px solid $light-grey;
     display: grid;
     grid-template-columns: 60% 40%;
+    justify-content: center;
+    align-items: center;
+    color: $black;
 
     .options {
       display: inline-flex;
-      justify-content: center;
       gap: 5px;
       padding-top: 5px;
-      // direction: rtl;
+      direction: rtl;
+      padding-right: 15px;
+      text-align: left;
+
+      > div {
+        direction: ltr;
+      }
     }
   }
 }

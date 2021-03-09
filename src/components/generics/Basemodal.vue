@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" :width="size ? size : 500" persistent>
         <v-card>
-            <v-card-title>
+            <v-card-title class="black--text">
                 {{ title ? title : '' }}
                 <v-spacer></v-spacer>
                 <v-btn icon color="black" @click="$emit('close')">
