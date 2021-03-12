@@ -52,7 +52,6 @@ export default {
     updateItem(item) {
       this.selectedItem = item;
       this.updateItemModal = true;
-      console.log('update', item);
     },
   },
   async created() {

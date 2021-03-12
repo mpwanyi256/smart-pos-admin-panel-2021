@@ -10,7 +10,13 @@
         <div class="frm_entry">
           <div class="label">Unit measure</div>
           <div class="entry_update">
-            <v-text-field outlined dense v-model="unit_measure"></v-text-field>
+            <!-- <v-text-field outlined dense v-model="unit_measure"></v-text-field> -->
+            <v-select dense outlined
+              :items="storeMeasures"
+              item-text="name"
+              item-value="id"
+              v-model="unit_measure_id"
+            />
           </div>
         </div>
         <div class="frm_entry">
@@ -20,21 +26,24 @@
           </div>
         </div>
         <div class="frm_entry">
-          <div class="label">Price per pack</div>
+          <div class="label">
+            {{ `Price per ${pack_size} ${selectedMeasureName.toLowerCase()}` }}
+          </div>
           <div class="entry_update">
             <v-text-field outlined dense v-model="unit_price"></v-text-field>
           </div>
         </div>
         <div class="frm_entry">
-          <div class="label">Min stock</div>
+          <div class="label">{{ `Min stock in ${selectedMeasureName.toLowerCase()}`}}</div>
           <div class="entry_update">
-            <v-text-field outlined dense hint="Min stock in packs" v-model="min_stock"/>
+            <v-text-field outlined dense
+            :hint="`Min stock in ${selectedMeasureName.toLowerCase()}`" v-model="min_stock"/>
           </div>
         </div>
         <div class="frm_entry">
           <div class="label">&nbsp;</div>
           <div class="entry_update">
-            <v-btn class="float-right">Update</v-btn>
+            <v-btn class="float-right" @click="updateStoreItem">Update</v-btn>
           </div>
         </div>
     </div>
@@ -42,6 +51,7 @@
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'UpdateStoreItem',
@@ -61,14 +71,40 @@ export default {
       pack_size: '',
       unit_measure: '',
       unit_price: '',
+      unit_measure_id: '',
     };
   },
-  created() {
+  computed: {
+    ...mapGetters('inventory', ['storeMeasures']),
+
+    selectedMeasureName() {
+      const measureSelect = this.storeMeasures
+        .find((Measure) => Measure.id === this.unit_measure_id);
+      return measureSelect ? measureSelect.name : '';
+    },
+  },
+  methods: {
+    ...mapActions('inventory', ['getStoreMeasures']),
+
+    updateStoreItem() {
+      const update = {
+        id: this.item.id,
+        name: this.name,
+        pack_size: this.pack_size,
+        unit_price: this.unit_price,
+        unit_measure_id: this.unit_measure_id,
+      };
+      console.log('Update', update);
+    },
+  },
+  async created() {
     this.name = this.item.name;
     this.min_stock = this.item.min_stock;
     this.pack_size = this.item.pack_size;
     this.unit_measure = this.item.unit_measure;
     this.unit_price = this.item.unit_price;
+    this.unit_measure_id = this.item.measure_id;
+    await this.getStoreMeasures('all');
   },
 };
 </script>
