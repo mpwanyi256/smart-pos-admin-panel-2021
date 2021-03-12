@@ -5,8 +5,10 @@
         </div>
         <div v-for="(link, i) in links" :key="i" @click="gotToPage(link)"
             class="link" :class="{ 'active': isActivePath(link.path) }">
-            <v-icon class="black--text">{{ link.icon }}</v-icon>
-            <div class="name black--text">{{ link.name }}</div>
+            <v-icon :class="isActivePath(link.path) ? 'black--text' : 'grey--text'">
+              {{ link.icon }}</v-icon>
+            <div :class="isActivePath(link.path) ? 'black--text' : 'grey--text'">
+              {{ link.name }}</div>
         </div>
     </div>
 </template>

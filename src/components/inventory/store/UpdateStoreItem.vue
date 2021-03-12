@@ -34,7 +34,7 @@
         <div class="frm_entry">
           <div class="label">&nbsp;</div>
           <div class="entry_update">
-            <v-btn large>Normal</v-btn>
+            <v-btn class="float-right">Update</v-btn>
           </div>
         </div>
     </div>
