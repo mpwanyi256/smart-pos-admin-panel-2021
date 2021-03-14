@@ -20,6 +20,7 @@
       v-if="updateItemModal && selectedItem"
       :item="selectedItem"
       @close="updateItemModal = false"
+      @reload="reloadItems"
     />
   </div>
 </template>
@@ -52,6 +53,12 @@ export default {
     updateItem(item) {
       this.selectedItem = item;
       this.updateItemModal = true;
+    },
+
+    async reloadItems() {
+      await this.getStoreItems({ company_id: this.user.company_id });
+      this.selectedItem = null;
+      this.updateItemModal = false;
     },
   },
   async created() {

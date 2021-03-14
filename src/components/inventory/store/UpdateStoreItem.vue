@@ -10,7 +10,6 @@
         <div class="frm_entry">
           <div class="label">Unit measure</div>
           <div class="entry_update">
-            <!-- <v-text-field outlined dense v-model="unit_measure"></v-text-field> -->
             <v-select dense outlined
               :items="storeMeasures"
               item-text="name"
@@ -41,16 +40,31 @@
           </div>
         </div>
         <div class="frm_entry">
+          <div class="label">Category</div>
+          <div class="entry_update">
+            <v-select dense outlined
+              :items="categories"
+              item-text="name"
+              item-value="id"
+              v-model="categoryId"
+            />
+          </div>
+        </div>
+        <div class="frm_entry">
           <div class="label">&nbsp;</div>
           <div class="entry_update">
             <v-btn class="float-right" @click="updateStoreItem">Update</v-btn>
           </div>
         </div>
+        <BaseAlert v-if="error" alert="info" :message="error" />
+        <LinearLoader v-if="loading" />
     </div>
   </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
+import BaseAlert from '@/components/generics/BaseAlert.vue';
+import LinearLoader from '@/components/generics/Loading.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -63,6 +77,8 @@ export default {
   },
   components: {
     Basemodal,
+    BaseAlert,
+    LinearLoader,
   },
   data() {
     return {
@@ -72,10 +88,13 @@ export default {
       unit_measure: '',
       unit_price: '',
       unit_measure_id: '',
+      categoryId: '',
+      error: '',
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters('inventory', ['storeMeasures']),
+    ...mapGetters('inventory', ['storeMeasures', 'categories']),
 
     selectedMeasureName() {
       const measureSelect = this.storeMeasures
@@ -84,26 +103,35 @@ export default {
     },
   },
   methods: {
-    ...mapActions('inventory', ['getStoreMeasures']),
+    ...mapActions('inventory', ['getStoreMeasures', 'getStoreCategories', 'updateItem']),
 
     updateStoreItem() {
       const update = {
-        id: this.item.id,
+        update_store_item: this.item.id,
         name: this.name,
         pack_size: this.pack_size,
         unit_price: this.unit_price,
         unit_measure_id: this.unit_measure_id,
+        category_id: this.categoryId,
+        minimum_stock: this.min_stock,
       };
-      console.log('Update', update);
+      this.loading = true;
+      const updated = this.updateItem(update);
+      this.loading = false;
+      if (updated.error) this.error = update.message;
+      else this.$emit('reload');
     },
   },
   async created() {
+    this.error = '';
     this.name = this.item.name;
     this.min_stock = this.item.min_stock;
     this.pack_size = this.item.pack_size;
     this.unit_measure = this.item.unit_measure;
     this.unit_price = this.item.unit_price;
     this.unit_measure_id = this.item.measure_id;
+    this.categoryId = this.item.category_id;
+    await this.getStoreCategories({ category_id: 'all' });
     await this.getStoreMeasures('all');
   },
 };
