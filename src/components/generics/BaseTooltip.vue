@@ -1,9 +1,9 @@
 <template>
     <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-        <v-btn icon class="create_menu_item_icon" dark
-            v-bind="attrs" v-on="on" @click="$emit('button')">
-            <v-icon>{{ `mdi-${icon}` }}</v-icon>
+        <v-btn icon :class="color ? color : 'black--text'" dark
+          v-bind="attrs" v-on="on" @click="$emit('button')">
+          <v-icon>{{ `mdi-${icon}` }}</v-icon>
         </v-btn>
         </template>
         <span>{{ message }}</span>
@@ -20,6 +20,14 @@ export default {
     icon: {
       type: String,
       required: true,
+    },
+    color: {
+      type: String,
+      required: false,
+    },
+    float: {
+      type: String,
+      required: false,
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <Basemodal :title="item.name" :size="700" @close="$emit('close')">
+  <Basemodal :title="'Create item'" :size="700" @close="$emit('close')">
     <div class="update_area">
         <div class="frm_entry">
           <div class="label">Item Name</div>
@@ -26,7 +26,7 @@
         </div>
         <div class="frm_entry">
           <div class="label">
-            {{ `Price per ${pack_size} ${selectedMeasureName.toLowerCase()}` }}
+            {{ `Price per ${pack_size}` }}
           </div>
           <div class="entry_update">
             <v-text-field outlined dense v-model="unit_price"></v-text-field>
@@ -52,13 +52,8 @@
         </div>
         <div class="frm_entry">
           <div class="label">&nbsp;</div>
-          <div class="actions">
-            <v-btn text @click="updateStoreItem">Update</v-btn>
-            <BaseTooltip class="pull-right"
-              @button="deleteItem"
-              :message="`Delete ${item.name}`" icon="delete"
-              color="red"
-            />
+          <div class="entry_update">
+            <v-btn text class="float-right" @click="createStoreItem">Create Item</v-btn>
           </div>
         </div>
         <BaseAlert v-if="error" alert="info" :message="error" />
@@ -70,22 +65,14 @@
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-  name: 'UpdateStoreItem',
-  props: {
-    item: {
-      type: Object,
-      required: true,
-    },
-  },
+  name: 'CreateStoreItemModal',
   components: {
     Basemodal,
     BaseAlert,
     LinearLoader,
-    BaseTooltip,
   },
   data() {
     return {
@@ -102,6 +89,7 @@ export default {
   },
   computed: {
     ...mapGetters('inventory', ['storeMeasures', 'categories']),
+    ...mapGetters('auth', ['user']),
 
     selectedMeasureName() {
       const measureSelect = this.storeMeasures
@@ -109,46 +97,43 @@ export default {
       return measureSelect ? measureSelect.name : '';
     },
   },
+  watch: {
+    error(val) {
+      if (!val) return;
+      setTimeout(() => {
+        this.error = '';
+      }, 3000);
+    },
+  },
   methods: {
-    ...mapActions('inventory', ['getStoreMeasures', 'getStoreCategories', 'updateItem']),
+    ...mapActions('inventory', ['getStoreMeasures', 'getStoreCategories', 'createItem']),
 
-    updateStoreItem() {
-      const update = {
-        update_store_item: this.item.id,
+    createStoreItem() {
+      if (!this.name || parseInt(this.pack_size, 10) <= 0 || !this.unit_measure_id
+          || !this.categoryId || !this.min_stock) {
+        this.error = 'Missing fields';
+        return;
+      }
+
+      const newItem = {
         name: this.name,
         pack_size: this.pack_size,
         unit_price: this.unit_price,
         unit_measure_id: this.unit_measure_id,
         category_id: this.categoryId,
-        minimum_stock: this.min_stock,
+        minimum_stock: this.min_stock || 1,
+        company_id: this.user.company_info.company_id,
       };
+      console.log('Create', newItem);
       this.loading = true;
-      const updated = this.updateItem(update);
+      const created = this.createItem(newItem);
       this.loading = false;
-      if (updated.error) this.error = update.message;
-      else this.$emit('reload');
-    },
-
-    deleteItem() {
-      // eslint-disable-next-line no-restricted-globals
-      const confirmDelete = confirm('Are you sure you want to delete item?');
-      if (!confirmDelete) return;
-      this.loading = true;
-      const updated = this.updateItem({ delete_store_item: this.item.id });
-      this.loading = false;
-      if (updated.error) this.error = updated.message;
+      if (created.error) this.error = created.message;
       else this.$emit('reload');
     },
   },
   async created() {
     this.error = '';
-    this.name = this.item.name;
-    this.min_stock = this.item.min_stock;
-    this.pack_size = this.item.pack_size;
-    this.unit_measure = this.item.unit_measure;
-    this.unit_price = this.item.unit_price;
-    this.unit_measure_id = this.item.measure_id;
-    this.categoryId = this.item.category_id;
     await this.getStoreCategories({ category_id: 'all' });
     await this.getStoreMeasures('all');
   },
@@ -169,16 +154,10 @@ export default {
       grid-template-columns: 30% 70%;
       align-items: center;
       height: 50px;
+      // border-top: 1px solid $light-grey;
+      // border-bottom: 1px solid $light-grey;
       font-size: 16px;
       color: $black;
-
-      .actions {
-        width: 100%;
-        direction: rtl;
-        display: flex;
-        flex-direction: row;
-        gap: 15px;
-      }
     }
   }
 </style>

@@ -4,8 +4,10 @@
       <div class="title">Store Items</div>
       <div class="options">
         <div>
-          <BaseTooltip @button="downloadModal = true"
-          message="Create Item" icon="plus" />
+          <BaseTooltip
+            @button="createItem = true"
+            message="Create Item" icon="plus"
+          />
         </div>
         <div><v-text-field dense outlined label="Search" v-model="search" /> </div>
       </div>
@@ -22,12 +24,18 @@
       @close="updateItemModal = false"
       @reload="reloadItems"
     />
+    <CreateStoreItemModal
+      v-if="createItem"
+      @close="createItem = false"
+      @reload="reloadItems"
+    />
   </div>
 </template>
 <script>
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import StoreItemsList from '@/components/inventory/store/StoreItemsList.vue';
 import UpdateStoreItem from '@/components/inventory/store/UpdateStoreItem.vue';
+import CreateStoreItemModal from '@/components/inventory/store/CreateStoreItemModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -36,12 +44,14 @@ export default {
     BaseTooltip,
     StoreItemsList,
     UpdateStoreItem,
+    CreateStoreItemModal,
   },
   data() {
     return {
       updateItemModal: false,
       selectedItem: null,
       search: '',
+      createItem: false,
     };
   },
   computed: {
@@ -58,6 +68,7 @@ export default {
     async reloadItems() {
       await this.getStoreItems({ company_id: this.user.company_id });
       this.selectedItem = null;
+      this.createItem = false;
       this.updateItemModal = false;
     },
   },

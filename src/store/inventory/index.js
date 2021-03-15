@@ -43,12 +43,23 @@ export default {
       if (!categories.error) commit('setCategories', categories.data);
     },
 
-    async updateItem({ commit }, payload) {
+    updateItem({ commit }, payload) {
       const params = new FormData();
       const updateKeys = Object.keys(payload);
       updateKeys.forEach((key) => {
         params.append(key, payload.[`${key}`]);
       });
+      commit('loading', true);
+      return API.smart(PATH, params);
+    },
+
+    createItem({ commit }, payload) {
+      const params = new FormData();
+      const updateKeys = Object.keys(payload);
+      updateKeys.forEach((key) => {
+        params.append(key, payload.[`${key}`]);
+      });
+      params.append('create_store_item', 'new');
       commit('loading', true);
       return API.smart(PATH, params);
     },
