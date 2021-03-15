@@ -12,7 +12,7 @@ export default {
     loading: false,
     error: { status: false, message: '' },
     routes: [
-      { icon: 'mdi-globe', name: 'Pos', path: 'pos' },
+      { icon: 'mdi-cart', name: 'Pos', path: 'pos' },
       { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
