@@ -12,10 +12,10 @@ export default {
     loading: false,
     error: { status: false, message: '' },
     routes: [
+      { icon: 'mdi-globe', name: 'Pos', path: 'pos' },
       { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
-      // { icon: 'mdi-home', name: 'Rooms', path: 'rooms' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
       { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
     ],
@@ -75,10 +75,12 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        commit('setUser', userInfo);
 
         if (userInfo.role === 5) {
-          commit('setUser', userInfo);
           router.push({ name: 'overview' });
+        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
+          router.push({ name: 'pos' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
@@ -107,10 +109,12 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        commit('setUser', userInfo);
 
         if (userInfo.role === 5) {
-          commit('setUser', userInfo);
           if (payload && payload.match('login')) router.push({ name: 'overview' });
+        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
+          router.push({ name: 'pos' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
