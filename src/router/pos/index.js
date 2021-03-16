@@ -6,5 +6,5 @@ export default {
     title: 'Smart POS - Home',
     admin_access: false,
   },
-  component: () => import('@/views/sales/home.vue'),
+  component: () => import('@/views/pos/home.vue'),
 };

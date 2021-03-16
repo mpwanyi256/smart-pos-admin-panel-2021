@@ -3,9 +3,7 @@
         <NavBar />
         <div class="sales_view">
             <Sections />
-            <div class="menu">
-                Menu Area
-            </div>
+            <MenuSection />
             <div class="selected_order">
                 Selected Order
             </div>
@@ -18,12 +16,14 @@
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
 import Sections from '@/components/pos/sections/sections.vue';
+import MenuSection from '@/views/pos/MenuSection.vue';
 
 export default {
   name: 'SmartSalesHome',
   components: {
     NavBar,
     Sections,
+    MenuSection,
   },
 };
 </script>
@@ -35,6 +35,7 @@ export default {
         width: 100vw;
         overflow: hidden;
         background-color: $bg_color;
+        font-size: 14px;
 
         .sales_view {
             height: calc(100vh - 52px);
