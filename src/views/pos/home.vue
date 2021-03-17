@@ -7,9 +7,7 @@
             <div class="selected_order">
                 Selected Order
             </div>
-            <div class="actions">
-                Actions
-            </div>
+            <Actions />
         </div>
     </div>
 </template>
@@ -17,6 +15,7 @@
 import NavBar from '@/components/nav/Navbar.vue';
 import Orders from '@/components/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
+import Actions from '@/views/pos/Actions.vue';
 
 export default {
   name: 'SmartSalesHome',
@@ -24,6 +23,7 @@ export default {
     NavBar,
     Orders,
     MenuSection,
+    Actions,
   },
 };
 </script>
@@ -36,6 +36,7 @@ export default {
         overflow: hidden;
         background-color: $bg_color;
         font-size: 14px;
+        font-family: $font-style;
         scrollbar-width: thin;
         ::-webkit-scrollbar{
           width: 8px;

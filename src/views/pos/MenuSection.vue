@@ -60,7 +60,7 @@ export default {
 
     .menu_categories {
         width: 100%;
-        height: calc(100vh - 52px);
+        height: calc(100% - 52px);
         display: flex;
         flex-direction: column;
         gap: 1px;

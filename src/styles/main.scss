@@ -1,5 +1,9 @@
 @import './constants.scss';
 
+html {
+    overflow-y: unset;
+}
+
 body {
     font-family: $font-style !important;
     background-color: $body-bg !important;
