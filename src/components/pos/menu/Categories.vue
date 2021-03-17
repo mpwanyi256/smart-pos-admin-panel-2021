@@ -3,11 +3,17 @@
     <div class="search_area">
       <p>Categories</p>
       <div class="search">
-        <input type="text" class="search_field" placeholder="Search" />
+        <input @keyup="searchFilter" type="text"
+        v-model="search"
+        class="search_field" placeholder="Search" />
       </div>
     </div>
     <div class="categories_list">
-      <CategoryItem v-for="i in 80" :key="i" />
+      <CategoryItem
+        v-for="category in categories" :key="category.id"
+        :category="category"
+        @filter="$emit('filterMenu', $event)"
+      />
     </div>
   </div>
 </template>
@@ -18,6 +24,22 @@ export default {
   name: 'Categories',
   components: {
     CategoryItem,
+  },
+  props: {
+    categories: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      search: '',
+    };
+  },
+  methods: {
+    searchFilter() {
+      this.$emit('search', this.search);
+    },
   },
 };
 </script>
@@ -38,6 +60,8 @@ export default {
     justify-content: left;
     align-items: center;
     border-bottom: 1px solid $bg_color;
+    background-color: $header;
+    color: $black-text;
 
     p {
       margin-left: 15px;
@@ -50,7 +74,7 @@ export default {
 
       .search_field {
         height: 35px;
-        border: 1px solid $bg_color;
+        border: 1px solid $black-text;
         border-radius: 5px;
         margin-right: 10px;
         direction: ltr;
@@ -62,10 +86,15 @@ export default {
 
   .categories_list {
     max-height: calc(50vh - 108px);
-    overflow-y: auto;
+    overflow-y: scroll;
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
+    // ::-webkit-scrollbar{
+    //   width: 8px;
+    // }
+    // scrollbar-width: thin !important;
+    // scrollbar-color: $blue;
   }
 }
 </style>

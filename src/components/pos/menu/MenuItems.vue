@@ -3,21 +3,45 @@
     <div class="search_area">
       <p>items</p>
       <div class="search">
-        <input type="text" class="search_field" placeholder="Search" />
+        <input type="text" v-model="menuSearchKey"
+          class="search_field" placeholder="Search" />
+        <v-btn text class="btn_create_order">
+          <v-icon left>mdi-plus</v-icon>
+          Create new order
+        </v-btn>
       </div>
     </div>
     <div class="categories_list">
-      <CategoryItem v-for="i in 300" :key="i" />
+      <MenuItem
+        v-for="item in items" :key="item.id"
+        :item="item"
+      />
     </div>
   </div>
 </template>
 <script>
-import CategoryItem from '@/components/pos/menu/CategoryItem.vue';
+import MenuItem from '@/components/pos/menu/MenuItem.vue';
 
 export default {
   name: 'MenuItems',
   components: {
-    CategoryItem,
+    MenuItem,
+  },
+  props: {
+    items: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      menuSearchKey: '',
+    };
+  },
+  watch: {
+    menuSearchKey(val) {
+      this.$emit('searchMenu', val);
+    },
   },
 };
 </script>
@@ -38,6 +62,7 @@ export default {
     justify-content: left;
     align-items: center;
     border-bottom: 1px solid $bg_color;
+    background-color: $header;
 
     p {
       margin-left: 15px;
@@ -47,25 +72,48 @@ export default {
 
     .search {
       direction: rtl;
+      display: inline-flex;
+      padding-right: 10px;
+      gap: 10px;
+
+      .btn_create_order {
+        border: 1px solid $bg_color;
+        color: $blue;
+        height: 35px;
+        font-size: 12px;
+        font-weight: inherit;
+        text-transform: capitalize;
+        direction: ltr;
+      }
 
       .search_field {
         height: 35px;
-        border: 1px solid $bg_color;
+        border: 1px solid $black-text;
         border-radius: 5px;
         margin-right: 10px;
         direction: ltr;
         padding-left: 5px;
         padding-right: 5px;
       }
+
+      .btn_create_order:hover {
+        border: 1px solid $black-text;
+      }
     }
   }
 
   .categories_list {
-    max-height: calc(50vh - 108px);
+    // max-height: calc(50vh - 108px);
     overflow-y: auto;
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
+    // ::-webkit-scrollbar{
+    //   width: 5px;
+    // }
+    // scrollbar-width: thin !important;
+    // scrollbar-color: $blue;
+    // border:2px solid red;
   }
 }
 </style>

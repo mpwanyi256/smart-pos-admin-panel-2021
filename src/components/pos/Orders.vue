@@ -1,5 +1,5 @@
 <template>
-    <div class="sections">
+    <div class="orders">
         <div v-for="i in 5" :key="i">
             ORDER 1
         </div>
@@ -7,13 +7,13 @@
 </template>
 <script>
 export default {
-  name: 'Sections',
+  name: 'Orders',
 };
 </script>
 <style scoped lang="scss">
 @import '@/styles/pos.scss';
 
-    .sections {
+    .orders {
         width: 100%;
         height: calc(100vh - 52px);
         display: flex;

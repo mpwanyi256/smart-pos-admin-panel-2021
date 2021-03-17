@@ -1,13 +1,14 @@
 <template>
-  <div class="category_item" @click="$emit('filter', category.id)">
-    <p v-html="category.name"></p>
+  <div class="category_item">
+    <p v-html="item.name"></p>
+    <p class="item_price" v-html="item.price_display"></p>
   </div>
 </template>
 <script>
 export default {
-  name: 'CategoryItem',
+  name: 'MenuItem',
   props: {
-    category: {
+    item: {
       type: Object,
       required: true,
     },
@@ -18,9 +19,10 @@ export default {
 @import '@/styles/pos.scss';
 
 .category_item {
-  height: 50px;
+  height: 55px;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   border: 1px solid $bg_color;
@@ -38,8 +40,14 @@ export default {
     overflow: hidden;
     width: 100%;
     white-space: nowrap;
-    text-align: center;
-    text-transform: uppercase;
+    text-align: left;
+  }
+
+  .item_price {
+    text-align: right;
+    font-weight: bold;
+    justify-content: baseline;
+    // color: $blue;
   }
 }
 
