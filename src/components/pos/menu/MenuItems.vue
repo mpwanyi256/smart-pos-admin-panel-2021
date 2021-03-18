@@ -84,36 +84,29 @@ export default {
         font-weight: inherit;
         text-transform: capitalize;
         direction: ltr;
+        box-shadow: $elevation-default;
       }
 
-      .search_field {
+      .search_field, .search_field:focus, .search_field:hover {
         height: 35px;
-        border: 1px solid $black-text;
+        border: 1px solid $bg_color;
         border-radius: 5px;
         margin-right: 10px;
         direction: ltr;
         padding-left: 5px;
         padding-right: 5px;
+        box-shadow: $elevation-default;
       }
 
-      .btn_create_order:hover {
-        border: 1px solid $black-text;
-      }
     }
   }
 
   .categories_list {
-    // max-height: calc(50vh - 108px);
+    height: calc(50vh - 52px);
     overflow-y: auto;
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    // ::-webkit-scrollbar{
-    //   width: 5px;
-    // }
-    // scrollbar-width: thin !important;
-    // scrollbar-color: $blue;
-    // border:2px solid red;
   }
 }
 </style>

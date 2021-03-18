@@ -1,7 +1,8 @@
 <template>
     <div class="actions_pane">
         <div class="action_item" v-for="(action, i) in actions" :key="i">
-            {{ action.name }}
+            <v-icon class="icon">{{ action.icon }}</v-icon>
+            <p>{{ action.name }}</p>
         </div>
     </div>
 </template>
@@ -11,10 +12,10 @@ export default {
   data() {
     return {
       actions: [
-        { name: 'Confirm' },
-        { name: 'Bill' },
-        { name: 'Settle' },
-        { name: 'Discount' },
+        { name: 'Confirm', icon: 'mdi-thumb-up' },
+        { name: 'Bill', icon: 'mdi-note' },
+        { name: 'Settle', icon: 'mdi-credit-card' },
+        { name: 'Discount', icon: 'mdi-sale' },
       ],
     };
   },
@@ -30,19 +31,38 @@ export default {
         gap: 10px;
         justify-content: top;
         align-items: center;
-        // padding: 15px;
+        padding-right: 10px;
+        padding-top: 10px;
 
         > div {
-            height: 50px;
+            height: 80px;
             width: 100%;
             background-color: $white;
             display: flex;
+            gap: 10px;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: $black-text;
+            color: $black;
             font-weight: bold;
             text-transform: uppercase;
             font-size: 100%;
-            border: 1px solid $black-text;        }
+            border: 1px solid $bg_color;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: $elevation-default;
+
+            .icon {
+              color: $black;
+            }
+        }
+
+        > div:hover {
+          background-color: $blue;
+          color: $white;
+          .icon {
+            color: $white;
+          }
+        }
     }
 </style>
