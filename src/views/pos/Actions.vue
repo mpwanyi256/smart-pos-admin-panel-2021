@@ -33,6 +33,7 @@ export default {
         align-items: center;
         padding-right: 10px;
         padding-top: 10px;
+        padding-left: 5px;
 
         > div {
             height: 80px;

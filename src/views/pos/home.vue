@@ -4,9 +4,7 @@
         <div class="sales_view">
             <Orders />
             <MenuSection />
-            <div class="selected_order">
-                Selected Order
-            </div>
+            <SelectedOrder />
             <Actions />
         </div>
     </div>
@@ -16,6 +14,7 @@ import NavBar from '@/components/nav/Navbar.vue';
 import Orders from '@/components/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
 import Actions from '@/views/pos/Actions.vue';
+import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 
 export default {
   name: 'SmartSalesHome',
@@ -24,6 +23,7 @@ export default {
     Orders,
     MenuSection,
     Actions,
+    SelectedOrder,
   },
 };
 </script>

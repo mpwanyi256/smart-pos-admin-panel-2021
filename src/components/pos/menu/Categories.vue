@@ -90,11 +90,6 @@ export default {
     overflow-x: hidden;
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    // ::-webkit-scrollbar{
-    //   width: 8px;
-    // }
-    // scrollbar-width: thin !important;
-    // scrollbar-color: $blue;
   }
 }
 </style>

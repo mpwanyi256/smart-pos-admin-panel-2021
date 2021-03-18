@@ -67,6 +67,7 @@ export default {
         overflow-x: hidden;
         overflow-y: auto;
         background-color: inherit;
+        box-shadow: $elevation-default;
     }
 
 </style>

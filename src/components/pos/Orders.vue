@@ -21,6 +21,7 @@ export default {
         gap: 1px;
         overflow-x: hidden;
         overflow-y: auto;
+        padding: 10px;
 
         >div {
             height: 52px;

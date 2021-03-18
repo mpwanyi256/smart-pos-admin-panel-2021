@@ -11,11 +11,13 @@
         </v-btn>
       </div>
     </div>
-    <div class="categories_list">
-      <MenuItem
-        v-for="item in items" :key="item.id"
-        :item="item"
-      />
+    <div class="menu_items_list">
+      <div class="menu">
+        <MenuItem
+          v-for="item in items" :key="item.id"
+          :item="item"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +51,7 @@ export default {
 @import '@/styles/pos.scss';
 
 .menu_listing {
-  height: calc(100vh - 352px);
+  height: 100%;
   background-color: $white;
   overflow: hidden;
   display: flex;
@@ -101,12 +103,16 @@ export default {
     }
   }
 
-  .categories_list {
-    height: calc(50vh - 52px);
+  .menu_items_list {
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
+
+    .menu {
+      display: grid;
+      max-height: 100%;
+      grid-template-columns: 25% 25% 25% 25%;
+    }
   }
 }
 </style>

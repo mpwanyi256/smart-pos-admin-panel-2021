@@ -1,20 +1,17 @@
 <template>
     <div class="order_item">
         <div class="item_name">
-            <strong class="mr-2">12</strong>
-            Strawberry juice
+            Item name
         </div>
-        <div class="item_price">50,000</div>
+        <div class="item_price">Amount</div>
         <div class="item_actions">
-            <v-btn icon>
-                <v-icon>mdi-delete</v-icon>
-            </v-btn>
+            &nbsp;
         </div>
     </div>
 </template>
 <script>
 export default {
-  name: 'OrderItem',
+  name: 'OrderListHeader',
 };
 </script>
 <style scoped lang="scss">
@@ -29,6 +26,7 @@ export default {
         grid-template-columns: 70% 20% 10%;
         font-size: 14px;
         color: $black;
+        font-weight: bold;
 
         .item_name {
             display: flex;
