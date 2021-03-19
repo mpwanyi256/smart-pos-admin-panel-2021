@@ -1,11 +1,11 @@
 <template>
   <div class="menu_listing">
     <div class="search_area">
-      <p>items</p>
+      <p>ITEMS</p>
       <div class="search">
         <input type="text" v-model="menuSearchKey"
           class="search_field" placeholder="Search" />
-        <v-btn text class="btn_create_order">
+        <v-btn @click="$emit('create-order')" text class="btn_create_order">
           <v-icon left>mdi-plus</v-icon>
           Create new order
         </v-btn>
@@ -61,14 +61,14 @@ export default {
     height: 56px;
     display: grid;
     grid-template-columns: 50% 50%;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
     border-bottom: 1px solid $bg_color;
     background-color: $header;
 
     p {
       margin-left: 15px;
-      font-size: 16px;
+      font-size: 18px;
       color: $black-text;
     }
 
@@ -79,7 +79,8 @@ export default {
       gap: 10px;
 
       .btn_create_order {
-        border: 1px solid $bg_color;
+        border: 1px solid $white;
+        background-color: $white;
         color: $blue;
         height: 35px;
         font-size: 12px;
@@ -91,7 +92,8 @@ export default {
 
       .search_field, .search_field:focus, .search_field:hover {
         height: 35px;
-        border: 1px solid $bg_color;
+        border: 1px solid $white;
+        background-color: $white;
         border-radius: 5px;
         margin-right: 10px;
         direction: ltr;

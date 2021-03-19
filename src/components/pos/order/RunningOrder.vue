@@ -27,6 +27,8 @@
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
+// import EventBus from '@/plugins/Eventbus';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'RunningOrder',
@@ -34,6 +36,9 @@ export default {
     OrderItem,
     OrderListHeader,
     OrderTotalCacular,
+  },
+  computed: {
+    ...mapGetters('pos', ['runningOrder']),
   },
 };
 </script>

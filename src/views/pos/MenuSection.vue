@@ -8,13 +8,15 @@
       <MenuItems
         :items="menuItems"
         @searchMenu="searchForAMenuItem"
+        @create-order="createOrder"
       />
     </div>
 </template>
 <script>
 import Categories from '@/components/pos/menu/Categories.vue';
 import MenuItems from '@/components/pos/menu/MenuItems.vue';
-import { mapActions, mapGetters } from 'vuex';
+import TimezoneMixin from '@/mixins/TimezoneMixin';
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'MenuSection',
@@ -22,6 +24,9 @@ export default {
     Categories,
     MenuItems,
   },
+  mixins: [
+    TimezoneMixin,
+  ],
   data() {
     return {
       categorySearchKey: '',
@@ -29,13 +34,46 @@ export default {
   },
   computed: {
     ...mapGetters('pos', ['menuItems', 'categories']),
+    ...mapGetters('auth', ['user']),
+
+    dayOpen() {
+      return this.user ? this.user.company_info.day_open : null;
+    },
+
     filteredCategories() {
       return this.categories.filter((Cat) => Cat.name.toLowerCase()
         .match(this.categorySearchKey.toLowerCase()));
     },
   },
   methods: {
-    ...mapActions('pos', ['getMenuItems', 'getMenuCategories']),
+    ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder']),
+    ...mapMutations('pos', ['setRunningOrder']),
+    ...mapActions('sales', ['filterOrders']),
+
+    async createOrder() {
+      if (!this.user) return;
+      const filters = {
+        company_id: this.user.company_id,
+        user_id: this.user.id,
+        date: this.today,
+        time: this.time,
+      };
+      const order = await this.createNewOrder(filters);
+      if (!order.error) {
+        const createdOrderId = order.order_id;
+        localStorage.setItem('smart_running_order', createdOrderId);
+        const filter = {
+          bill_no: createdOrderId,
+          from: '',
+          to: '',
+          client_id: '',
+        };
+
+        const orderInfo = await this.filterOrders(filter);
+        this.setRunningOrder({ order_id: orderInfo.data[0] });
+        console.log('Order info', orderInfo.data);
+      } else console.info(order.message);
+    },
 
     searchForAMenuItem(searchKey) {
       console.log('Search', searchKey);

@@ -9,8 +9,12 @@ export default {
     menuItems: [],
     departments: [],
     menuCategories: [],
+    runningOrder: null,
   },
   mutations: {
+    setRunningOrder(state, payload) {
+      state.runningOrder = payload;
+    },
     setCategories(state, payload) {
       state.menuCategories = payload;
     },
@@ -25,6 +29,18 @@ export default {
     },
   },
   actions: {
+
+    createNewOrder({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('create_new_order', payload.company_id);
+      filters.append('user_id', payload.user_id);
+      filters.append('date', payload.date);
+      filters.append('time', payload.time);
+      commit('toggleLoading', false);
+      return API.smart(PATH, filters);
+    },
+
     toggleLoad({ commit }, payload) {
       commit('toggleLoading', payload);
     },
@@ -134,5 +150,6 @@ export default {
     menuItems: (state) => state.menuItems,
     departments: (state) => state.departments,
     categories: (state) => state.menuCategories,
+    runningOrder: (state) => state.runningOrder,
   },
 };
