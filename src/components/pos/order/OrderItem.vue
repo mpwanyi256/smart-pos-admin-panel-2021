@@ -1,10 +1,14 @@
 <template>
     <div class="order_item">
         <div class="item_name">
-            <strong class="mr-2">12</strong>
-            Strawberry juice
+            <strong class="mr-2">
+              {{ item.quantity }}
+            </strong>
+            {{ item.item_name }}
         </div>
-        <div class="item_price">50,000</div>
+        <div class="item_price">
+            {{ item.amount }}
+        </div>
         <div class="item_actions">
             <v-btn icon>
                 <v-icon>mdi-delete</v-icon>
@@ -15,6 +19,12 @@
 <script>
 export default {
   name: 'OrderItem',
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

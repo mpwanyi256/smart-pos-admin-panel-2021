@@ -11,10 +11,11 @@
 </template>
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
-import Orders from '@/components/pos/Orders.vue';
+import Orders from '@/views/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
 import Actions from '@/views/pos/Actions.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SmartSalesHome',
@@ -24,6 +25,29 @@ export default {
     MenuSection,
     Actions,
     SelectedOrder,
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+  },
+  data() {
+    return {
+      dayOpenPoll: null,
+    };
+  },
+  created() {
+    const setPolling = () => {
+      if (!this.user) {
+        clearInterval(this.polling);
+      } else {
+        this.getDayOpen(this.user.company_id);
+      }
+    };
+    this.polling = setInterval(() => {
+      setPolling();
+    }, 3000);
+  },
+  methods: {
+    ...mapActions('auth', ['getDayOpen']),
   },
 };
 </script>

@@ -1,9 +1,21 @@
-import Vue from 'vue';
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
+export default (Vue, eventBus) => {
+  Vue.mixin({
+    created() {
+      const callbacks = this.$options.eventBusCallbacks;
+      let key;
+      for (key in callbacks) {
+        eventBus.$on(key, this[callbacks[key]]);
+      }
+    },
 
-const EventBus = new Vue();
-
-EventBus.$on('i-got-clicked', (orderId) => {
-  console.log(`Fetch order info ${orderId} `);
-});
-
-export default EventBus;
+    destroyed() {
+      const callbacks = this.$options.eventBusCallbacks;
+      let key;
+      for (key in callbacks) {
+        eventBus.$off(key, this[callbacks[key]]);
+      }
+    },
+  });
+};

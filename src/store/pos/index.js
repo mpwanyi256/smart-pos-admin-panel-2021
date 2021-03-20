@@ -10,8 +10,12 @@ export default {
     departments: [],
     menuCategories: [],
     runningOrder: null,
+    runningOrderId: null,
   },
   mutations: {
+    setRunningOrderId(state, payload) {
+      state.runningOrderId = payload;
+    },
     setRunningOrder(state, payload) {
       state.runningOrder = payload;
     },
@@ -29,6 +33,14 @@ export default {
     },
   },
   actions: {
+
+    setRunningOrderId({ commit }, payload) {
+      commit('setRunningOrderId', payload);
+    },
+
+    setRunningOrder({ commit }, payload) {
+      commit('setRunningOrder', payload);
+    },
 
     createNewOrder({ commit }, payload) {
       commit('toggleLoading', true);
@@ -151,5 +163,6 @@ export default {
     departments: (state) => state.departments,
     categories: (state) => state.menuCategories,
     runningOrder: (state) => state.runningOrder,
+    runningOrderId: (state) => state.runningOrderId,
   },
 };

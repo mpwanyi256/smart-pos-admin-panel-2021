@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder']),
-    ...mapMutations('pos', ['setRunningOrder']),
+    ...mapMutations('pos', ['setRunningOrder', 'setRunningOrderId']),
     ...mapActions('sales', ['filterOrders']),
 
     async createOrder() {
@@ -61,22 +61,13 @@ export default {
       const order = await this.createNewOrder(filters);
       if (!order.error) {
         const createdOrderId = order.order_id;
+        this.setRunningOrderId(order.order_id);
         localStorage.setItem('smart_running_order', createdOrderId);
-        const filter = {
-          bill_no: createdOrderId,
-          from: '',
-          to: '',
-          client_id: '',
-        };
-
-        const orderInfo = await this.filterOrders(filter);
-        this.setRunningOrder({ order_id: orderInfo.data[0] });
-        console.log('Order info', orderInfo.data);
+        this.$eventBus.$emit('fetch-orders');
       } else console.info(order.message);
     },
 
     searchForAMenuItem(searchKey) {
-      console.log('Search', searchKey);
       setTimeout(() => {
         this.getMenuItems({ category_id: 'all', item_name: searchKey.trim() });
       }, 100);

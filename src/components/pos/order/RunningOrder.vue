@@ -1,25 +1,29 @@
 <template>
     <div class="runnning_order">
-        <div class="order_header">
-            <h2>Order 3210</h2>
+        <div class="order_header" v-if="runningOrder">
+            <h2>Order {{ runningOrder.bill_no }}</h2>
             <div class="date_and_time">
                 <p>
-                    15 Mar, 2020
+                    {{ runningOrder.date }}
                     <span>
                         <v-icon small class="clock_icon">mdi-clock</v-icon>
                     </span>
-                    3:30 pm
+                    {{ runningOrder.time }}
                 </p>
             </div>
         </div>
         <OrderListHeader />
         <div class="items_list">
             <div class="items">
-                <OrderItem v-for="i in 20" :key="i" />
+                <OrderItem
+                    v-for="item in orderItems"
+                    :key="item.id"
+                    :item="item"
+                />
             </div>
         </div>
         <div class="order_sum_info">
-            <OrderTotalCacular />
+            <OrderTotalCacular :order="runningOrder" />
         </div>
     </div>
 </template>
@@ -27,18 +31,55 @@
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
-// import EventBus from '@/plugins/Eventbus';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'RunningOrder',
+  props: {
+    order: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      orderItems: [],
+    };
+  },
   components: {
     OrderItem,
     OrderListHeader,
     OrderTotalCacular,
   },
   computed: {
-    ...mapGetters('pos', ['runningOrder']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+
+    orderId() {
+      return this.runningOrder ? this.runningOrder.order_id : null;
+    },
+  },
+
+  watch: {
+    runningOrderId(val) {
+      this.fetchOrderItems(val);
+    },
+  },
+
+  created() {
+    if (this.order) this.fetchOrderItems();
+  },
+
+  eventBusCallbacks: {
+    'fetch-items': 'fetchOrderItems',
+  },
+
+  methods: {
+    ...mapActions('sales', ['getOrderItems']),
+
+    async fetchOrderItems(orderId) {
+      const items = await this.getOrderItems(orderId || this.order.order_id);
+      if (!items.error) this.orderItems = items.data;
+    },
   },
 };
 </script>

@@ -4,7 +4,9 @@
             <div class="item_name">
                 Total
             </div>
-            <div class="item_price">100,000</div>
+            <div class="item_price">
+                {{ order ? order.bill_sum_display : '' }}
+            </div>
             <div class="item_actions">
                 &nbsp;
             </div>
@@ -13,7 +15,9 @@
             <div class="item_name">
                 Discount
             </div>
-            <div class="item_price">10,000</div>
+            <div class="item_price">
+                {{ order ? order.discount : '' }}
+            </div>
             <div class="item_actions">
                 &nbsp;
             </div>
@@ -22,7 +26,9 @@
             <div class="item_name">
                 BILL
             </div>
-            <div class="item_price">99,000</div>
+            <div class="item_price">
+                {{ order ? order.final_amount : '' }}
+            </div>
             <div class="item_actions">
                 &nbsp;
             </div>
@@ -32,6 +38,13 @@
 <script>
 export default {
   name: 'OrderTotalCacular',
+
+  props: {
+    order: {
+      type: Object,
+      required: false,
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

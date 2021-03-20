@@ -6,6 +6,8 @@ import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
 import './styles/main.scss';
+import eventBus from './plugins/event-bus';
+import EventBusCallbacks from './plugins/Eventbus';
 
 // Api setup
 const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
@@ -27,6 +29,10 @@ router.beforeEach((to, from, next) => {
   }
   next();
 });
+
+Vue.use(EventBusCallbacks, eventBus);
+
+Vue.prototype.$eventBus = eventBus;
 
 new Vue({
   router,

@@ -1,15 +1,35 @@
 <template>
     <div class="selected_order">
-        <RunningOrder class="running_order" />
+        <RunningOrder
+            class="running_order"
+            :order="runningOrder"
+        />
     </div>
 </template>
 <script>
 import RunningOrder from '@/components/pos/order/RunningOrder.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SelectedOrder',
   components: {
     RunningOrder,
+  },
+  computed: {
+    ...mapGetters('pos', ['runningOrder']),
+
+    activeOrder() {
+      const setOrder = localStorage.getItem('smart_running_order');
+      return setOrder;
+    },
+  },
+
+  watch: {
+    activeOrder(val, oldVal) {
+      if (val !== oldVal) {
+        console.log('Fetch new order');
+      }
+    },
   },
 };
 </script>
