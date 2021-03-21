@@ -1,5 +1,5 @@
 <template>
-  <div class="category_item">
+  <div class="category_item" @click="$emit('addItem', item)">
     <p v-html="item.name"></p>
     <p class="item_price" v-html="item.price_display"></p>
   </div>

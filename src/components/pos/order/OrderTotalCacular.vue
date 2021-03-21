@@ -18,9 +18,6 @@
             <div class="item_price">
                 {{ order ? order.discount : '' }}
             </div>
-            <div class="item_actions">
-                &nbsp;
-            </div>
         </div>
         <div class="order_summmary">
             <div class="item_name">
@@ -28,9 +25,6 @@
             </div>
             <div class="item_price">
                 {{ order ? order.final_amount : '' }}
-            </div>
-            <div class="item_actions">
-                &nbsp;
             </div>
         </div>
     </div>
@@ -68,7 +62,7 @@ export default {
             width: inherit;
             background-color: inherit;
             display: grid;
-            grid-template-columns: 70% 20% 10%;
+            grid-template-columns: 80% 20%;
             font-size: 14px;
             color: $black;
 

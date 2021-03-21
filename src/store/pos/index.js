@@ -1,6 +1,7 @@
 import API from '@/api';
 
 const PATH = 'pos/';
+const SALES = 'scylla/';
 
 export default {
   namespaced: true,
@@ -11,8 +12,12 @@ export default {
     menuCategories: [],
     runningOrder: null,
     runningOrderId: null,
+    loadedOrders: [],
   },
   mutations: {
+    setOrders(state, payload) {
+      state.loadedOrders = payload;
+    },
     setRunningOrderId(state, payload) {
       state.runningOrderId = payload;
     },
@@ -156,6 +161,32 @@ export default {
       return create;
     },
 
+    addOrderItem({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((param) => {
+        filters.append(param, payload[param]);
+      });
+      const addItem = API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return addItem;
+    },
+
+    async filterOrders({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('find_bill', payload.bill_no);
+      filters.append('from', payload.from);
+      filters.append('to', payload.to);
+      filters.append('client_id', payload.client_id);
+
+      const Orders = await API.smart(SALES, filters);
+      if (!Orders.error) commit('setOrders', Orders.data.orders);
+      commit('toggleLoading', false);
+      return Orders;
+    },
+
   },
   getters: {
     loading: (state) => state.loading,
@@ -164,5 +195,6 @@ export default {
     categories: (state) => state.menuCategories,
     runningOrder: (state) => state.runningOrder,
     runningOrderId: (state) => state.runningOrderId,
+    orders: (state) => state.loadedOrders,
   },
 };

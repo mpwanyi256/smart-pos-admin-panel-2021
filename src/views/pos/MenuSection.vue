@@ -9,6 +9,7 @@
         :items="menuItems"
         @searchMenu="searchForAMenuItem"
         @create-order="createOrder"
+        @addItem="addItemToOrder"
       />
     </div>
 </template>
@@ -30,10 +31,11 @@ export default {
   data() {
     return {
       categorySearchKey: '',
+      quantity: 1,
     };
   },
   computed: {
-    ...mapGetters('pos', ['menuItems', 'categories']),
+    ...mapGetters('pos', ['menuItems', 'categories', 'runningOrderId']),
     ...mapGetters('auth', ['user']),
 
     dayOpen() {
@@ -46,9 +48,27 @@ export default {
     },
   },
   methods: {
-    ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder']),
+    ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder', 'addOrderItem']),
     ...mapMutations('pos', ['setRunningOrder', 'setRunningOrderId']),
     ...mapActions('sales', ['filterOrders']),
+
+    async addItemToOrder(menuItem) {
+      const filters = {
+        order_id: this.runningOrderId,
+        menu_item_id: menuItem.id,
+        item_unit_price: menuItem.price,
+        menu_item_price: (menuItem.price * this.quantity),
+        quantity: this.quantity,
+        notes: '',
+        status: 0,
+        added_by: this.user.id,
+        add_order_item: this.runningOrderId,
+        time: this.time,
+      };
+      const addItem = await this.addOrderItem(filters);
+      if (addItem.error) console.info(addItem.message);
+      else this.$eventBus.$emit('fetch-items');
+    },
 
     async createOrder() {
       if (!this.user) return;

@@ -16,6 +16,7 @@
         <MenuItem
           v-for="item in items" :key="item.id"
           :item="item"
+          @addItem="$emit('addItem', $event)"
         />
       </div>
     </div>

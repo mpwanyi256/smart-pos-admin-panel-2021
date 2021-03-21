@@ -1,12 +1,17 @@
 <template>
     <div class="actions_pane">
-        <div class="action_item" v-for="(action, i) in actions" :key="i">
+        <div class="action_item"
+          v-for="(action, i) in actions" :key="i"
+          @click="listen(action.name)"
+        >
             <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p>{{ action.name }}</p>
+            <p>{{ action.name }} {{ orderId }}</p>
         </div>
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Actions',
   data() {
@@ -18,6 +23,25 @@ export default {
         { name: 'Discount', icon: 'mdi-sale' },
       ],
     };
+  },
+  conputed: {
+    ...mapGetters('pos', ['runningOrder']),
+
+    orderId() {
+      return this.runningOrder ? this.runningOrder.order_id : null;
+    },
+  },
+  methods: {
+    listen(action) {
+      switch (action) {
+        case 'Confirm':
+
+          break;
+        default:
+          console.log('Invalid action');
+          break;
+      }
+    },
   },
 };
 </script>

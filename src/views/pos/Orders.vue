@@ -6,7 +6,7 @@
         <div class="order_list">
             <div class="order_pane">
                 <div
-                    v-for="order in orderList"
+                    v-for="order in orders"
                     :key="order.order_id"
                     :class="order.order_id == runningOrderId ? 'active' : ''"
                     @click="setOrder(order)"
@@ -30,13 +30,12 @@ export default {
   data() {
     return {
       polling: null,
-      orderList: [],
     };
   },
 
   computed: {
     ...mapGetters('auth', ['user']),
-    ...mapGetters('pos', ['runningOrderId']),
+    ...mapGetters('pos', ['runningOrderId', 'orders']),
 
     dayOpen() {
       return this.user && this.user.company_info ? this.user.company_info.day_open : null;
@@ -66,17 +65,16 @@ export default {
   },
 
   methods: {
-    ...mapActions('sales', ['filterOrders']),
+    ...mapActions('pos', ['filterOrders']),
     ...mapActions('pos', ['setRunningOrder', 'setRunningOrderId']),
 
     async fetchOrders() {
-      const orders = await this.filterOrders({
+      await this.filterOrders({
         bill_no: '',
         from: this.dayOpen,
         to: this.dayOpen,
         client_id: '',
       });
-      if (!orders.error) this.orderList = orders.data.orders;
     },
 
     setOrder(order) {

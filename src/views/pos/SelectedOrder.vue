@@ -2,7 +2,7 @@
     <div class="selected_order">
         <RunningOrder
             class="running_order"
-            :order="runningOrder"
+            :order="running"
         />
     </div>
 </template>
@@ -16,19 +16,14 @@ export default {
     RunningOrder,
   },
   computed: {
-    ...mapGetters('pos', ['runningOrder']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
 
-    activeOrder() {
-      const setOrder = localStorage.getItem('smart_running_order');
-      return setOrder;
+    orderId() {
+      return this.runningOrder ? this.runningOrder.order_id : null;
     },
-  },
 
-  watch: {
-    activeOrder(val, oldVal) {
-      if (val !== oldVal) {
-        console.log('Fetch new order');
-      }
+    running() {
+      return this.orderId ? this.orders.find((Order) => Order.order_id === this.orderId) : null;
     },
   },
 };

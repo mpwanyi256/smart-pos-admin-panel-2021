@@ -1,5 +1,7 @@
 <template>
-    <div class="order_item">
+    <div class="order_item"
+        :class="[item.status == 0, 'pending']"
+    >
         <div class="item_name">
             <strong class="mr-2">
               {{ item.quantity }}
@@ -8,11 +10,6 @@
         </div>
         <div class="item_price">
             {{ item.amount }}
-        </div>
-        <div class="item_actions">
-            <v-btn icon>
-                <v-icon>mdi-delete</v-icon>
-            </v-btn>
         </div>
     </div>
 </template>
@@ -36,9 +33,11 @@ export default {
         background-color: $white;
         border: 1px solid $header;
         display: grid;
-        grid-template-columns: 70% 20% 10%;
+        grid-template-columns: 80% 20%;
         font-size: 14px;
         color: $black;
+        cursor: pointer;
+        text-transform: uppercase;
 
         .item_name {
             display: flex;
@@ -66,5 +65,13 @@ export default {
         .item_actions {
             direction: rtl;
         }
+    }
+
+    .order_item:hover {
+        font-weight: bold;
+    }
+
+    .pending {
+        background-color: $warning-highlight;
     }
 </style>

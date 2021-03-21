@@ -1,14 +1,15 @@
 <template>
     <div class="runnning_order">
+        <Alert v-if="false" icon="warning" status="warining" />
         <div class="order_header" v-if="runningOrder">
-            <h2>Order {{ runningOrder.bill_no }}</h2>
+            <h2>Order {{ order.bill_no }}</h2>
             <div class="date_and_time">
                 <p>
-                    {{ runningOrder.date }}
+                    {{ order.date }}
                     <span>
                         <v-icon small class="clock_icon">mdi-clock</v-icon>
                     </span>
-                    {{ runningOrder.time }}
+                    {{ order.time }}
                 </p>
             </div>
         </div>
@@ -23,7 +24,7 @@
             </div>
         </div>
         <div class="order_sum_info">
-            <OrderTotalCacular :order="runningOrder" />
+            <OrderTotalCacular :order="order" />
         </div>
     </div>
 </template>
@@ -31,6 +32,7 @@
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
+import Alert from '@/components/generics/Alert.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -41,18 +43,19 @@ export default {
       required: true,
     },
   },
+  components: {
+    Alert,
+    OrderItem,
+    OrderListHeader,
+    OrderTotalCacular,
+  },
   data() {
     return {
       orderItems: [],
     };
   },
-  components: {
-    OrderItem,
-    OrderListHeader,
-    OrderTotalCacular,
-  },
   computed: {
-    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
@@ -76,8 +79,8 @@ export default {
   methods: {
     ...mapActions('sales', ['getOrderItems']),
 
-    async fetchOrderItems(orderId) {
-      const items = await this.getOrderItems(orderId || this.order.order_id);
+    async fetchOrderItems() {
+      const items = await this.getOrderItems(this.runningOrderId);
       if (!items.error) this.orderItems = items.data;
     },
   },
