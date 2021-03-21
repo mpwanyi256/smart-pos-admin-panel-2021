@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Actions',
@@ -32,15 +32,26 @@ export default {
     },
   },
   methods: {
+    ...mapActions('pos', ['addOrderItem']),
+
     listen(action) {
       switch (action) {
         case 'Confirm':
-
+          this.confirmOrder();
           break;
         default:
           console.log('Invalid action', this.orderId);
           break;
       }
+    },
+
+    async confirmOrder() {
+      const params = {
+        confirm_order: this.orderId,
+      };
+      const addItem = await this.addOrderItem(params);
+      if (addItem.error) console.info(addItem.message);
+      else this.$eventBus.$emit('fetch-items');
     },
   },
 };

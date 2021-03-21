@@ -1,6 +1,6 @@
 <template>
     <div class="order_item"
-        :class="[item.status == 0, 'pending']"
+        :class="item.status == 0 ? 'pending': ''"
     >
         <div class="item_name">
             <strong class="mr-2">
