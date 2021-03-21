@@ -5,7 +5,7 @@
           @click="listen(action.name)"
         >
             <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p>{{ action.name }} {{ orderId }}</p>
+            <p>{{ action.name }}</p>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default {
       ],
     };
   },
-  conputed: {
+  computed: {
     ...mapGetters('pos', ['runningOrder']),
 
     orderId() {
@@ -38,7 +38,7 @@ export default {
 
           break;
         default:
-          console.log('Invalid action');
+          console.log('Invalid action', this.orderId);
           break;
       }
     },
