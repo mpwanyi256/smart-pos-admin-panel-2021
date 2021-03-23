@@ -7,6 +7,7 @@
             </v-btn>
         </div>
         <div ref="tableView">
+            <div class="order_view">
             <table class="tableView" style="margin:0px;padding:0px;font-family:sans-serif;
             width: 100%;background-color:rgba(255, 255, 255, 0.91);top:0;left:0;">
                 <tr style="text-align:center;"><th colspan="4">
@@ -22,9 +23,9 @@
                     </td>
                 </tr>
                 <tr><td colspan="4"><hr></td></tr>
-                <tr><td colspan="4"><small><strong>Table:</strong> {{ order.table}}
+                <!-- <tr><td colspan="4"><small><strong>Table:</strong> {{ order.table}}
                     &nbsp;</small></td>
-                </tr>
+                </tr> -->
                 <tr><td colspan="4"><small><strong>SERVED By:</strong>
                     {{ order.waiter ? order.waiter.toUpperCase() : ''}}</small></td>
                 </tr>
@@ -113,6 +114,7 @@
                     </small>
                 </td></tr>
             </table>
+            </div>
         </div>
 
     </Basemodal>
@@ -173,3 +175,10 @@ export default {
   },
 };
 </script>
+<style scoped lang="scss">
+@import '@/styles/pos.scss';
+
+    .tableView .order_view {
+        padding: 15px;
+    }
+</style>

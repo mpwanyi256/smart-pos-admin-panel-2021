@@ -75,15 +75,28 @@ export default {
       const filters = {
         company_id: this.user.company_id,
         user_id: this.user.id,
-        date: this.today,
+        date: this.dayOpen,
         time: this.time,
       };
       const order = await this.createNewOrder(filters);
       if (!order.error) {
         const createdOrderId = order.order_id;
+        // Get new Order Info
+        const newOrder = await this.filterOrders({
+          from: '',
+          to: '',
+          client_id: '',
+          bill_no: createdOrderId,
+        });
+
+        if (!newOrder.error) {
+          if (newOrder.data.orders) this.setRunningOrder(newOrder.data.orders[0]);
+        }
+
         this.setRunningOrderId(order.order_id);
         localStorage.setItem('smart_running_order', createdOrderId);
         this.$eventBus.$emit('fetch-orders');
+        this.$eventBus.$emit('fetch-items');
       } else console.info(order.message);
     },
 
@@ -94,7 +107,6 @@ export default {
     },
 
     filterMenuByCategory(categoryId) {
-      console.log('Filter by', categoryId);
       this.getMenuItems({ category_id: categoryId, item_name: 'all' });
     },
   },

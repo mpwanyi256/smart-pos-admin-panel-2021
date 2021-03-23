@@ -25,7 +25,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('pos', ['runningOrder']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
@@ -38,6 +38,12 @@ export default {
       switch (action) {
         case 'Confirm':
           this.confirmOrder();
+          break;
+        case 'Bill':
+          this.$emit('bill');
+          break;
+        case 'Discount':
+          this.$emit('discount');
           break;
         default:
           console.log('Invalid action', this.orderId);

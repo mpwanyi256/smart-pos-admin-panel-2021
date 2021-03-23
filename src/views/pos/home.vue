@@ -5,8 +5,20 @@
             <Orders />
             <MenuSection />
             <SelectedOrder />
-            <Actions />
+            <Actions
+              @bill="showBill = true"
+              @discount="showDiscount = true"
+            />
         </div>
+      <BillModal
+        v-if="showBill && runningOrder"
+        :order="runningOrder"
+        @close="showBill = false"
+      />
+      <AddDiscountModal
+        v-if="showDiscount"
+        @close="showDiscount = false"
+      />
     </div>
 </template>
 <script>
@@ -14,7 +26,9 @@ import NavBar from '@/components/nav/Navbar.vue';
 import Orders from '@/views/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
 import Actions from '@/views/pos/Actions.vue';
+import BillModal from '@/components/sales/modals/Bill.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
+import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -25,13 +39,18 @@ export default {
     MenuSection,
     Actions,
     SelectedOrder,
+    BillModal,
+    AddDiscountModal,
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
   },
   data() {
     return {
       dayOpenPoll: null,
+      showBill: false,
+      showDiscount: false,
     };
   },
   created() {
@@ -84,8 +103,8 @@ export default {
             grid-template-columns: 15% 50% 25% 10%;
 
             >div {
-                height: calc(100vh - 52px);
-                width: 100%;
+              height: calc(100vh - 50px);
+              width: 100%;
             }
         }
     }

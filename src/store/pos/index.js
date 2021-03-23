@@ -173,6 +173,18 @@ export default {
       return addItem;
     },
 
+    updateRunningOrder({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((param) => {
+        filters.append(param, payload[param]);
+      });
+      const addItem = API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return addItem;
+    },
+
     async filterOrders({ commit }, payload) {
       commit('toggleLoading', true);
       const filters = new FormData();

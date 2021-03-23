@@ -1,9 +1,9 @@
 <template>
     <div class="selected_order">
-        <RunningOrder
-            class="running_order"
-            :order="running"
-        />
+      <RunningOrder
+          class="running_order"
+          :order="running"
+      />
     </div>
 </template>
 <script>
@@ -15,6 +15,7 @@ export default {
   components: {
     RunningOrder,
   },
+
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
 

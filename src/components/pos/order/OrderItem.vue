@@ -1,6 +1,7 @@
 <template>
     <div class="order_item"
         :class="item.status == 0 ? 'pending': ''"
+        @click="$emit('viewItems', item)"
     >
         <div class="item_name">
             <strong class="mr-2">

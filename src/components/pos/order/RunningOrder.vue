@@ -20,11 +20,17 @@
                     v-for="item in orderItems"
                     :key="item.id"
                     :item="item"
+                    @viewItems="viewPendingItems"
                 />
             </div>
         </div>
         <div class="order_sum_info">
             <OrderTotalCacular :order="order" />
+            <OrderItemsList
+              v-if="showItems && orderItemSelected"
+              @close="showItems = false"
+              :item="orderItemSelected"
+            />
         </div>
     </div>
 </template>
@@ -33,6 +39,7 @@ import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
 import Alert from '@/components/generics/Alert.vue';
+import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -48,10 +55,13 @@ export default {
     OrderItem,
     OrderListHeader,
     OrderTotalCacular,
+    OrderItemsList,
   },
   data() {
     return {
       orderItems: [],
+      showItems: false,
+      orderItemSelected: null,
     };
   },
   computed: {
@@ -78,6 +88,11 @@ export default {
 
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+
+    viewPendingItems(orderItem) {
+      this.orderItemSelected = orderItem;
+      this.showItems = true;
+    },
 
     async fetchOrderItems() {
       const items = await this.getOrderItems(this.runningOrderId);
