@@ -47,12 +47,6 @@ export default {
     },
   },
 
-  watch: {
-    runningOrderId(val) {
-      document.getElementById(val).click();
-    },
-  },
-
   created() {
     const setPolling = async () => {
       if (!this.user) {

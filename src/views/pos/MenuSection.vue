@@ -93,7 +93,7 @@ export default {
         const OrderFetched = orders.data.orders;
         if (!OrderFetched.length) return;
         this.setRunningOrder(OrderFetched[0]);
-        console.log('Created', OrderFetched[0]);
+        document.getElementById(order.order_id).click();
         this.setRunningOrderId(order.order_id);
         this.$eventBus.$emit('fetch-items');
       } else console.info(order.message);
