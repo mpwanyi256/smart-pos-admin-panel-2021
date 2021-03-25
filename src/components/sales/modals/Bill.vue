@@ -151,7 +151,7 @@ export default {
   methods: {
     ...mapActions('sales', ['getOrderItems']),
     printBill() {
-      const divToPrint = this.$refs.tableView; // document.getElementById('tableView');
+      const divToPrint = this.$refs.tableView;
 
       const newWin = window.open('', 'Print-Window');
       newWin.document.open();
@@ -159,18 +159,18 @@ export default {
       newWin.document.close();
 
       setTimeout(() => {
-        // newWin.close();
         divToPrint.innerHTML = '';
       }, 10);
       this.$emit('close');
     },
   },
   async mounted() {
+    this.$eventBus.$emit('fetch-orders');
     const items = await this.getOrderItems(this.order.order_id);
     if (!items.error) {
       this.orderItems = items.data;
-      this.billDiscount = items.discount;
-      this.finalBillAmount = items.final_amount;
+      this.billDiscount = this.order.discount;
+      this.finalBillAmount = this.order.final_amount;
     }
   },
 };

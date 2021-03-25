@@ -35,6 +35,7 @@ export default {
     ...mapActions('pos', ['addOrderItem']),
 
     listen(action) {
+      this.$eventBus.$emit('fetch-orders');
       switch (action) {
         case 'Confirm':
           this.confirmOrder();

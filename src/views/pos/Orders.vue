@@ -47,7 +47,6 @@ export default {
   },
 
   created() {
-    // this.fetchOrders();
     const setPolling = async () => {
       if (!this.user) {
         clearInterval(this.polling);
@@ -69,19 +68,26 @@ export default {
     ...mapActions('pos', ['setRunningOrder', 'setRunningOrderId']),
 
     async fetchOrders() {
-      await this.filterOrders({
+      const orders = await this.filterOrders({
         bill_no: '',
         from: this.dayOpen,
         to: this.dayOpen,
         client_id: '',
       });
+      if (!orders.error) this.setRunning(orders.data.orders);
+    },
+
+    setRunning(orders) {
+      if (!this.runningOrderId) return;
+      const findRunning = orders.find((Order) => Order.order_id === this.runningOrderId);
+      if (findRunning) this.setRunningOrder(findRunning);
     },
 
     setOrder(order) {
       this.setRunningOrder(order);
       this.setRunningOrderId(order.order_id);
       localStorage.setItem('smart_running_order', order.order_id);
-      this.$eventBus.$emit('fetch-items');
+      this.$eventBus.$emit('fetch-orders');
     },
   },
 };
