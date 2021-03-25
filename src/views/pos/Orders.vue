@@ -6,10 +6,11 @@
         <div class="order_list">
             <div class="order_pane">
                 <div
-                    v-for="order in orders"
-                    :key="order.order_id"
-                    :class="order.order_id == runningOrderId ? 'active' : ''"
-                    @click="setOrder(order)"
+                  v-for="order in orders"
+                  :key="order.order_id"
+                  :class="order.order_id == runningOrderId ? 'active' : ''"
+                  @click="setOrder(order)"
+                  :id="order.order_id"
                 >
                     <h3>#{{ order.bill_no }}</h3>
                     <small>
@@ -43,6 +44,12 @@ export default {
 
     dayOpenDisplay() {
       return this.user ? this.user.company_info.day_open_display : '';
+    },
+  },
+
+  watch: {
+    runningOrderId(val) {
+      document.getElementById(val).click();
     },
   },
 
@@ -86,7 +93,6 @@ export default {
     setOrder(order) {
       this.setRunningOrder(order);
       this.setRunningOrderId(order.order_id);
-      localStorage.setItem('smart_running_order', order.order_id);
       this.$eventBus.$emit('fetch-orders');
     },
   },

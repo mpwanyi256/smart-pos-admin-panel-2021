@@ -1,8 +1,8 @@
 <template>
-    <div class="selected_order">{{ running }}
+    <div class="selected_order">
       <RunningOrder
-          class="running_order"
-          :order="running"
+        class="running_order"
+        :order="runningOrder"
       />
     </div>
 </template>
@@ -17,15 +17,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
-
-    orderId() {
-      return this.runningOrder ? this.runningOrder.order_id : null;
-    },
-
-    running() {
-      return this.orderId ? this.orders.find((Order) => Order.order_id === this.orderId) : null;
-    },
+    ...mapGetters('pos', ['runningOrder', 'orders']),
   },
 };
 </script>

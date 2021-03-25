@@ -30,6 +30,8 @@
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'OrderTotalCacular',
 
@@ -37,6 +39,14 @@ export default {
     order: {
       type: Object,
       required: false,
+    },
+
+    computed: {
+      ...mapGetters('pos', ['runningOrder']),
+
+    //   order() {
+    //     return this.runningOrder;
+    //   },
     },
   },
 };

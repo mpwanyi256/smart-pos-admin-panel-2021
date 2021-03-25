@@ -17,7 +17,7 @@
 import Categories from '@/components/pos/menu/Categories.vue';
 import MenuItems from '@/components/pos/menu/MenuItems.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MenuSection',
@@ -35,7 +35,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('pos', ['menuItems', 'categories', 'runningOrderId']),
+    ...mapGetters('pos', ['menuItems', 'categories', 'runningOrderId', 'orders']),
     ...mapGetters('auth', ['user']),
 
     dayOpen() {
@@ -48,10 +48,8 @@ export default {
     },
   },
   methods: {
-    ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder', 'addOrderItem']),
-    ...mapMutations('pos', ['setRunningOrder']),
-    ...mapActions('sales', ['filterOrders']),
-    ...mapActions('pos', ['setRunningOrderId']),
+    ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'setRunningOrder',
+      'createNewOrder', 'addOrderItem', 'setRunningOrderId', 'filterOrders']),
 
     async addItemToOrder(menuItem) {
       const filters = {
@@ -68,7 +66,10 @@ export default {
       };
       const addItem = await this.addOrderItem(filters);
       if (addItem.error) console.info(addItem.message);
-      else this.$eventBus.$emit('fetch-items');
+      else {
+        this.$eventBus.$emit('fetch-items');
+        this.$eventBus.$emit('fetch-orders');
+      }
     },
 
     async createOrder() {
@@ -80,12 +81,20 @@ export default {
         time: this.time,
       };
       const order = await this.createNewOrder(filters);
-      console.log('Created Order', order);
+      await this.$eventBus.$emit('fetch-orders');
       if (!order.error) {
-        console.log('No errors found');
+        const orders = await this.filterOrders({
+          bill_no: order.order_id,
+          from: '',
+          to: '',
+          client_id: '',
+        });
+
+        const OrderFetched = orders.data.orders;
+        if (!OrderFetched.length) return;
+        this.setRunningOrder(OrderFetched[0]);
+        console.log('Created', OrderFetched[0]);
         this.setRunningOrderId(order.order_id);
-        localStorage.setItem('smart_running_order', order.order_id);
-        this.$eventBus.$emit('fetch-orders');
         this.$eventBus.$emit('fetch-items');
       } else console.info(order.message);
     },

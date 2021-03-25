@@ -1,7 +1,7 @@
 <template>
     <div class="runnning_order">
         <Alert v-if="false" icon="warning" status="warining" />
-        <div class="order_header" v-if="runningOrder">
+        <div class="order_header" v-if="order">
             <h2>Order {{ order.bill_no }}</h2>
             <div class="date_and_time">
                 <p>
@@ -73,8 +73,8 @@ export default {
   },
 
   watch: {
-    runningOrderId(val) {
-      this.fetchOrderItems(val);
+    runningOrderId() {
+      this.fetchOrderItems();
     },
   },
 
