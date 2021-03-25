@@ -18,7 +18,8 @@ export default {
     setOrders(state, payload) {
       state.loadedOrders = payload;
     },
-    setRunningOrderId(state, payload) {
+    setRunningId(state, payload) {
+      console.log('Running order set', payload);
       state.runningOrderId = payload;
     },
     setRunningOrder(state, payload) {
@@ -40,7 +41,7 @@ export default {
   actions: {
 
     setRunningOrderId({ commit }, payload) {
-      commit('setRunningOrderId', payload);
+      commit('setRunningId', payload);
     },
 
     setRunningOrder({ commit }, payload) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="selected_order">
+    <div class="selected_order">{{ running }}
       <RunningOrder
           class="running_order"
           :order="running"

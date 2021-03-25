@@ -49,8 +49,9 @@ export default {
   },
   methods: {
     ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'createNewOrder', 'addOrderItem']),
-    ...mapMutations('pos', ['setRunningOrder', 'setRunningOrderId']),
+    ...mapMutations('pos', ['setRunningOrder']),
     ...mapActions('sales', ['filterOrders']),
+    ...mapActions('pos', ['setRunningOrderId']),
 
     async addItemToOrder(menuItem) {
       const filters = {
@@ -79,22 +80,11 @@ export default {
         time: this.time,
       };
       const order = await this.createNewOrder(filters);
+      console.log('Created Order', order);
       if (!order.error) {
-        const createdOrderId = order.order_id;
-        // Get new Order Info
-        const newOrder = await this.filterOrders({
-          from: '',
-          to: '',
-          client_id: '',
-          bill_no: createdOrderId,
-        });
-
-        if (!newOrder.error) {
-          if (newOrder.data.orders) this.setRunningOrder(newOrder.data.orders[0]);
-        }
-
+        console.log('No errors found');
         this.setRunningOrderId(order.order_id);
-        localStorage.setItem('smart_running_order', createdOrderId);
+        localStorage.setItem('smart_running_order', order.order_id);
         this.$eventBus.$emit('fetch-orders');
         this.$eventBus.$emit('fetch-items');
       } else console.info(order.message);
