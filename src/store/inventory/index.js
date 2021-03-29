@@ -21,6 +21,16 @@ export default {
     },
   },
   actions: {
+
+    async getItemRecipe({ commit }, payload) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('get_recipe', payload.menu_item_id);
+      const recipe = await API.smart(PATH, filters);
+      commit('toggleLoading', false);
+      return recipe.data || [];
+    },
+
     async getStoreItems({ commit }, payload) {
       const params = new FormData();
       params.append('get_store_items', 'all');

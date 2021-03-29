@@ -1,6 +1,6 @@
 <template>
     <div class="orders">
-        <div class="day_open" v-if="dayOpen">
+        <div class="day_open" v-show="dayOpen">
             {{ dayOpen }}
         </div>
         <div class="order_list">
@@ -10,7 +10,7 @@
                   :key="order.order_id"
                   :class="order.order_id == runningOrderId ? 'active' : ''"
                   @click="setOrder(order)"
-                  :id="order.order_id"
+                  :ref="order.order_id"
                 >
                     <h3>#{{ order.bill_no }}</h3>
                     <small>
@@ -47,7 +47,8 @@ export default {
     },
   },
 
-  created() {
+  async mounted() {
+    // await this.fetchOrders();
     const setPolling = async () => {
       if (!this.user) {
         clearInterval(this.polling);
@@ -62,11 +63,17 @@ export default {
 
   eventBusCallbacks: {
     'fetch-orders': 'fetchOrders',
+    'reload-order': 'reload',
   },
 
   methods: {
     ...mapActions('pos', ['filterOrders']),
     ...mapActions('pos', ['setRunningOrder', 'setRunningOrderId']),
+
+    async reload() {
+      await this.fetchOrders();
+      this.$eventBus.$emit('fetch-items');
+    },
 
     async fetchOrders() {
       const orders = await this.filterOrders({

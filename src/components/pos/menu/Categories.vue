@@ -57,14 +57,14 @@ export default {
     height: 56px;
     display: grid;
     grid-template-columns: 50% 50%;
-    justify-content: left;
     align-items: center;
     border-bottom: 1px solid $bg_color;
     background-color: $header;
     color: $black-text;
 
     p {
-      margin-left: 15px;
+      margin: 10px;
+      text-align: left;
       font-size: 16px;
       color: $black-text;
     }
@@ -74,12 +74,14 @@ export default {
 
       .search_field {
         height: 35px;
-        border: 1px solid $black-text;
+        border: 1px solid $white;
+        background-color: $white;
         border-radius: 5px;
         margin-right: 10px;
         direction: ltr;
         padding-left: 5px;
         padding-right: 5px;
+        box-shadow: $elevation-default;
       }
     }
   }

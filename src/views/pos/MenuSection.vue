@@ -52,6 +52,7 @@ export default {
       'createNewOrder', 'addOrderItem', 'setRunningOrderId', 'filterOrders']),
 
     async addItemToOrder(menuItem) {
+      if (!this.runningOrderId) return;
       const filters = {
         order_id: this.runningOrderId,
         menu_item_id: menuItem.id,
@@ -67,8 +68,7 @@ export default {
       const addItem = await this.addOrderItem(filters);
       if (addItem.error) console.info(addItem.message);
       else {
-        this.$eventBus.$emit('fetch-items');
-        this.$eventBus.$emit('fetch-orders');
+        this.$eventBus.$emit('reload-order');
       }
     },
 
@@ -83,19 +83,18 @@ export default {
       const order = await this.createNewOrder(filters);
       await this.$eventBus.$emit('fetch-orders');
       if (!order.error) {
-        const orders = await this.filterOrders({
-          bill_no: order.order_id,
-          from: '',
-          to: '',
-          client_id: '',
-        });
-
-        const OrderFetched = orders.data.orders;
-        if (!OrderFetched.length) return;
-        this.setRunningOrder(OrderFetched[0]);
-        document.getElementById(order.order_id).click();
         this.setRunningOrderId(order.order_id);
-        this.$eventBus.$emit('fetch-items');
+        // const orders = await this.filterOrders({
+        //   bill_no: order.order_id,
+        //   from: '',
+        //   to: '',
+        //   client_id: '',
+        // });
+        //
+        // const OrderFetched = orders.data.orders;
+        // if (!OrderFetched.length) return;
+        // this.setRunningOrder(OrderFetched[0]);
+        // this.$eventBus.$emit('fetch-items');
       } else console.info(order.message);
     },
 

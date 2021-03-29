@@ -1,6 +1,5 @@
 <template>
     <div class="runnning_order">
-        <Alert v-if="false" icon="warning" status="warining" />
         <div class="order_header" v-if="order">
             <h2>Order {{ order.bill_no }}</h2>
             <div class="date_and_time">
@@ -38,7 +37,6 @@
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
-import Alert from '@/components/generics/Alert.vue';
 import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
 import { mapGetters, mapActions } from 'vuex';
 
@@ -51,7 +49,6 @@ export default {
     },
   },
   components: {
-    Alert,
     OrderItem,
     OrderListHeader,
     OrderTotalCacular,
@@ -73,7 +70,8 @@ export default {
   },
 
   watch: {
-    runningOrderId() {
+    orderId(val) {
+      this.$eventBus.$emit('reload-order', val);
       this.fetchOrderItems();
     },
   },

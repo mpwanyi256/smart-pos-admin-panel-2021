@@ -17,7 +17,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters('pos', ['runningOrder', 'orders']),
+    ...mapGetters('pos', ['runningOrder']),
   },
 };
 </script>

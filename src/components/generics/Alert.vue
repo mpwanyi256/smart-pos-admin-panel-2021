@@ -8,7 +8,7 @@
             v-if="icon"
             class="material-icons"
         >
-            {{ icon }}
+            <v-icon>{{ `mdi-${icon}` }}</v-icon>
         </i>
         <div class="message">
             <slot />

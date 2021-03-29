@@ -19,6 +19,7 @@
         v-if="showDiscount"
         @close="showDiscount = false"
       />
+      <PageAlert message="Message" />
     </div>
 </template>
 <script>
@@ -29,6 +30,7 @@ import Actions from '@/views/pos/Actions.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
+import PageAlert from '@/components/alerts/PageAlert.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -41,6 +43,7 @@ export default {
     SelectedOrder,
     BillModal,
     AddDiscountModal,
+    PageAlert,
   },
   computed: {
     ...mapGetters('auth', ['user']),

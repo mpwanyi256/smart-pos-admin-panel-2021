@@ -56,6 +56,7 @@ export default {
     async addItemNote(note) {
       await this.updateRunningOrder(note);
       this.$eventBus.$emit('fetch-items');
+      this.$eventBus.$emit('fetch-orders');
     },
 
     async deleteItem(orderItemId) {

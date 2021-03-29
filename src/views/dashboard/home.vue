@@ -56,7 +56,7 @@ export default {
   font-family: $font-style !important;
 
   .smart_pane {
-    overflow: auto;
+    overflow: hidden;
     top: 0;
     bottom: 0;
     height: calc(100vh - 52px);
