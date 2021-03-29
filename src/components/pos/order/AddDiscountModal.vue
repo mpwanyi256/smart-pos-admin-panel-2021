@@ -104,7 +104,7 @@ export default {
         reason: this.reason,
       };
       const discount = await this.updateRunningOrder(filter);
-      this.$eventBus.$emit('fetch-items');
+      this.$eventBus.$emit('reload-order');
       if (!discount.error) this.$emit('close');
     },
   },

@@ -10,7 +10,7 @@
                   :key="order.order_id"
                   :class="order.order_id == runningOrderId ? 'active' : ''"
                   @click="setOrder(order)"
-                  :ref="order.order_id"
+                  :ref="`order-${order.order_id}`"
                 >
                     <h3>#{{ order.bill_no }}</h3>
                     <small>
@@ -48,17 +48,17 @@ export default {
   },
 
   async mounted() {
-    // await this.fetchOrders();
-    const setPolling = async () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.fetchOrders();
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
+    await this.fetchOrders();
+    // const setPolling = async () => {
+    //   if (!this.user) {
+    //     clearInterval(this.polling);
+    //   } else {
+    //     this.fetchOrders();
+    //   }
+    // };
+    // this.polling = setInterval(() => {
+    //   setPolling();
+    // }, 3000);
   },
 
   eventBusCallbacks: {
@@ -73,6 +73,7 @@ export default {
     async reload() {
       await this.fetchOrders();
       this.$eventBus.$emit('fetch-items');
+      this.$refs[`order-${this.runningOrderId}`][0].click();
     },
 
     async fetchOrders() {

@@ -55,8 +55,7 @@ export default {
 
     async addItemNote(note) {
       await this.updateRunningOrder(note);
-      this.$eventBus.$emit('fetch-items');
-      this.$eventBus.$emit('fetch-orders');
+      this.$eventBus.$emit('reload-order');
     },
 
     async deleteItem(orderItemId) {
@@ -64,7 +63,7 @@ export default {
         delete_order_item: orderItemId,
       };
       await this.updateRunningOrder(filter);
-      this.$eventBus.$emit('fetch-items');
+      this.$eventBus.$emit('reload-order');
       if (this.itemsLength === 0) this.$emit('close');
     },
 

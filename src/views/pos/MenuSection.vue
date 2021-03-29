@@ -84,17 +84,17 @@ export default {
       await this.$eventBus.$emit('fetch-orders');
       if (!order.error) {
         this.setRunningOrderId(order.order_id);
-        // const orders = await this.filterOrders({
-        //   bill_no: order.order_id,
-        //   from: '',
-        //   to: '',
-        //   client_id: '',
-        // });
-        //
-        // const OrderFetched = orders.data.orders;
-        // if (!OrderFetched.length) return;
-        // this.setRunningOrder(OrderFetched[0]);
-        // this.$eventBus.$emit('fetch-items');
+        const orders = await this.filterOrders({
+          bill_no: order.order_id,
+          from: '',
+          to: '',
+          client_id: '',
+        });
+
+        const OrderFetched = orders.data.orders;
+        if (!OrderFetched.length) return;
+        this.setRunningOrder(OrderFetched[0]);
+        this.$eventBus.$emit('reload-order');
       } else console.info(order.message);
     },
 
