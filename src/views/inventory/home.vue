@@ -51,6 +51,22 @@ export default {
   flex-direction: column;
   font-family: $font-style !important;
 
+  ::-webkit-scrollbar{
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: #696969;
+      border-radius: 1ex;
+      -webkit-border-radius: 1ex;
+      -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+  }
+
+  ::-webkit-scrollbar-corner {
+      background: #000;
+  }
+
   .inv_pave {
     overflow: hidden;
     top: 0;

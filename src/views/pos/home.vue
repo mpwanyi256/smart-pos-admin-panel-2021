@@ -6,7 +6,7 @@
             <MenuSection />
             <SelectedOrder />
             <Actions
-              @bill="showBill = true"
+              @bill="showOrderBill"
               @discount="showDiscount = true"
             />
         </div>
@@ -68,8 +68,15 @@ export default {
       setPolling();
     }, 3000);
   },
+  eventBusCallbacks: {
+    'view-bill': 'viewBill',
+  },
   methods: {
     ...mapActions('auth', ['getDayOpen']),
+
+    viewBill() {
+      this.showBill = true;
+    },
   },
 };
 </script>

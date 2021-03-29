@@ -41,7 +41,8 @@ export default {
           this.confirmOrder();
           break;
         case 'Bill':
-          this.$emit('bill');
+          // this.$emit('bill');
+          this.$eventBus.$emit('print-bill');
           break;
         case 'Discount':
           this.$emit('discount');

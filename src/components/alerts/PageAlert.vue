@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <div class="alert-pager">
     <v-alert v-show="message"
       v-model="alert"
       color="red"
       border="left"
       elevation="2"
       colored-border
-      icon="mdi-twitter"
+      icon="mdi-alert"
+      dismissible
+      @click="$emit('close')"
     >
       {{ message }}
     </v-alert>
@@ -31,3 +33,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .alert-pager {
+    margin: 10px;
+  }
+</style>

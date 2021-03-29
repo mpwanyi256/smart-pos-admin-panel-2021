@@ -1,5 +1,6 @@
 <template>
     <div class="runnning_order">
+      <PageAlert v-if="errorMessage" :message="errorMessage" @close="errorMessage= ''" />
         <div class="order_header" v-if="order">
             <h2>Order {{ order.bill_no }}</h2>
             <div class="date_and_time">
@@ -38,6 +39,7 @@ import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
 import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
+import PageAlert from '@/components/alerts/PageAlert.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -53,12 +55,14 @@ export default {
     OrderListHeader,
     OrderTotalCacular,
     OrderItemsList,
+    PageAlert,
   },
   data() {
     return {
       orderItems: [],
       showItems: false,
       orderItemSelected: null,
+      errorMessage: '',
     };
   },
   computed: {
@@ -67,12 +71,23 @@ export default {
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
     },
+
+    isPending() {
+      return this.orderItems.filter((Order) => Order.status === 0).length > 0;
+    },
   },
 
   watch: {
     orderId(val) {
       this.$eventBus.$emit('reload-order', val);
       this.fetchOrderItems();
+    },
+
+    errorMessage(val) {
+      if (!val) return;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
     },
   },
 
@@ -82,10 +97,21 @@ export default {
 
   eventBusCallbacks: {
     'fetch-items': 'fetchOrderItems',
+    'print-bill': 'checkOrderStatus',
+    'trigger-error': 'showErrorAlert',
   },
 
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+
+    showErrorAlert(msg) {
+      this.errorMessage = msg;
+    },
+
+    checkOrderStatus() {
+      if (!this.isPending) this.$eventBus.$emit('view-bill');
+      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
+    },
 
     viewPendingItems(orderItem) {
       this.orderItemSelected = orderItem;
