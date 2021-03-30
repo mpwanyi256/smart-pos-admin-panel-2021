@@ -99,6 +99,7 @@ export default {
     'fetch-items': 'fetchOrderItems',
     'print-bill': 'checkOrderStatus',
     'trigger-error': 'showErrorAlert',
+    'settle-bill': 'settleBill',
   },
 
   methods: {
@@ -106,6 +107,11 @@ export default {
 
     showErrorAlert(msg) {
       this.errorMessage = msg;
+    },
+
+    settleBill() {
+      if (!this.isPending) this.$eventBus.$emit('open-settlement-modal');
+      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
     },
 
     checkOrderStatus() {

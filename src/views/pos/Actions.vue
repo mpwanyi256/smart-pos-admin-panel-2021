@@ -41,11 +41,13 @@ export default {
           this.confirmOrder();
           break;
         case 'Bill':
-          // this.$emit('bill');
           this.$eventBus.$emit('print-bill');
           break;
         case 'Discount':
           this.$emit('discount');
+          break;
+        case 'Settle':
+          this.$eventBus.$emit('settle-bill');
           break;
         default:
           console.log('Invalid action', this.orderId);

@@ -19,7 +19,10 @@
         v-if="showDiscount"
         @close="showDiscount = false"
       />
-      <PageAlert message="Message" />
+      <OrderSettlementModal
+        v-if="openSettementModal"
+        @close="openSettementModal = false"
+      />
     </div>
 </template>
 <script>
@@ -30,7 +33,7 @@ import Actions from '@/views/pos/Actions.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
-import PageAlert from '@/components/alerts/PageAlert.vue';
+import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -43,7 +46,7 @@ export default {
     SelectedOrder,
     BillModal,
     AddDiscountModal,
-    PageAlert,
+    OrderSettlementModal,
   },
   computed: {
     ...mapGetters('auth', ['user']),
@@ -54,6 +57,7 @@ export default {
       dayOpenPoll: null,
       showBill: false,
       showDiscount: false,
+      openSettementModal: false,
     };
   },
   created() {
@@ -70,12 +74,17 @@ export default {
   },
   eventBusCallbacks: {
     'view-bill': 'viewBill',
+    'open-settlement-modal': 'settleBill',
   },
   methods: {
     ...mapActions('auth', ['getDayOpen']),
 
     viewBill() {
       this.showBill = true;
+    },
+
+    settleBill() {
+      this.openSettementModal = true;
     },
   },
 };
