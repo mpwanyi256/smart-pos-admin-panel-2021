@@ -1,9 +1,16 @@
 <template>
     <div class="direct_settle">
         <div class="option">
-            <h2>Cash</h2>
-            <v-switch class="switch-toggle" value="red" hide-details
-            ></v-switch>
+            <h2>Bill: {{ billTotal }}</h2>
+            <v-select outlined class="settle_options"
+                v-model="settlementId"
+                :items="options"
+                item-text="name"
+                item-value="id"
+            />
+            <v-btn block class="btn_settle" :disabled="!settlementId">
+                Settle Bill
+            </v-btn>
         </div>
     </div>
 </template>
@@ -11,10 +18,26 @@
 
 export default {
   name: 'DirectSettlement',
+  props: {
+    order: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      ex11: ['red', 'indigo', 'orange', 'primary', 'secondary', 'success', 'info', 'warning', 'error', 'red darken-3', 'indigo darken-3', 'orange darken-3'],
+      options: [
+        { name: 'CASH', id: 1 },
+        { name: 'VISA', id: 2 },
+        { name: 'MOBILE MONEY', id: 3 },
+      ],
+      settlementId: null,
     };
+  },
+  computed: {
+    billTotal() {
+      return this.order.final_amount;
+    },
   },
 };
 </script>
@@ -27,16 +50,24 @@ export default {
         width: 100%;
 
         > div {
-            height: 50px;
+            height: 300px;
             width: 100%;
-            display: grid;
-            grid-template-columns: 60% 40%;
-            border: 1px solid $blue;
+            display: inline-flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            gap: 10px;
+            padding: 10px;
 
-            .switch-toggle {
-                color: $blue;
+            .settle_options {
+                width: 300px;
+            }
+
+            .btn_settle {
+                background-color: $blue !important;
+                color: $white;
+                height: 10px;
+                width: 100%;
             }
         }
     }

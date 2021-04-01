@@ -14,7 +14,7 @@
             </v-tabs>
             <v-tabs-items v-model="tab">
                 <v-tab-item>
-                    <DirectSettlement />
+                    <DirectSettlement :order="runningOrder" />
                 </v-tab-item>
             </v-tabs-items>
         </div>
@@ -23,6 +23,7 @@
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import DirectSettlement from '@/components/pos/order/DirectSettlement.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'OrderSettlementModal',
@@ -39,6 +40,9 @@ export default {
       ],
       tab: 0,
     };
+  },
+  computed: {
+    ...mapGetters('pos', ['runningOrder']),
   },
   methods: {
     isActiveTab(tabIndex) {
