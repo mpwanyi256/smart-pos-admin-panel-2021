@@ -1,9 +1,9 @@
 <template>
     <div class="order_item">
         <p>{{ orderItem.name }}</p>
-        <div class="update_options" v-if="orderItem.status == 0">
+        <div class="update_options">
             <div class="input_field">
-                <template v-if="addNote">
+                <template v-if="addNote && isPending">
                     <input type="text" v-model="itemNotes"
                     class="search_field" placeholder="Add note" />
                     <v-btn small @click="saveNote">Save</v-btn>
@@ -14,13 +14,21 @@
             </div>
             <div class="options">
                 <BaseTooltip @button="deleteItem" message="Delete item" icon="delete" />
-                <BaseTooltip @button="addNote = !addNote" message="Add notes" icon="note" />
+                <BaseTooltip message="Discount item" icon="sale" />
+                <BaseTooltip v-if="isPending" @button="addNote = !addNote"
+                message="Add notes" icon="note" />
             </div>
+            <ConfirmModal
+              v-if="confirmAction"
+              @close="confirmAction = false"
+              @yes="$emit('delete', orderItem.id)"
+            />
         </div>
     </div>
 </template>
 <script>
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -33,18 +41,25 @@ export default {
   },
   components: {
     BaseTooltip,
+    ConfirmModal,
   },
   data() {
     return {
       addNote: false,
       itemNotes: '',
+      confirmAction: false,
     };
+  },
+  computed: {
+    isPending() {
+      return this.orderItem.status === '0';
+    },
   },
   methods: {
     ...mapActions('pos', ['updateRunningOrder']),
 
     async deleteItem() {
-      this.$emit('delete', this.orderItem.id);
+      this.confirmAction = true;
     },
 
     saveNote() {
@@ -68,7 +83,7 @@ export default {
     .order_item {
         min-height: 100px;
         background-color: $white;
-        border: 1px solid $black;
+        border: 1px solid $border-color;
         border-radius: 5px;
         box-shadow: $elevation-low;
         padding: 10px;

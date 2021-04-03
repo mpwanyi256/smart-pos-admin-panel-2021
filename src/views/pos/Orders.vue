@@ -105,7 +105,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import '@/styles/pos.scss';
+@import '@/styles/constants.scss';
 
     .orders {
         width: 100%;
