@@ -3,7 +3,7 @@
         <thead v-if="hasHeader">
             <slot name="header" />
         </thead>
-        <tbody v-if="hasBody">
+        <tbody>
             <slot name="body" />
         </tbody>
         <slot />

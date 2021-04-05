@@ -15,7 +15,7 @@
           <td>{{ item.name }}</td>
             <td>{{ item.category }}</td>
           <td>{{ item.price_display }}</td>
-          <td>recipe amount</td>
+          <td>2,000</td>
           <td>
             <v-btn small raised @click="viewRecipeInfo(item)">
               View
