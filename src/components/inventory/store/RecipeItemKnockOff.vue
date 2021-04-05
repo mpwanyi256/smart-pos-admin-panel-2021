@@ -8,7 +8,7 @@
     <template v-else>
       <div class="knock_off_update">
         <input type="text" v-model="updated_knock_off"
-        class="search_field" placeholder="Search" />
+        class="search_field" placeholder="Enter amount" />
         <v-btn small @click="updateItemKnockOff">Update</v-btn>
         <v-btn x-small icon class="red--text darken-3"
           @click="update = false"

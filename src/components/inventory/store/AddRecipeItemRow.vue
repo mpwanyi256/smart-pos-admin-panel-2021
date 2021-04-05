@@ -1,9 +1,14 @@
 <template>
-  <tr class="new_recipe_item_entry">
-    <td colspan="2">
+  <div class="new_recipe_item_entry">
+    <div>
       <div class="select_store_item">
         <div class="store_item_select">
-          <BaseTextfield v-model="store_items_filter" class="input_field" />
+          <h3>Select store item</h3>
+          <BaseTextfield
+            v-model="store_items_filter"
+            class="input_field"
+            placeholder="Find a store item"
+          />
           <div class="menu_items_filter">
             <div class="store_column">
               <div
@@ -17,13 +22,13 @@
           </div>
         </div>
       </div>
-    </td>
-    <td colspan="4">
+    </div>
+    <div>
       <div v-if="selected_store_item" class="knock_off_entry">
         <h3>{{ selected_store_item.name }}</h3>
         <div class="frm_entry">
           <div>
-            <div>Knock off in {{ selected_store_item.unit_measure.toLowerCase() }}</div>
+            <div>Enter Knock off in {{ selected_store_item.unit_measure.toLowerCase() }}</div>
             <div>
               <BaseTextfield v-model="knockOffQuantity"
               :placeholder="`Enter ${selected_store_item.unit_measure}`" />
@@ -38,8 +43,8 @@
           </div>
         </div>
       </div>
-    </td>
-  </tr>
+    </div>
+  </div>
 </template>
 <script>
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
@@ -108,19 +113,30 @@ export default {
   background-color: $white !important;
   height: 300px;
   font-family: $font-style;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  overflow: hidden;
 
-  td {
+  h3 {
+    margin: 5px;
+  }
+
+  div {
     .select_store_item {
       display: flex;
       flex-direction: column;
       gap: 5px;
+      border: 1px solid $border-color;
+      border-radius: 5px;
+      box-shadow: $elevation-low;
 
         .input_field {
           margin: 5px;
+          color: $grey;
         }
 
         .menu_items_filter {
-          height: calc(300px - 35px);
+          height: calc(300px - 60px);
           overflow-y: auto;
           overflow-x: hidden;
           display: flex;

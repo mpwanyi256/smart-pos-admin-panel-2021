@@ -1,17 +1,24 @@
 <template>
   <Basemodal :title="menuItem.name" :size="900" @close="$emit('close')">
     <template slot="action">
-      <BaseTooltip color="blue"
+      <!-- <BaseTooltip color="blue"
          class="mr-2"
         @button="addRecipe = !addRecipe"
         message="Add new recipe item"
         :icon="!addRecipe ? 'plus' : 'close'"
-      />
+      /> -->
+      <v-btn v-if="hasRecipe" small class="mr-3 add_receipe_button"
+        @click="addRecipe = !addRecipe">
+        <v-icon left>
+          {{ !addRecipe ? 'mdi-plus' : 'mdi-eye' }}
+        </v-icon>
+        {{ !addRecipe ? 'Add item to recipe' : 'Show all items' }}
+      </v-btn>
     </template>
     <div class="recipe_view">
-      <Table>
+      <Table v-if="hasRecipe && !loading">
         <template slot="header">
-          <tr>
+          <tr v-if="!hasRecipe">
             <th>
               <div class="store_item_name">
                 Store Item name
@@ -24,11 +31,14 @@
           </tr>
         </template>
         <template slot="body">
+          <tr v-if="addRecipe"><td colspan="6">
           <AddRecipeItemRow
             @close="addRecipe = false"
             @refresh="fetchRecipe"
-            v-if="addRecipe"
             :menuItem="menuItem" />
+            </td>
+          </tr>
+          <template v-else>
           <tr v-for="storeItem in recipe" :key="storeItem.id">
             <td>{{ storeItem.name }}</td>
             <td>
@@ -45,8 +55,28 @@
               </v-btn>
             </td>
           </tr>
+          </template>
         </template>
       </Table>
+      <div v-else class="empty_state">
+        <template v-if="addRecipe">
+          <AddRecipeItemRow
+            @close="addRecipe = false"
+            @refresh="fetchRecipe"
+            v-if="addRecipe"
+            :menuItem="menuItem" />
+        </template>
+        <template v-else>
+          <h1> No recipe set</h1>
+          <v-btn small class="add_receipe_button"
+            @click="addRecipe = !addRecipe">
+            <v-icon>
+              {{ !addRecipe ? 'mdi-plus' : 'mdi-close' }}
+            </v-icon>
+            {{ !addRecipe ? 'Add items to recipe' : 'Show all items' }}
+          </v-btn>
+        </template>
+      </div>
     </div>
     <ConfirmModal
       v-if="confirmDelete && selectedItem"
@@ -57,7 +87,7 @@
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+// import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import Table from '@/components/generics/new/Table.vue';
 import RecipeItemKnockOff from '@/components/inventory/store/RecipeItemKnockOff.vue';
@@ -69,7 +99,7 @@ export default {
   components: {
     Basemodal,
     Table,
-    BaseTooltip,
+    // BaseTooltip,
     RecipeItemKnockOff,
     AddRecipeItemRow,
     ConfirmModal,
@@ -86,16 +116,24 @@ export default {
       addRecipe: false,
       confirmDelete: false,
       selectedItem: null,
+      loading: true,
     };
   },
   async created() {
     this.fetchRecipe();
   },
+  computed: {
+    hasRecipe() {
+      return this.recipe.length > 0;
+    },
+  },
   methods: {
     ...mapActions('inventory', ['getItemRecipe', 'updateItem']),
 
     async fetchRecipe() {
+      this.loading = true;
       this.recipe = await this.getItemRecipe({ menu_item_id: this.menuItem.id });
+      this.loading = false;
     },
 
     deleteRecipe(itemId) {
@@ -115,8 +153,25 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '@/styles/constants.scss';
+
   .recipe_view {
     height: 450px;
     overflow: auto;
+
+    .empty_state {
+      width: 100%;
+      height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  .add_receipe_button {
+    background-color: $blue !important;
+    color: $white;
   }
 </style>

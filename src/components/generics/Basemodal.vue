@@ -2,9 +2,9 @@
     <v-dialog v-model="dialog" :width="size ? size : 500" persistent>
         <v-card class="modal_content">
             <v-card-title class="black--text">
-                <slot name="action" />
                 {{ title ? title : '' }}
                 <v-spacer></v-spacer>
+                <slot name="action" />
                 <v-btn icon color="black" @click="$emit('close')">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
