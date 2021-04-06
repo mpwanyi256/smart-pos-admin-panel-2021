@@ -2,7 +2,7 @@
   <div class="recipe_knock_off">
     <template v-if="!update">
       <div @click="update = !update">
-      {{ recipeItem.ko_quantity }}
+      {{ `${recipeItem.ko_quantity} ${recipeItem.measure}` }}
     </div>
     </template>
     <template v-else>

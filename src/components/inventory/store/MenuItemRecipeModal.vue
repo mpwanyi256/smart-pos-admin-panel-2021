@@ -20,8 +20,8 @@
             </th>
             <th>Avg price</th>
             <th>pack size</th>
-            <th>Knock off</th>
             <th>Measure</th>
+            <th>Knock off</th>
             <th>Delete</th>
           </tr>
         </template>
@@ -41,13 +41,13 @@
               'No purchases made' : storeItem.average_price_display }}
             </td>
             <td>{{ storeItem.pack_size }}</td>
+            <td>{{ storeItem.measure }}</td>
             <td>
               <RecipeItemKnockOff
                 @refresh="fetchRecipe"
                 :recipeItem="storeItem"
               />
             </td>
-            <td>{{ storeItem.measure }}</td>
             <td>
               <v-btn @click="deleteRecipe(storeItem.id)" small icon class="red--text darken--3">
                 <v-icon>mdi-delete</v-icon>

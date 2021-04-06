@@ -28,7 +28,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import '../../styles/constants.scss';
+@import '@/styles/constants.scss';
 
     .confirm_options {
         display: inline-flex;
