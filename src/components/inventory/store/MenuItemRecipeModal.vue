@@ -1,12 +1,6 @@
 <template>
   <Basemodal :title="menuItem.name" :size="900" @close="$emit('close')">
     <template slot="action">
-      <!-- <BaseTooltip color="blue"
-         class="mr-2"
-        @button="addRecipe = !addRecipe"
-        message="Add new recipe item"
-        :icon="!addRecipe ? 'plus' : 'close'"
-      /> -->
       <v-btn v-if="hasRecipe" small class="mr-3 add_receipe_button"
         @click="addRecipe = !addRecipe">
         <v-icon left>
@@ -18,29 +12,35 @@
     <div class="recipe_view">
       <Table v-if="hasRecipe && !loading">
         <template slot="header">
-          <tr v-if="!hasRecipe">
+          <tr>
             <th>
               <div class="store_item_name">
                 Store Item name
               </div>
             </th>
+            <th>Avg price</th>
+            <th>pack size</th>
             <th>Knock off</th>
             <th>Measure</th>
-            <th>Avg price</th>
             <th>Delete</th>
           </tr>
         </template>
         <template slot="body">
-          <tr v-if="addRecipe"><td colspan="6">
-          <AddRecipeItemRow
-            @close="addRecipe = false"
-            @refresh="fetchRecipe"
-            :menuItem="menuItem" />
+          <tr v-if="addRecipe">
+            <td colspan="6">
+              <AddRecipeItemRow
+                @close="addRecipe = false"
+                @refresh="fetchRecipe"
+                :menuItem="menuItem" />
             </td>
           </tr>
           <template v-else>
           <tr v-for="storeItem in recipe" :key="storeItem.id">
             <td>{{ storeItem.name }}</td>
+            <td>{{ storeItem.average_price_display == '0' ?
+              'No purchases made' : storeItem.average_price_display }}
+            </td>
+            <td>{{ storeItem.pack_size }}</td>
             <td>
               <RecipeItemKnockOff
                 @refresh="fetchRecipe"
@@ -48,7 +48,6 @@
               />
             </td>
             <td>{{ storeItem.measure }}</td>
-            <td>{{ storeItem.average_price_display }}</td>
             <td>
               <v-btn @click="deleteRecipe(storeItem.id)" small icon class="red--text darken--3">
                 <v-icon>mdi-delete</v-icon>

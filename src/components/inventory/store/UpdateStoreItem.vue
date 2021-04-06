@@ -1,5 +1,12 @@
 <template>
   <Basemodal :title="item.name" :size="700" @close="$emit('close')">
+  <template slot="action">
+    <BaseTooltip class="mr-3"
+      @button="deleteItem"
+      :message="`Delete ${item.name}`" icon="delete"
+      color="red"
+    />
+  </template>
     <div class="update_area">
         <div class="frm_entry">
           <div class="label">Item Name</div>
@@ -54,11 +61,6 @@
           <div class="label">&nbsp;</div>
           <div class="actions">
             <v-btn text @click="updateStoreItem">Update</v-btn>
-            <BaseTooltip class="pull-right"
-              @button="deleteItem"
-              :message="`Delete ${item.name}`" icon="delete"
-              color="red"
-            />
           </div>
         </div>
         <BaseAlert v-if="error" alert="info" :message="error" />
