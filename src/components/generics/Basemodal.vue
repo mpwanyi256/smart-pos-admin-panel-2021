@@ -4,6 +4,7 @@
             <v-card-title class="black--text">
                 {{ title ? title : '' }}
                 <v-spacer></v-spacer>
+                <slot name="action" />
                 <v-btn icon color="black" @click="$emit('close')">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>

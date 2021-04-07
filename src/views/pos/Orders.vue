@@ -6,7 +6,7 @@
         <div class="order_list">
             <div class="order_pane">
                 <div
-                  v-for="order in orders"
+                  v-for="order in pendingOrders"
                   :key="order.order_id"
                   :class="order.order_id == runningOrderId ? 'active' : ''"
                   @click="setOrder(order)"
@@ -37,6 +37,10 @@ export default {
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    pendingOrders() {
+      return this.orders.filter((Order) => Order.status === 0);
+    },
 
     dayOpen() {
       return this.user && this.user.company_info ? this.user.company_info.day_open : null;

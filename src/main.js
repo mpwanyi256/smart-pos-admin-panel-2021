@@ -9,7 +9,7 @@ import './styles/main.scss';
 import eventBus from './plugins/event-bus';
 import EventBusCallbacks from './plugins/Eventbus';
 
-// Api setup
+// Api server address set
 const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
 axios.defaults.baseURL = IPAddress ? `http://${IPAddress}/papi/` : 'http://localhost:80/papi/';
 // axios.defaults.baseURL = 'http://localhost:80/papi/';
