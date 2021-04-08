@@ -46,7 +46,7 @@ export default {
         position: sticky;
         top: 0;
         background-color: $white !important;
-        z-index: 10;
+        z-index: 6;
     }
 
     td {

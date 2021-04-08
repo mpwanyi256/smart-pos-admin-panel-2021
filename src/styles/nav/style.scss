@@ -73,13 +73,13 @@
       .menu {
 
         // Desktop view
-        @media screen and (max-width: 900px) {
+        @media screen and (max-width: 959px) {
             display: none;
         }
 
         @media screen and (min-width: 901px) {
             .toggle-btn {
-                display: none;
+                display: none !important;
             }
 
             height: 100%;
@@ -200,4 +200,25 @@
     }
 
   }
+}
+
+.side_bar_auth {
+  border-color: $red !important;
+  background-color: $red;
+  color: $white !important;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.33337;
+  font-weight: 400;
+  letter-spacing: -.01em;
+  font-family: $font-style;
+  min-width: 23px;
+  padding-left: 11px;
+  padding-right: 11px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 12px;
 }

@@ -1,7 +1,11 @@
 import { mapActions, mapGetters } from 'vuex';
+import SalesNavBar from '@/components/nav/SalesNavBar.vue';
 
 export default {
   name: 'RoutingMixin',
+  components: {
+    SalesNavBar,
+  },
 
   data() {
     return {

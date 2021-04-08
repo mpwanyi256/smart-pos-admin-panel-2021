@@ -10,6 +10,7 @@
             <div :class="isActivePath(link.path) ? 'black--text' : 'grey--text'">
               {{ link.name }}</div>
         </div>
+        <slot name="logout"></slot>
     </div>
 </template>
 <script>

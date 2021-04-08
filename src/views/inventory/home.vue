@@ -75,6 +75,11 @@ export default {
     bottom: 0;
     height: calc(100vh - 52px);
     display: grid;
+
+    @media only screen and (max-width: 1200px) {
+      grid-template-columns: 20% 80%;
+    }
+
     @media only screen and (min-width: 1600px) {
       grid-template-columns: 20% 80%;
     }

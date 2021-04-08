@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="nav-content">
         <div class="title">
-          <v-app-bar-nav-icon class="toggle-btn" @click="$emit('drawer')" />
+          <v-app-bar-nav-icon absolute class="d-none d-sm-flex d-md-none" @click="drawer = true" />
           Smart POS
         </div>
         <div class="menu">
@@ -28,6 +28,27 @@
         </div>
       </div>
     </div>
+   <v-navigation-drawer
+      v-model="drawer"
+      absolute
+      bottom
+      temporary
+    >
+      <SalesNavBar :title="'Quick links'" :links="routes">
+        <template slot="logout">
+          <div class="menu">
+            <div class="tray">
+              <div class="side_bar_auth" @click="performLogout()">
+                <v-icon small class="icon" dark>
+                  mdi-lock
+                </v-icon>
+                Logout
+              </div>
+            </div>
+          </div>
+        </template>
+      </SalesNavBar>
+   </v-navigation-drawer>
   </div>
 </template>
 <script>
