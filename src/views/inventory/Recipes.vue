@@ -8,7 +8,7 @@
               <BaseTextfield v-model="search" placeholder="Search for a menu item" />
               <v-btn class="download_btn" small @click="downloadCSV">
                 <v-icon left>mdi-download</v-icon>
-                download csv
+                download
               </v-btn>
             </div>
           </th>
@@ -114,18 +114,18 @@ export default {
 
   .item_name {
     display: grid;
-    grid-template-columns: 70% 30%;
+    grid-template-columns: 60% 40%;
     gap: 10px;
     justify-content: center;
     align-items: center;
+
+    .download_btn {
+      background-color: $green !important;
+      color: $white !important;
+    }
   }
 
   .no_purchases {
     color: $red;
-  }
-
-  .download_btn {
-    background-color: $green !important;
-    color: $white !important;
   }
 </style>

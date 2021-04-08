@@ -43,6 +43,10 @@ export default {
 
     th {
         padding: 16px;
+        position: sticky;
+        top: 0;
+        background-color: $white !important;
+        z-index: 10;
     }
 
     td {
@@ -56,6 +60,8 @@ export default {
 
         tr {
             border: 0;
+            background-color: $white !important;
+            top: 0;
         }
 
         th {
