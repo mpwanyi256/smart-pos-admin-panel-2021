@@ -60,6 +60,8 @@
         font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
         cursor: default;
         display: block;
+        justify-content: center;
+        align-items: center;
         float: left;
         margin: 14px 0 -14px;
         padding: 0;
@@ -68,6 +70,13 @@
         text-align: inherit;
         box-sizing: content-box;
         pointer-events: auto;
+        width: auto;
+
+        .menu_icons {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+        }
       }
 
       .menu {

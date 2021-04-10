@@ -6,7 +6,7 @@
         @search="categorySearchKey = $event"
       />
       <MenuItems
-        :items="menuItems"
+        :items="filteredMenuItems"
         @searchMenu="searchForAMenuItem"
         @create-order="createOrder"
         @addItem="addItemToOrder"
@@ -38,13 +38,18 @@ export default {
     ...mapGetters('pos', ['menuItems', 'categories', 'runningOrderId', 'orders']),
     ...mapGetters('auth', ['user']),
 
+    filteredMenuItems() {
+      return this.menuItems.filter((Item) => Item.status === 0);
+    },
+
     dayOpen() {
       return this.user ? this.user.company_info.day_open : null;
     },
 
     filteredCategories() {
       return this.categories.filter((Cat) => Cat.name.toLowerCase()
-        .match(this.categorySearchKey.toLowerCase()));
+        .match(this.categorySearchKey.toLowerCase())
+        && Cat.status === '0');
     },
   },
   methods: {

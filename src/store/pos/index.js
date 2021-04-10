@@ -101,7 +101,7 @@ export default {
       const filters = new FormData();
       filters.append('get_menu_categories', true);
       const categories = await API.smart(PATH, filters);
-      if (!categories.error) commit('setCategories', [{ id: 0, name: 'ALL', status: 0 }, ...categories.data]);
+      if (!categories.error) commit('setCategories', [{ id: 0, name: 'ALL', status: '0' }, ...categories.data]);
     },
 
     async updateMenuItemCategory({ commit }, payload) {

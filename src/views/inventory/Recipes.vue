@@ -5,11 +5,12 @@
         <tr>
           <th>
             <div class="item_name">
+              <BaseTooltip
+                @button="downloadCSV"
+                message="Download receipes" icon="download"
+                color="green"
+              />
               <BaseTextfield v-model="search" placeholder="Search for a menu item" />
-              <v-btn class="download_btn" small @click="downloadCSV">
-                <v-icon left>mdi-download</v-icon>
-                download
-              </v-btn>
             </div>
           </th>
           <th>Category</th>
@@ -28,7 +29,7 @@
               'No purchases found' : item.average_cost_price }}</td>
           <td>
             <v-btn small text @click="viewRecipeInfo(item)">
-              View receipe
+              View
             </v-btn>
           </td>
         </tr>
@@ -43,6 +44,7 @@
 </template>
 <script>
 import Table from '@/components/generics/new/Table.vue';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import MenuItemRecipeModal from '@/components/inventory/store/MenuItemRecipeModal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DownloadCSVMixin from '@/mixins/DownloadCSVMixin';
@@ -55,6 +57,7 @@ export default {
     Table,
     MenuItemRecipeModal,
     BaseTextfield,
+    BaseTooltip,
   },
   data() {
     return {
@@ -113,10 +116,11 @@ export default {
   }
 
   .item_name {
-    display: grid;
-    grid-template-columns: 60% 40%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     gap: 10px;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
 
     .download_btn {

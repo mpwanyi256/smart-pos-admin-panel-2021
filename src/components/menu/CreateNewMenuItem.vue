@@ -3,6 +3,7 @@
       <div class="update_area">
         <v-form ref="addItemForm" @submit.prevent="createNewMenuItem">
           <v-text-field dense outlined label="Item name" v-model="name" />
+          <v-text-field dense outlined label="Item price" v-model="price" />
           <v-select
             dense outlined
             label="Category"
@@ -19,7 +20,6 @@
             item-value="id"
             v-model="display"
           />
-          <v-text-field dense outlined label="Item price" v-model="price" />
           <v-btn block type="submit" dense>Add item</v-btn>
         </v-form>
       </div>
@@ -96,6 +96,7 @@ export default {
         this.alert = 'error';
         this.errorMessage = create.message;
         this.error = true;
+        this.loading = false;
         return;
       }
       this.$refs.addItemForm.reset();

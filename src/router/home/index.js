@@ -12,7 +12,7 @@ export default {
       name: 'sales',
       meta: {
         authrequired: true,
-        title: 'SmartPOS :: Sales',
+        title: 'Sales | Home',
       },
       component: () => import('@/views/dashboard/sales/sales.vue'),
       children: [
@@ -21,7 +21,7 @@ export default {
           name: 'overview',
           meta: {
             authrequired: true,
-            title: 'Sales :: Dashboard',
+            title: 'Sales | Dashboard',
           },
           component: () => import('@/views/dashboard/sales/reports/salesOverview.vue'),
         },
@@ -30,7 +30,7 @@ export default {
           name: 'findbill',
           meta: {
             authrequired: true,
-            title: 'SmartPOS :: Find bill',
+            title: 'Sales | Find a bill',
           },
           component: () => import('@/views/dashboard/sales/reports/findBill.vue'),
         },
@@ -39,7 +39,7 @@ export default {
           name: 'itemwisesale',
           meta: {
             authrequired: true,
-            title: 'SmartPOS :: Items sold',
+            title: 'Sales | Items sold',
           },
           component: () => import('@/views/dashboard/sales/reports/ItemsSold.vue'),
         },
@@ -48,7 +48,7 @@ export default {
           name: 'salessammary',
           meta: {
             authrequired: true,
-            title: 'SmartPOS :: Sales summary',
+            title: 'Sales | Sales summary',
           },
           component: () => import('@/views/dashboard/sales/reports/SalesSammary.vue'),
         },
@@ -57,7 +57,7 @@ export default {
           name: 'menu_items',
           meta: {
             authrequired: true,
-            title: 'Sales :: Menu Items',
+            title: 'Sales | Menu Items',
           },
           component: () => import('@/views/dashboard/sales/MenuItems.vue'),
         },

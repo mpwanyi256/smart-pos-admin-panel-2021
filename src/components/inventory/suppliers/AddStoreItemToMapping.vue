@@ -1,0 +1,74 @@
+<template>
+    <Table>
+        <template slot="header">
+            <tr>
+                <th>
+                    <BaseTextfield v-model="search" placeholder="Search..." />
+                </th>
+                <th>&nbsp;</th>
+            </tr>
+        </template>
+        <template slot="body">
+            <tr
+                v-for="item in filteredStoreItems" :key="item.id"
+            >
+                <td>{{ item.name }}</td>
+                <td>
+                    <v-btn small @click="addItem(item)">
+                        Add to list
+                    </v-btn>
+                </td>
+            </tr>
+        </template>
+    </Table>
+</template>
+<script>
+import Table from '@/components/generics/new/Table.vue';
+import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+import { mapActions } from 'vuex';
+
+export default {
+  name: 'AddStoreItemToMapping',
+  props: {
+    storeItems: {
+      type: Array,
+      required: true,
+    },
+    supplier: {
+      type: Object,
+      required: true,
+    },
+  },
+  components: {
+    Table,
+    BaseTextfield,
+  },
+  data() {
+    return {
+      search: '',
+      loading: false,
+    };
+  },
+  computed: {
+    filteredStoreItems() {
+      return this.storeItems.filter((Item) => Item.name.toLowerCase()
+        .match(this.search.toLowerCase()));
+    },
+  },
+  methods: {
+    ...mapActions('inventory', ['updateItem']),
+
+    async addItem(item) {
+      this.loading = true;
+      const mapping = {
+        item_id: item.id,
+        supplier_id: this.supplier.id,
+        add_supplier_item_mapping: true,
+      };
+      const updateMappung = await this.updateItem(mapping);
+      if (!updateMappung.error) this.$emit('reload');
+      this.loading = false;
+    },
+  },
+};
+</script>

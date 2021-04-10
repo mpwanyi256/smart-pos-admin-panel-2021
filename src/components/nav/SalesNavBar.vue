@@ -56,28 +56,38 @@ export default {
         padding-top: 10px;
         padding-left: 10px;
         font-size: 14px;
+        font-family: $font-style;
+        transition: color 0.5s cubic-bezier(0.28, 0.11, 0.32, 1);
+        font-size: 14px;
+        line-height: 1.14286;
+        font-weight: 600;
+        letter-spacing: .011em;
+        color: $black;
 
         > div {
-            height: 36px;
-            width: 100%;
-            line-height: 1.5;
-            display: inline-flex;
-            flex-direction: row;
-            gap: 3px;
-            border-radius: 5px;
-            justify-content: left;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            padding-left: 15px;
-            margin-bottom: 5px;
-            color: $black !important;
+          height: 36px;
+          width: 100%;
+          line-height: 1.5;
+          display: inline-flex;
+          flex-direction: row;
+          gap: 3px;
+          border-radius: 5px;
+          justify-content: left;
+          align-items: center;
+          text-align: center;
+          cursor: pointer;
+          padding-left: 15px;
+          margin-bottom: 5px;
+          color: $black !important;
         }
 
-        > div:first-child {
-            border-radius: 0;
-            font-weight: bold;
-            font-size: 16px;
+        > div:first-child, > div:first-child:hover {
+          border-radius: 0;
+          font-weight: bold;
+          font-size: 16px;
+          border: none;
+          cursor: default;
+          background-color: inherit;
         }
 
         .active {
@@ -86,10 +96,6 @@ export default {
 
         > div:hover {
             background-color:#dddddd;
-        }
-
-        > div:first-child:hover {
-            border: none;
         }
     }
 </style>

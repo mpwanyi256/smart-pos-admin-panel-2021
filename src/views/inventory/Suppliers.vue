@@ -3,9 +3,20 @@
         <Table>
             <template slot="header">
                 <tr>
-                    <th><BaseTextfield v-model="search" placeholder="Find a supplier" /></th>
+                    <th>
+                      <div class="add_supplier_option">
+                        <BaseTooltip
+                          @button="newSupplier = true"
+                          message="Add new supplier" icon="plus"
+                        />
+                        <BaseTextfield v-model="search" placeholder="Search..." />
+                      </div>
+                    </th>
                     <th>Contact</th>
                     <th>Email address</th>
+                    <th>
+                      Supply items
+                    </th>
                     <th>&nbsp;</th>
                 </tr>
             </template>
@@ -18,7 +29,12 @@
                     <td>{{ supplier.contact }}</td>
                     <td>{{ supplier.email }}</td>
                     <td>
-                        <v-btn small icon>
+                      <v-btn small raised @click="viewSupplierMappings(supplier)">
+                        view
+                      </v-btn>
+                    </td>
+                    <td>
+                        <v-btn small icon @click="updateSupplierInfo(supplier)">
                             <v-icon>
                                 mdi-pencil
                             </v-icon>
@@ -27,12 +43,32 @@
                 </tr>
             </template>
         </Table>
+        <UpdateSupplierInfo
+          v-if="updateSupplier && selectedSupplier"
+          :supplier="selectedSupplier"
+          @close="updateSupplier = false"
+          @reload="reloadData"
+        />
+        <CreateSupplierModal
+          v-if="newSupplier"
+          @close="newSupplier = false"
+          @reload="reloadData"
+        />
+        <SupplierItemMapping
+          v-if="selectedSupplier && viewMappings"
+          :supplier="selectedSupplier"
+          @close="viewMappings = false"
+        />
     </div>
 </template>
 <script>
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
+import UpdateSupplierInfo from '@/components/inventory/suppliers/UpdateSupplierInfo.vue';
+import CreateSupplierModal from '@/components/inventory/suppliers/CreateSupplierModal.vue';
+import SupplierItemMapping from '@/components/inventory/suppliers/SupplierItemMapping.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -41,12 +77,20 @@ export default {
     Table,
     BaseTextfield,
     LinearLoader,
+    UpdateSupplierInfo,
+    BaseTooltip,
+    CreateSupplierModal,
+    SupplierItemMapping,
   },
   data() {
     return {
       suppliers: [],
       search: '',
       loading: false,
+      updateSupplier: false,
+      selectedSupplier: null,
+      newSupplier: false,
+      viewMappings: false,
     };
   },
   computed: {
@@ -59,24 +103,38 @@ export default {
   watch: {
     search(val) {
       if (val.length >= 3) {
-        setTimeout(() => {
-          this.fetchSuppliers(val);
-        }, 1000);
+        this.fetchSuppliers(val);
       } else {
         this.fetchSuppliers('all');
       }
     },
   },
   created() {
-    this.fetchSuppliers('all');
+    this.fetchSuppliers();
   },
   methods: {
     ...mapActions('inventory', ['updateItem']),
 
+    viewSupplierMappings(supplier) {
+      this.selectedSupplier = supplier;
+      this.viewMappings = true;
+    },
+
+    reloadData() {
+      this.updateSupplier = false;
+      this.newSupplier = false;
+      this.fetchSuppliers();
+    },
+
+    updateSupplierInfo(supplier) {
+      this.selectedSupplier = supplier;
+      this.updateSupplier = true;
+    },
+
     async fetchSuppliers(searchFilter) {
       this.loading = true;
       const Suppliers = await this.updateItem({
-        get_suppliers: searchFilter,
+        get_suppliers: searchFilter || 'all',
         company_id: this.companyId,
       });
       if (!Suppliers.error) this.suppliers = Suppliers.data;
@@ -95,6 +153,15 @@ export default {
         flex-direction: column;
         overflow: auto;
         color: $black;
+    }
+
+    .add_supplier_option {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      justify-content: left;
+      align-items: center;
     }
 
 </style>

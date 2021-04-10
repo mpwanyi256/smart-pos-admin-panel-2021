@@ -3,8 +3,11 @@
     <div class="wrapper">
       <div class="nav-content">
         <div class="title">
-          <v-app-bar-nav-icon absolute class="d-none d-sm-flex d-md-none" @click="drawer = true" />
-          Smart POS
+          <div class="menu_icons">
+            <v-app-bar-nav-icon class="d-none d-sm-flex d-md-none"
+              @click="drawer = true" />
+            <p>Smart POS</p>
+          </div>
         </div>
         <div class="menu">
           <div class="tray">
@@ -31,7 +34,6 @@
    <v-navigation-drawer
       v-model="drawer"
       absolute
-      bottom
       temporary
     >
       <SalesNavBar :title="'Quick links'" :links="routes">
