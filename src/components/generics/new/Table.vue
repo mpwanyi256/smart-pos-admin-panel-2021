@@ -54,7 +54,7 @@ export default {
     }
 
     thead {
-        border-top: 1px solid $quaternary;
+        // border-top: 1px solid $quaternary;
         border-bottom: 1px solid $quaternary;
         background: #FCFCFC;
 

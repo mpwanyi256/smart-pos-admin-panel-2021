@@ -12,6 +12,7 @@
             <AddStoreItemToMapping
               :storeItems="storeItems"
               :supplier="supplier"
+              :mappings="mappings"
               @reload="fetchMappings"
             />
         </div>
@@ -79,7 +80,9 @@ export default {
       }
 
       .mappings {
-          overflow: auto;
+        overflow: auto;
+        top: 0;
+        bottom: 0;
       }
 
       .add_mapping {

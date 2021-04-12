@@ -2,8 +2,9 @@
     <Table>
         <template slot="header">
             <tr>
-                <th>Item name</th>
-                <th>&nbsp;</th>
+                <th>Supplier's list items</th>
+                <th>Av. price</th>
+                <th>Remove</th>
             </tr>
         </template>
         <template slot="body">
@@ -11,8 +12,10 @@
                 v-for="item in mappings" :key="item.id"
             >
                 <td>{{ item.item_name }}</td>
+                <td>{{ item.average_price_display === '0' ?
+                  'No puchases yet' : item.average_price_display }}</td>
                 <td>
-                    <v-btn icon @click="removeItem(item)">
+                    <v-btn class="drop_mapping_btn" icon @click="removeItem(item)">
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
                 </td>
@@ -22,7 +25,6 @@
 </template>
 <script>
 import Table from '@/components/generics/new/Table.vue';
-// import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -57,3 +59,10 @@ export default {
   },
 };
 </script>
+<style scoped lang="scss">
+@import '@/styles/constants.scss';
+
+  .drop_mapping_btn {
+    color: $red!important;
+  }
+</style>

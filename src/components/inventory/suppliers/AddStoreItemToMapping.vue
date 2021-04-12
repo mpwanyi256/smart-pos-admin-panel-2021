@@ -14,7 +14,7 @@
             >
                 <td>{{ item.name }}</td>
                 <td>
-                    <v-btn small @click="addItem(item)">
+                    <v-btn :disabled="exists(item)" small @click="addItem(item)">
                         Add to list
                     </v-btn>
                 </td>
@@ -38,6 +38,10 @@ export default {
       type: Object,
       required: true,
     },
+    mappings: {
+      type: Array,
+      required: true,
+    },
   },
   components: {
     Table,
@@ -57,6 +61,10 @@ export default {
   },
   methods: {
     ...mapActions('inventory', ['updateItem']),
+
+    exists(item) {
+      return this.mappings.findIndex((Item) => Item.store_item_id === item.id) >= 0;
+    },
 
     async addItem(item) {
       this.loading = true;
