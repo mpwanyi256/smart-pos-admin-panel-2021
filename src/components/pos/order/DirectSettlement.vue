@@ -4,17 +4,21 @@
             <h2>Bill: {{ billTotal }}</h2>
             <v-select outlined class="settle_options"
                 v-model="settlementId"
-                :items="options"
+                :items="paymentSettlements"
                 item-text="name"
                 item-value="id"
             />
-            <v-btn block class="btn_settle" :disabled="!settlementId">
+            <v-btn block
+              class="btn_settle"
+              :disabled="!settlementId"
+              @click="settleBill">
                 Settle Bill
             </v-btn>
         </div>
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 
 export default {
   name: 'DirectSettlement',
@@ -23,20 +27,42 @@ export default {
       type: Object,
       required: true,
     },
+    paymentSettlements: {
+      type: Array,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
   },
   data() {
     return {
-      options: [
-        { name: 'CASH', id: 1 },
-        { name: 'VISA', id: 2 },
-        { name: 'MOBILE MONEY', id: 3 },
-      ],
-      settlementId: null,
+      settlementId: 1,
     };
   },
   computed: {
     billTotal() {
       return this.order.final_amount;
+    },
+  },
+  methods: {
+    ...mapActions('pos', ['updateOrder', 'setRunningOrderId', 'setRunningOrder']),
+
+    async settleBill() {
+      const order = {
+        order_id: this.order.order_id,
+        settlement_id: this.settlementId,
+        settled_by: this.user.id,
+        settle_order: 'direct',
+      };
+      this.$emit('pay', order);
+      // const settleOrder = await this.updateOrder(order);
+      // if (!settleOrder.error) {
+      //   this.setRunningOrderId(null);
+      //   this.setRunningOrder(null);
+      //   this.$emit('close');
+      // }
     },
   },
 };

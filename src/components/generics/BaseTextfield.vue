@@ -1,16 +1,26 @@
 <template>
   <div class="text_field">
-    <input type="text"
+    <input :type="inputType ? inputType : 'text'"
+    :disabled="disabled"
     v-model="input_text"
-    class="search_field" :placeholder="placeholder ? placeholder.toLowerCase() : 'Search'" />
+    class="search_field"
+    :placeholder="placeholder ? placeholder : 'Search'" />
   </div>
 </template>
 <script>
 export default {
   name: 'BaseTextfield',
   props: {
+    inputType: {
+      type: String,
+      required: false,
+    },
     placeholder: {
       type: String,
+      required: false,
+    },
+    disabled: {
+      type: Boolean,
       required: false,
     },
   },
@@ -30,7 +40,7 @@ export default {
 @import '@/styles/constants.scss';
 
   .search_field, .search_field:focus {
-    height: 35px;
+    height: 40px;
     width: 100%;
     border: 1px solid $white;
     background-color: $white;

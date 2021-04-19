@@ -13,8 +13,12 @@ export default {
     runningOrder: null,
     runningOrderId: null,
     loadedOrders: [],
+    paymentSettlements: [],
   },
   mutations: {
+    setpaymentSettlements(state, payload) {
+      state.paymentSettlements = payload;
+    },
     setOrders(state, payload) {
       state.loadedOrders = payload;
     },
@@ -200,6 +204,25 @@ export default {
       return Orders;
     },
 
+    async fetchsetpaymentSettlements({ commit }) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('fetch_payment_settlements', true);
+      const settlements = await API.smart(PATH, filters);
+      if (!settlements.error) commit('setpaymentSettlements', settlements.data);
+      commit('toggleLoading', false);
+    },
+
+    updateOrder({ commit }, payload) {
+      commit('loading', true);
+      const params = new FormData();
+      const updateKeys = Object.keys(payload);
+      updateKeys.forEach((key) => {
+        params.append(key, payload[`${key}`]);
+      });
+      commit('loading', false);
+      return API.smart(PATH, params);
+    },
   },
   getters: {
     loading: (state) => state.loading,

@@ -2,7 +2,6 @@ $white: white;
 $light-grey: #f4f7f7;
 $dark-grey: #7e8182;
 $grey: #525252;
-// $black: #000000;
 $blue: #2e5772;
 $running: #5c85a0;
 $settled: #1a2e3b;
@@ -19,24 +18,24 @@ $border-color: #d6d6d6;
 $shadow: 1px 3px $light-grey;
 
 
-// fonts
+/* fonts */
 $display-font: 'Inter', sans-serif;
 $body-font: 'Inter', sans-serif;
 $pricing-font: 'Inter', sans-serif;
 $display-font-new: 'Inter', sans-serif;
 
-// shades of gray
+/* shades of gray */
 $black: #0b0d0e;
-$darkest-gray: #2d3438; // gray-20
+$darkest-gray: #2d3438;
 $darker-gray: #49556B;
-$dark-gray: #72838c; // gray-50,
-$gray: #aab5ba; // gray-70
-$light-gray: #e2e6e8; // gray-90, use for border color
-$lightest-gray: #f6f7f8; // gray-97
+$dark-gray: #72838c;
+$gray: #aab5ba;
+$light-gray: #e2e6e8;
+$lightest-gray: #f6f7f8;
 $white: white;
 $container-gray: #F6F6F6;
 
-// color states
+/* color states */
 $primary-color: $black;
 $secondary-color: $dark-gray;
 $tertiary-color: $gray;
@@ -44,33 +43,25 @@ $accent-color: #31a3dd;
 $border-color: $light-gray;
 $container-accent: #EFF8FC;
 
-// shades of blue
-// $blue: $accent-color;
+
 $light-blue: #c6eafc;
 $lighter-blue: #EFF8FC;
 $dark-blue: #186c96;
 $container-blue: $container-accent;
 
-// shades of green
 $green: #09b66d;
 $light-green: #b3fbdc;
 $lighter-green: #EBF9F3;
 $dark-green: #057646;
 $container-green: #EBF9F3;
 
-// shades of yellow
-// $yellow: #f5c023;
-// $light-yellow: #fcefc7;
-// $dark-yellow: #ae8407;
-// $container-yellow: #FEFAED;
-
-// shades of red
+/* shades of red */
 $red: #ef2d56;
 $light-red: #fcdfe5;
 $dark-red: #ab0d2e;
 $container-red: #FDF3F8;
 
-// shades of violet
+/* shades of violet */
 $violet: #c04cfd;
 $light-violet: #efd2fe;
 $dark-violet: #8b02d3;

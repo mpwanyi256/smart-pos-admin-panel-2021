@@ -7,8 +7,9 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
+              class="picker_field"
               :value="computedDateFormattedMomentjs"
-              dense
+              dense :disabled="disabled"
               :label="message"
               readonly outlined
               v-bind="attrs"
@@ -34,6 +35,10 @@ export default {
       type: String,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+    },
   },
   data: () => ({
     date: format(parseISO(new Date().toISOString()), 'yyyy-MM-dd'),
@@ -54,3 +59,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .picker_field {
+    max-height: 35px !important;
+  }
+</style>
