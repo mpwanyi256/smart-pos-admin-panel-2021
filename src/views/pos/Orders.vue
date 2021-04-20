@@ -4,7 +4,14 @@
             {{ dayOpen }}
         </div>
         <div class="order_list">
-            <div class="order_pane">
+            <SectionsPane
+              v-if="companyType == 1"
+              :sections="sections"
+              :user="user"
+              :dayOpen="dayOpen"
+            />
+            <div v-else
+            class="order_pane">
                 <div
                   v-for="order in pendingOrders"
                   :key="order.order_id"
@@ -24,19 +31,29 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import SectionsPane from '@/components/pos/order/SectionsPane.vue';
 
 export default {
   name: 'Orders',
 
+  components: {
+    SectionsPane,
+  },
+
   data() {
     return {
       polling: null,
+      sections: [],
     };
   },
 
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
 
     pendingOrders() {
       return this.orders.filter((Order) => Order.status === 0);
@@ -53,6 +70,7 @@ export default {
 
   async mounted() {
     await this.fetchOrders();
+    await this.fetchTables();
     // const setPolling = async () => {
     //   if (!this.user) {
     //     clearInterval(this.polling);
@@ -71,8 +89,17 @@ export default {
   },
 
   methods: {
-    ...mapActions('pos', ['filterOrders']),
-    ...mapActions('pos', ['setRunningOrder', 'setRunningOrderId']),
+    ...mapActions('pos', ['filterOrders', 'setRunningOrder', 'setRunningOrderId', 'updateOrder']),
+
+    async fetchTables() {
+      const Sections = await this.updateOrder(
+        {
+          get_setup_sections: this.user.company_id,
+          day_open: this.dayOpen,
+        },
+      );
+      if (!Sections.error) this.sections = Sections.data;
+    },
 
     async reload() {
       await this.fetchOrders();
@@ -81,6 +108,7 @@ export default {
     },
 
     async fetchOrders() {
+      await this.fetchTables();
       const orders = await this.filterOrders({
         bill_no: '',
         from: this.dayOpen,
@@ -97,7 +125,7 @@ export default {
     },
 
     setOrder(order) {
-      this.setRunningOrder(order);
+      // this.setRunningOrder(order);
       this.setRunningOrderId(order.order_id);
       this.$eventBus.$emit('fetch-orders');
     },

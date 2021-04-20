@@ -84,6 +84,7 @@ export default {
         user_id: this.user.id,
         date: this.dayOpen,
         time: this.time,
+        table_id: 'default',
       };
       const order = await this.createNewOrder(filters);
       await this.$eventBus.$emit('fetch-orders');

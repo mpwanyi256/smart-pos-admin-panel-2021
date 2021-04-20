@@ -59,6 +59,7 @@ export default {
       filters.append('user_id', payload.user_id);
       filters.append('date', payload.date);
       filters.append('time', payload.time);
+      filters.append('table_id', payload.table_id);
       commit('toggleLoading', false);
       return API.smart(PATH, filters);
     },
