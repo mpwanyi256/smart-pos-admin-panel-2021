@@ -14,8 +14,12 @@ export default {
     runningOrderId: null,
     loadedOrders: [],
     paymentSettlements: [],
+    selectedTableId: null,
   },
   mutations: {
+    setWorkingTable(state, tableId) {
+      state.selectedTableId = tableId;
+    },
     setpaymentSettlements(state, payload) {
       state.paymentSettlements = payload;
     },
@@ -44,6 +48,9 @@ export default {
   },
   actions: {
 
+    setWorkingTable({ commit }, payload) {
+      commit('setWorkingTable', payload);
+    },
     setRunningOrderId({ commit }, payload) {
       commit('setRunningId', payload);
     },

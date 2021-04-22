@@ -17,7 +17,9 @@
 import Categories from '@/components/pos/menu/Categories.vue';
 import MenuItems from '@/components/pos/menu/MenuItems.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import { mapActions, mapGetters } from 'vuex';
+import {
+  mapActions, mapGetters, mapState,
+} from 'vuex';
 
 export default {
   name: 'MenuSection',
@@ -37,6 +39,7 @@ export default {
   computed: {
     ...mapGetters('pos', ['menuItems', 'categories', 'runningOrderId', 'orders']),
     ...mapGetters('auth', ['user']),
+    ...mapState('pos', ['selectedTableId']),
 
     filteredMenuItems() {
       return this.menuItems.filter((Item) => Item.status === 0);
@@ -52,9 +55,44 @@ export default {
         && Cat.status === '0');
     },
   },
+
+  eventBusCallbacks: {
+    'create-table-order': 'createTableOrder',
+  },
+
   methods: {
     ...mapActions('pos', ['getMenuItems', 'getMenuCategories', 'setRunningOrder',
-      'createNewOrder', 'addOrderItem', 'setRunningOrderId', 'filterOrders']),
+      'createNewOrder', 'addOrderItem', 'setRunningOrderId', 'filterOrders',
+      'setWorkingTable']),
+
+    async createTableOrder(payload) {
+      // if (!this.selectedTableId || this.selectedTableId.table_id !== payload.table_id) {
+      //   this.setWorkingTable(payload);
+      //   return;
+      // }
+      const order = await this.createNewOrder({
+        ...payload,
+        company_id: this.user.company_id,
+        user_id: this.user.id,
+        date: this.dayOpen,
+        time: this.time,
+      });
+      await this.$eventBus.$emit('fetch-orders');
+      if (!order.error) {
+        this.setRunningOrderId(order.order_id);
+        const orders = await this.filterOrders({
+          bill_no: order.order_id,
+          from: '',
+          to: '',
+          client_id: '',
+        });
+
+        const OrderFetched = orders.data.orders;
+        if (!OrderFetched.length) return;
+        this.setRunningOrder(OrderFetched[0]);
+        this.$eventBus.$emit('reload-order');
+      } else console.info(order.message);
+    },
 
     async addItemToOrder(menuItem) {
       if (!this.runningOrderId) return;

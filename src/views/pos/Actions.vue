@@ -26,10 +26,22 @@ export default {
   },
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+    ...mapGetters('auth', ['user']),
+
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
     },
+  },
+  created() {
+    if (this.companyType === 1) {
+      this.actions.unshift(
+        { name: 'Waiter', icon: 'mdi-account' },
+      );
+    }
   },
   methods: {
     ...mapActions('pos', ['addOrderItem']),

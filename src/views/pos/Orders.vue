@@ -71,16 +71,6 @@ export default {
   async mounted() {
     await this.fetchOrders();
     await this.fetchTables();
-    // const setPolling = async () => {
-    //   if (!this.user) {
-    //     clearInterval(this.polling);
-    //   } else {
-    //     this.fetchOrders();
-    //   }
-    // };
-    // this.polling = setInterval(() => {
-    //   setPolling();
-    // }, 3000);
   },
 
   eventBusCallbacks: {
@@ -125,7 +115,7 @@ export default {
     },
 
     setOrder(order) {
-      // this.setRunningOrder(order);
+      this.setRunningOrder(order);
       this.setRunningOrderId(order.order_id);
       this.$eventBus.$emit('fetch-orders');
     },

@@ -2,7 +2,9 @@
     <div class="runnning_order">
       <PageAlert v-if="errorMessage" :message="errorMessage" @close="errorMessage= ''" />
         <div class="order_header" v-if="order">
-            <h2>Order {{ order.bill_no }}</h2>
+            <h2>
+              <span v-if="companyType == 1">{{ order.table }}</span>
+              #{{ order.bill_no }}</h2>
             <div class="date_and_time">
                 <p>
                     {{ order.date }}
@@ -67,6 +69,11 @@ export default {
   },
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
+    ...mapGetters('auth', ['user']),
+
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;

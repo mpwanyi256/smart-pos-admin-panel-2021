@@ -8,30 +8,36 @@
           <v-expansion-panel-header
             :class="section.has_orders ? 'has-orders' : ''">
             <div>
-              <v-btn x-small fab
-                v-if="section.has_orders"
-              class="white">
+              <span v-if="section.has_orders">
                 {{ ordersCount(section) }}
-              </v-btn>
+              </span>
               {{ section.name }}
             </div>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <div class="tables_display">
-            <TableComponent
-              v-for="table in section.tables"
-              :key="table.id"
-              :table="table"
-              @order="createOrder(table)"
-            />
+              <TableComponent
+                v-for="table in section.tables"
+                :key="table.id"
+                :table="table"
+                @order="confirmOrderCreation(table)"
+                :ref="`table-${table.id}`"
+              />
             </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
+      <ConfirmModal
+        v-if="dialog && tableSelected"
+        :title="`Create new order for ${tableSelected.name}`"
+        @close="cancelCreate"
+        @yes="createOrder"
+      />
     </div>
 </template>
 <script>
 import TableComponent from '@/components/pos/order/TableComponent.vue';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
 import { mapActions } from 'vuex';
 
@@ -44,6 +50,7 @@ export default {
 
   components: {
     TableComponent,
+    ConfirmModal,
   },
 
   props: {
@@ -60,48 +67,48 @@ export default {
       required: true,
     },
   },
+
+  data() {
+    return {
+      tableSelected: null,
+      dialog: false,
+    };
+  },
+
   methods: {
-    ...mapActions('pos', ['createNewOrder', 'setRunningOrderId', 'filterOrders']),
+    ...mapActions('pos', ['setRunningOrderId', 'setRunningOrder']),
+
+    cancelCreate() {
+      this.tableSelected = null;
+      this.dialog = false;
+    },
 
     ordersCount(section) {
       return section.tables.filter((Table) => Table.order.id !== null).length;
     },
 
     setOrder(orderId) {
-      this.setRunningOrderId(orderId);
       this.$eventBus.$emit('fetch-orders');
+      this.setRunningOrderId(orderId);
     },
 
-    async createOrder(table) {
-      console.log('create', table);
+    confirmOrderCreation(table) {
       if (table.order.id) {
         this.setOrder(table.order.id);
         return;
       }
+      this.tableSelected = table;
+      this.dialog = true;
+    },
+
+    async createOrder() {
       if (!this.user) return;
       const filters = {
-        company_id: this.user.company_id,
-        user_id: this.user.id,
-        date: this.dayOpen,
-        time: this.time,
-        table_id: table.id,
+        table_id: this.tableSelected.id,
       };
-      const order = await this.createNewOrder(filters);
-      await this.$eventBus.$emit('fetch-orders');
-      if (!order.error) {
-        this.setRunningOrderId(order.order_id);
-        const orders = await this.filterOrders({
-          bill_no: order.order_id,
-          from: '',
-          to: '',
-          client_id: '',
-        });
-
-        const OrderFetched = orders.data.orders;
-        if (!OrderFetched.length) return;
-        this.setRunningOrder(OrderFetched[0]);
-        this.$eventBus.$emit('reload-order');
-      } else console.info(order.message);
+      this.$eventBus.$emit('create-table-order', filters);
+      this.dialog = false;
+      this.tableSelected = null;
     },
   },
 };
@@ -113,11 +120,20 @@ export default {
   display: flex;
   margin: 5px;
   color: $black;
+  font-size: 14px;
 }
 
 .has-orders {
-  background-color: $blue !important;
-  color: $white !important;
+  background-color: $border-color !important;
+  font-weight: bold;
+  font-size: 12px;
+  border-bottom: 1px solid $border-color;
+
+  span {
+    color: $accent-color;
+    margin-right: 5px;
+    font-size: 14px;
+  }
 }
 
 .tables_display {
