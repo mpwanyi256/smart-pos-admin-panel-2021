@@ -94,7 +94,7 @@ export default {
     async reload() {
       await this.fetchOrders();
       this.$eventBus.$emit('fetch-items');
-      this.$refs[`order-${this.runningOrderId}`][0].click();
+      // this.$refs[`order-${this.runningOrderId}`][0].click();
     },
 
     async fetchOrders() {

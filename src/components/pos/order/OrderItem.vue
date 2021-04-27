@@ -32,7 +32,7 @@ export default {
         height: 50px;
         width: inherit;
         background-color: $white;
-        border: 1px solid $header;
+        border-bottom: 0.5px solid $header;
         display: grid;
         grid-template-columns: 80% 20%;
         font-size: 14px;

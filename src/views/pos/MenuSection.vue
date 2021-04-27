@@ -66,10 +66,6 @@ export default {
       'setWorkingTable']),
 
     async createTableOrder(payload) {
-      // if (!this.selectedTableId || this.selectedTableId.table_id !== payload.table_id) {
-      //   this.setWorkingTable(payload);
-      //   return;
-      // }
       const order = await this.createNewOrder({
         ...payload,
         company_id: this.user.company_id,

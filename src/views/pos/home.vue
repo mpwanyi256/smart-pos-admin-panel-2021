@@ -6,7 +6,6 @@
             <MenuSection />
             <SelectedOrder />
             <Actions
-              @bill="showOrderBill"
               @discount="showDiscount = true"
             />
         </div>
@@ -23,6 +22,11 @@
         v-if="openSettementModal"
         @close="openSettementModal = false"
       />
+      <WaitersModal
+        v-if="showWaiters"
+        :order="runningOrder"
+        @close="showWaiters = false"
+      />
     </div>
 </template>
 <script>
@@ -34,6 +38,7 @@ import BillModal from '@/components/sales/modals/Bill.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
+import WaitersModal from '@/components/pos/order/AddWaiterModel.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -47,6 +52,7 @@ export default {
     BillModal,
     AddDiscountModal,
     OrderSettlementModal,
+    WaitersModal,
   },
   computed: {
     ...mapGetters('auth', ['user']),
@@ -58,6 +64,7 @@ export default {
       showBill: false,
       showDiscount: false,
       openSettementModal: false,
+      showWaiters: false,
     };
   },
   created() {
@@ -75,9 +82,14 @@ export default {
   eventBusCallbacks: {
     'view-bill': 'viewBill',
     'open-settlement-modal': 'settleBill',
+    'add-waiter': 'addWaiter',
   },
   methods: {
     ...mapActions('auth', ['getDayOpen']),
+
+    addWaiter() {
+      if (this.runningOrderId) this.showWaiters = true;
+    },
 
     viewBill() {
       this.showBill = true;

@@ -8,14 +8,13 @@
             <Table>
               <template slot="header">
                 <tr>
-                  <th>
+                  <th colspan="2">
                     <BaseTextfield
                       v-model="store_items_filter"
                       class="input_field"
-                      placeholder="Find a purchase item"
+                      placeholder="Search ..."
                     />
                   </th>
-                  <th>Add</th>
                 </tr>
               </template>
               <template slot="body">

@@ -3,11 +3,14 @@
         :class="isSelectedTable"
         @click="$emit('order', table)"
     >
-        {{ table.name }}<br>
-        <small v-if="table.order.order_number">
-            #{{ table.order.order_number }}
-        </small>
-        <v-icon class="printer">mdi-printer</v-icon>
+        {{ table.name }}
+        <template  v-if="table.order.order_number">
+          <br>
+          <small>
+              #{{ table.order.order_number }}
+          </small>
+          <v-icon class="printer">mdi-printer</v-icon>
+        </template>
     </div>
 </template>
 <script>
@@ -22,7 +25,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('pos', ['runningOrder']),
+    ...mapGetters('pos', ['runningOrder', 'orders']),
+
+    tableOrder() {
+      return this.orders.find((Order) => Order.order_id.match(this.table.order.order_number));
+    },
 
     selectedTable() {
       return this.runningOrder ? this.runningOrder.table_id : 0;
@@ -42,6 +49,10 @@ export default {
 <style scoped lang="scss">
 @import '@/styles/constants.scss';
 
+::v-deep .v-expansion-panel-content__wrap {
+  padding: 0px;
+}
+
 .table {
     background-color: $white;
     border: 1px solid $border-color;
@@ -50,25 +61,30 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     height: 70px;
-    margin: 1px;
+    margin: 3px;
     cursor: pointer;
     font-size: 14px !important;
+    overflow: hidden;
+
+    .printer {
+      color: $accent-color !important;
+    }
   }
 
   .isSelected {
     background-color: $accent-color !important;
     color: $white;
+
+    .printer {
+      color: $white !important;
+    }
   }
 
   .hasOrder {
     border: 1px solid $accent-color !important;
     color: $accent-color;
-    font-weight: bold;
-  }
-
-  .printer {
-    color: $black !important;
   }
 
 </style>

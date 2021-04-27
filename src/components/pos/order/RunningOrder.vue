@@ -12,6 +12,10 @@
                         <v-icon small class="clock_icon">mdi-clock</v-icon>
                     </span>
                     {{ order.time }}
+                    <span v-if="order.waiter">
+                      <v-icon small class="clock_icon">mdi-account</v-icon>
+                      {{ order.waiter.split(' ')[0] }}
+                    </span>
                 </p>
             </div>
         </div>
@@ -49,7 +53,7 @@ export default {
   props: {
     order: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   components: {
@@ -151,7 +155,7 @@ export default {
         color: $black;
 
         .order_header {
-            height: 56px;
+            height: 96px;
             background-color: $header;
             display: flex;
             flex-direction: column;

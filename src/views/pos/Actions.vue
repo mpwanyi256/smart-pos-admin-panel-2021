@@ -5,7 +5,7 @@
           @click="listen(action.name)"
         >
             <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p>{{ action.name }}</p>
+            <p class="name">{{ action.name }}</p>
         </div>
     </div>
 </template>
@@ -61,6 +61,9 @@ export default {
         case 'Settle':
           this.$eventBus.$emit('settle-bill');
           break;
+        case 'Waiter':
+          this.$eventBus.$emit('add-waiter');
+          break;
         default:
           console.log('Invalid action', this.orderId);
           break;
@@ -79,7 +82,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import '@/styles/pos.scss';
+@import '@/styles/constants.scss';
 
     .actions_pane {
         height: calc(100% - 52px);
@@ -93,13 +96,12 @@ export default {
         padding-left: 5px;
 
         > div {
-            height: 80px;
+            height: 60px;
             width: 100%;
             background-color: $white;
             display: flex;
             gap: 10px;
-            flex-direction: column;
-            justify-content: center;
+            padding-left: 20px;
             align-items: center;
             color: $black;
             font-weight: bold;
@@ -108,10 +110,13 @@ export default {
             border: 1px solid $bg_color;
             cursor: pointer;
             border-radius: 5px;
-            box-shadow: $elevation-default;
 
             .icon {
-              color: $black;
+              color: $gray-25;
+            }
+
+            .name {
+              margin: 0px;
             }
         }
 

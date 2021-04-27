@@ -14,7 +14,8 @@
               {{ section.name }}
             </div>
           </v-expansion-panel-header>
-          <v-expansion-panel-content>
+          <v-expansion-panel-content
+          class="expansion_panel">
             <div class="tables_display">
               <TableComponent
                 v-for="table in section.tables"
@@ -123,6 +124,10 @@ export default {
   font-size: 14px;
 }
 
+  ::v-deep .v-expansion-panel-content__wrap {
+    padding: 0px;
+  }
+
 .has-orders {
   background-color: $border-color !important;
   font-weight: bold;
@@ -142,6 +147,8 @@ export default {
   overflow-x: hidden;
   display: grid;
   grid-template-columns: 50% 50%;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 </style>
