@@ -1,5 +1,8 @@
 <template>
-    <div class="order_item">
+    <div
+      class="order_item"
+      :class="isPending ? 'pending' : ''"
+    >
         <div class="item_name_display">
           <p>{{ orderItem.name.toUpperCase() }}
             <br>
@@ -18,7 +21,9 @@
                 <template v-else>
                     <small
                       v-if="orderItem.notes"
-                      @click="addNote = !addNote" class="notes"
+                      @click="addNote = !addNote"
+                      class="notes"
+                      :class="isPending ? 'pending' : ''"
                     >
                       <span>
                         Notes:
@@ -35,11 +40,6 @@
                   icon="delete"
                 />
                 <BaseTooltip
-                  v-if="!isPending"
-                  message="Shift item"
-                  icon="sale"
-                />
-                <BaseTooltip
                   v-if="isPending"
                   @button="addNote = !addNote"
                   message="Add notes"
@@ -52,12 +52,26 @@
                   message="Cancel item"
                   icon="delete"
                 />
+                <BaseTooltip
+                  v-if="!isPending && companyType == 1"
+                  @button="shiftItem = true"
+                  color="blue"
+                  message="Shift item"
+                  icon="arrow-expand"
+                />
+                <!-- TO DO :: Check if user is alllowed to perform this action -->
             </div>
             <ConfirmModal
               v-if="cancelOrderItem"
               :requireReason="true"
+              title="Please enter cancellation reason"
               @close="cancelOrderItem = false"
-              @yes="$emit('candelOrder', orderItem)"
+              @yes="cancelOrder"
+            />
+            <ShiftOrderItem
+              v-if="shiftItem"
+              @close="shiftItem = false"
+              @shift="shiftOrderItemHandler"
             />
         </div>
     </div>
@@ -65,10 +79,13 @@
 <script>
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
-import { mapActions } from 'vuex';
+import ShiftOrderItem from '@/components/pos/order/manage/ShiftOrderItem.vue';
+import TimezoneMixin from '@/mixins/TimezoneMixin';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'OrderItemPreview',
+  mixins: [TimezoneMixin],
   props: {
     orderItem: {
       type: Object,
@@ -78,6 +95,7 @@ export default {
   components: {
     BaseTooltip,
     ConfirmModal,
+    ShiftOrderItem,
   },
   data() {
     return {
@@ -85,15 +103,71 @@ export default {
       itemNotes: '',
       confirmAction: false,
       cancelOrderItem: false,
+      shiftItem: false,
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
+
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
+
+    dayOpen() {
+      return this.user ? this.user.company_info.day_open : null;
+    },
+
     isPending() {
       return this.orderItem.status === '0';
     },
   },
   methods: {
-    ...mapActions('pos', ['updateRunningOrder']),
+    ...mapActions('pos', ['updateRunningOrder', 'updateOrder']),
+
+    async shiftOrderItemHandler(table) {
+      const tableOrder = {
+        create_new_order: this.user.company_id,
+        user_id: this.user.id,
+        date: this.dayOpen,
+        time: this.time,
+        table_id: table.id,
+      };
+      const shiftInfo = {
+        table_order_id: table.order.id,
+        shift_order_item_id: this.orderItem.id,
+        notes: `Item shifted from ${table.name.toUpperCase()} by ${this.user.user_name}`,
+      };
+
+      const tableHadOrder = table.order.id;
+      if (tableHadOrder) {
+        await this.shiftItemToTable(shiftInfo);
+      } else {
+        const createNewOrder = await this.updateOrder(tableOrder);
+        if (!createNewOrder.error) {
+          const newShiftInfo = {
+            table_order_id: createNewOrder.order_id,
+            shift_order_item_id: this.orderItem.id,
+            notes: `Item shifted from ${table.name.toUpperCase()} by ${this.user.user_name}`,
+          };
+          await this.shiftItemToTable(newShiftInfo);
+        }
+      }
+      this.shiftItem = false;
+    },
+
+    async shiftItemToTable(filters) {
+      const shiftItem = await this.updateOrder(filters);
+      if (!shiftItem.error) this.$eventBus.$emit('reload-order');
+    },
+
+    cancelOrder(reason) {
+      const cancel = {
+        ...this.orderItem,
+        reason,
+      };
+      this.$emit('cancel', cancel);
+      this.cancelOrderItem = false;
+    },
 
     saveNote() {
       const filter = {
@@ -112,6 +186,10 @@ export default {
 </script>
 <style scoped lang="scss">
 @import '@/styles/constants.scss';
+
+    .pending {
+      background-color: $header !important;
+    }
 
     .order_item {
         min-height: 130px;

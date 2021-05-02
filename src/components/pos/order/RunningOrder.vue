@@ -14,7 +14,16 @@
                     {{ order.time }}
                     <span v-if="order.waiter">
                       <v-icon small class="clock_icon">mdi-account</v-icon>
-                      {{ order.waiter.split(' ')[0] }}
+                      {{ order.waiter ? order.waiter.split(' ')[0] : '' }}
+                    </span>
+                    <span v-if="companyType == 1">
+                      <BaseTooltip
+                        :small="true"
+                        @button="shift = true"
+                        color="black"
+                        message="Shift table"
+                        icon="arrow-expand"
+                      />
                     </span>
                 </p>
             </div>
@@ -38,6 +47,11 @@
               :item="orderItemSelected"
             />
         </div>
+        <ShiftTable
+          v-if="shift"
+          @close="shift = false"
+          @shift="shiftOrder"
+        />
     </div>
 </template>
 <script>
@@ -46,6 +60,8 @@ import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
 import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
 import PageAlert from '@/components/alerts/PageAlert.vue';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import ShiftTable from '@/components/pos/order/manage/ShiftTable.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
@@ -62,6 +78,8 @@ export default {
     OrderTotalCacular,
     OrderItemsList,
     PageAlert,
+    BaseTooltip,
+    ShiftTable,
   },
   data() {
     return {
@@ -69,6 +87,7 @@ export default {
       showItems: false,
       orderItemSelected: null,
       errorMessage: '',
+      shift: false,
     };
   },
   computed: {
@@ -115,6 +134,18 @@ export default {
 
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+    ...mapActions('pos', ['updateOrder']),
+
+    async shiftOrder(tableId) {
+      const filter = {
+        shift_order_to_table: tableId,
+        order_id: this.order.order_id,
+      };
+      const updated = await this.updateOrder(filter);
+      if (!updated.error) this.$eventBus.$emit('reload-order');
+      console.log('Shift table', updated);
+      this.shift = false;
+    },
 
     showErrorAlert(msg) {
       this.errorMessage = msg;
@@ -184,7 +215,7 @@ export default {
             height: 400px;
             display: flex;
             flex-direction: column;
-            background-color: $header;
+            background-color: #d8dfe2; // $header;
         }
     }
 </style>

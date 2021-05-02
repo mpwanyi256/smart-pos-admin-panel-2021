@@ -73,6 +73,6 @@ export default {
     }
 
     .pending {
-        background-color: $warning-highlight;
+        background-color: $header; // $warning-highlight;
     }
 </style>

@@ -150,18 +150,27 @@ export default {
   },
   methods: {
     ...mapActions('sales', ['getOrderItems']),
-    printBill() {
-      const divToPrint = this.$refs.tableView;
+    ...mapActions('pos', ['updateOrder']),
 
-      const newWin = window.open('', 'Print-Window');
-      newWin.document.open();
-      newWin.document.write(`<html><style>@page{size: auto;margin: 0mm;}</style><body onload="window.print(true)">${divToPrint.innerHTML}</body></html>`);
-      newWin.document.close();
+    async printBill() {
+      this.updateOrder({ update_bill_print_status: this.order.order_id })
+        .then((res) => {
+          if (res.error) return;
+          this.$eventBus.$emit('reload-order');
+          //    TO DO use the thermal printer based on settings
+          const divToPrint = this.$refs.tableView;
+          const newWin = window.open('', 'Print-Window');
+          newWin.document.open();
+          newWin.document.write(`<html><style>@page{size: auto;margin: 0mm;}</style><body onload="window.print(true)">${divToPrint.innerHTML}</body></html>`);
+          newWin.document.close();
 
-      setTimeout(() => {
-        divToPrint.innerHTML = '';
-      }, 10);
-      this.$emit('close');
+          setTimeout(() => {
+            divToPrint.innerHTML = '';
+          }, 10);
+          this.$emit('close');
+        }).catch((e) => {
+          console.log('Error updating bill was printed', e);
+        });
     },
   },
   async mounted() {

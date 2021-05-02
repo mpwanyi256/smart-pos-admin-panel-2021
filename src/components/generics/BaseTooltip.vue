@@ -1,7 +1,7 @@
 <template>
     <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
-        <v-btn icon :class="color ? color : 'black--text'" dark
+        <v-btn :x-small="small" icon :class="color ? color : 'black--text'" dark
           v-bind="attrs" v-on="on" @click="$emit('button')">
           <v-icon>{{ `mdi-${icon}` }}</v-icon>
         </v-btn>
@@ -28,6 +28,10 @@ export default {
     float: {
       type: String,
       required: false,
+    },
+    small: {
+      type: Boolean,
+      default: false,
     },
   },
 };

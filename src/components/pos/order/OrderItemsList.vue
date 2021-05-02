@@ -9,6 +9,7 @@
                 :orderItem="item"
                 @delete="deleteItem"
                 @note="addItemNote"
+                @cancel="cancelOrderItem"
             />
         </div>
     </Basemodal>
@@ -16,7 +17,7 @@
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import OrderItemPreview from '@/components/pos/order/OrderItemPreview.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'OrderItemsList',
@@ -36,6 +37,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters('auth', ['user']),
     itemsLength() {
       return this.orderItemsList.length;
     },
@@ -52,6 +54,18 @@ export default {
   methods: {
     ...mapActions('sales', ['getOrderItems']),
     ...mapActions('pos', ['updateRunningOrder']),
+
+    async cancelOrderItem(item) {
+      const itemCanceled = {
+        reason: item.reason.toUpperCase(),
+        cancel_order_item: item.id,
+        order_id: item.order_id,
+        cancelled_by: this.user.id,
+      };
+      const cancelled = await this.updateRunningOrder(itemCanceled);
+      if (!cancelled.error) this.$eventBus.$emit('reload-order');
+      // TO DO :: add email notification
+    },
 
     async addItemNote(note) {
       await this.updateRunningOrder(note);
@@ -84,7 +98,7 @@ export default {
 </script>
 <style scoped lang="scss">
     .menu_items {
-        height: 300px;
+        height: 350px;
         display: flex;
         flex-direction: column;
         gap: 10px;

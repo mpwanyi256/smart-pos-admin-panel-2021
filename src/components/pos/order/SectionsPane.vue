@@ -129,7 +129,7 @@ export default {
   }
 
 .has-orders {
-  background-color: $border-color !important;
+  background-color: $header !important;
   font-weight: bold;
   font-size: 12px;
   border-bottom: 1px solid $border-color;
@@ -146,9 +146,18 @@ export default {
   overflow-y: auto;
   overflow-x: hidden;
   display: grid;
-  grid-template-columns: 50% 50%;
   padding: 10px;
   margin-bottom: 10px;
+
+  // Desktop view
+  @media screen and (max-width: 1440px) {
+    grid-template-columns: 100%;
+  }
+
+  @media screen and (min-width: 1441px) {
+    grid-template-columns: 50% 50%;
+  }
+
 }
 
 </style>

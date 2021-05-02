@@ -9,7 +9,11 @@
           <small>
               #{{ table.order.order_number }}
           </small>
-          <v-icon class="printer">mdi-printer</v-icon>
+          <v-icon
+            v-if="table.order.bill_printed"
+            class="printer">
+            mdi-printer
+          </v-icon>
         </template>
     </div>
 </template>

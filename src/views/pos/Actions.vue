@@ -65,7 +65,7 @@ export default {
           this.$eventBus.$emit('add-waiter');
           break;
         default:
-          console.log('Invalid action', this.orderId);
+          console.log('Invalid action');
           break;
       }
     },
@@ -101,7 +101,7 @@ export default {
             background-color: $white;
             display: flex;
             gap: 10px;
-            padding-left: 20px;
+            padding-left: 5px;
             align-items: center;
             color: $black;
             font-weight: bold;

@@ -11,7 +11,7 @@
               :dayOpen="dayOpen"
             />
             <div v-else
-            class="order_pane">
+              class="order_pane">
                 <div
                   v-for="order in pendingOrders"
                   :key="order.order_id"

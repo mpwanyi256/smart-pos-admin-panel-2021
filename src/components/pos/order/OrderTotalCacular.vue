@@ -46,14 +46,15 @@ export default {
 @import '@/styles/pos.scss';
     .summary_info {
         overflow: hidden;
+        padding-top: 10px;
 
         .order_summmary:first-child, .order_summmary:last-child {
-            border-top: 1px solid $header;
+            // border-top: 1px solid $header;
             font-weight: bold;
         }
 
         .order_summmary:last-child {
-            border-bottom: 1px solid $header;
+            // border-bottom: 1px solid $header;
             font-weight: bold;
             height: 50px;
         }
