@@ -6,6 +6,8 @@ import accounts from './accounts';
 import menu from './menu';
 import inventory from './inventory';
 import pos from './pos';
+import reports from './reports';
+import settings from './settings';
 
 Vue.use(Vuex);
 
@@ -17,5 +19,7 @@ export default new Vuex.Store({
     menu,
     inventory,
     pos,
+    reports,
+    settings,
   },
 });

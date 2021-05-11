@@ -18,7 +18,7 @@
           class="expansion_panel">
             <div class="tables_display">
               <TableComponent
-                v-for="table in section.tables"
+                v-for="table in activeTables(section)"
                 :key="table.id"
                 :table="table"
                 @order="confirmOrderCreation(table)"
@@ -76,12 +76,19 @@ export default {
     };
   },
 
+  computed: {
+  },
+
   methods: {
     ...mapActions('pos', ['setRunningOrderId', 'setRunningOrder']),
 
     cancelCreate() {
       this.tableSelected = null;
       this.dialog = false;
+    },
+
+    activeTables(section) {
+      return section.tables.filter((Table) => !Table.hidden);
     },
 
     ordersCount(section) {

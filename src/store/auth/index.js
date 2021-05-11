@@ -17,7 +17,8 @@ export default {
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
+      { icon: 'mdi-home', name: 'Accomodation', path: 'accomodation' },
+      { icon: 'mdi-cog', name: 'Settings', path: 'access_controls' },
     ],
   },
   mutations: {
@@ -79,8 +80,10 @@ export default {
 
         if (userInfo.role === 5) {
           router.push({ name: 'overview' });
+          dispatch('settings/fetch', { get_access_controls: 'all' });
         } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
           router.push({ name: 'pos' });
+          dispatch('settings/fetch', { get_access_controls: 'all' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');

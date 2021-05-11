@@ -1,12 +1,26 @@
 <template>
     <div class="orders">
-        <div class="day_open" v-show="dayOpen">
-            {{ dayOpen }}
+        <div
+          class="day_open"
+          v-show="dayOpen"
+          @click="actions = true"
+        >
+         <p>
+           <span class="time_display">
+             <v-btn text class="time_display">
+              <v-icon class="time_display" left>
+                mdi-clock-outline
+              </v-icon>
+              {{ timeNow }}
+              {{ dayOpenDisplay }}
+             </v-btn>
+           </span>
+         </p>
         </div>
         <div class="order_list">
             <SectionsPane
               v-if="companyType == 1"
-              :sections="sections"
+              :sections="activeTables"
               :user="user"
               :dayOpen="dayOpen"
             />
@@ -27,29 +41,51 @@
                 </div>
             </div>
         </div>
+        <ManagerActions
+          v-if="actions"
+          @close="actions = false"
+          @action="actionHandler"
+        />
+        <SalesReport
+          v-if="viewSales"
+          @close="viewSales = false"
+          :date="dayOpen"
+        />
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import SectionsPane from '@/components/pos/order/SectionsPane.vue';
+import ManagerActions from '@/components/pos/manage/ManagerActions.vue';
+import SalesReport from '@/components/Reports/SalesReport.vue';
+import TimezoneMixin from '@/mixins/TimezoneMixin';
 
 export default {
   name: 'Orders',
-
+  mixins: [TimezoneMixin],
   components: {
     SectionsPane,
+    ManagerActions,
+    SalesReport,
   },
 
   data() {
     return {
       polling: null,
       sections: [],
+      actions: false,
+      viewSales: false,
+      timeNow: '',
     };
   },
 
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    activeTables() {
+      return this.sections.filter((Section) => !Section.hidden);
+    },
 
     companyType() {
       return this.user ? this.user.company_info.business_type : 0;
@@ -68,9 +104,15 @@ export default {
     },
   },
 
-  async mounted() {
+  async created() {
     await this.fetchOrders();
     await this.fetchTables();
+
+    setInterval(() => {
+      const timeKati = new Date().getTime();
+      const extract = new Date(timeKati);
+      this.timeNow = `${extract.getHours()}:${extract.getMinutes()}:${extract.getSeconds()}`;
+    }, 1000);
   },
 
   eventBusCallbacks: {
@@ -80,6 +122,33 @@ export default {
 
   methods: {
     ...mapActions('pos', ['filterOrders', 'setRunningOrder', 'setRunningOrderId', 'updateOrder']),
+
+    getTimeNow(unixTimestamp) {
+      const date = new Date(unixTimestamp * 1000);
+      // Hours part from the timestamp
+      const hours = date.getHours();
+      // Minutes part from the timestamp
+      const minutes = `0${date.getMinutes()}`;
+      // Seconds part from the timestamp
+      const seconds = `0${date.getSeconds()}`;
+
+      // Will display time in 10:30:23 format
+      return `${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}`;
+    },
+
+    actionHandler(action) {
+      console.log(action);
+      switch (action) {
+        case 'sales':
+          this.viewSales = true;
+          break;
+        default:
+          console.log('Invalid action');
+          this.actions = true;
+          return;
+      }
+      this.actions = false;
+    },
 
     async fetchTables() {
       const Sections = await this.updateOrder(
@@ -131,14 +200,20 @@ export default {
         display: flex;
         flex-direction: column;
 
+        .time_display {
+          color: $accent-color;
+        }
+
         .day_open {
-            height: 50px;
-            background-color: $white;
-            color: $black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
+          height: 50px;
+          background-color: $white;
+          color: $accent-color;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
         }
 
         .order_list {

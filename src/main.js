@@ -40,8 +40,10 @@ new Vue({
   vuetify,
   created() {
     const LoggedInUser = localStorage.getItem('smart_user_id');
-    if (LoggedInUser) store.dispatch('auth/getUserById');
-    else store.replace({ name: 'login' });
+    if (LoggedInUser) {
+      store.dispatch('auth/getUserById');
+      store.dispatch('settings/fetch', { get_access_controls: 'all' });
+    } else store.replace({ name: 'login' });
   },
   render: (h) => h(App),
 }).$mount('#app');

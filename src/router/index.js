@@ -8,6 +8,8 @@ import setup from './setup';
 import inventory from './inventory';
 import Accounting from './accounting';
 import POS from './pos';
+import Accomodation from './accomodation';
+import Settings from './settings';
 
 Vue.use(VueRouter);
 Vue.use(Meta, {
@@ -22,6 +24,8 @@ const routes = [
   setup,
   inventory,
   POS,
+  Accomodation,
+  Settings,
 ];
 
 const router = new VueRouter({

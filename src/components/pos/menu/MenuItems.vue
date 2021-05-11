@@ -1,13 +1,14 @@
 <template>
   <div class="menu_listing">
     <div class="search_area">
-      <p>ITEMS</p>
+      <p>Menu items</p>
       <div class="search">
         <input type="text" v-model="menuSearchKey"
           class="search_field" placeholder="Search" />
         <v-btn @click="$emit('create-order')" text class="btn_create_order">
           <v-icon left>mdi-plus</v-icon>
           Create new order
+          <!-- TO Do -->
         </v-btn>
       </div>
     </div>

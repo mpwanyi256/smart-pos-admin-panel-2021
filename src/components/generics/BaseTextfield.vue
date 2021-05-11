@@ -15,6 +15,10 @@ export default {
       type: String,
       required: false,
     },
+    preset: {
+      type: String,
+      required: false,
+    },
     placeholder: {
       type: String,
       required: false,
@@ -34,6 +38,11 @@ export default {
       this.$emit('input', val.trim());
     },
   },
+  created() {
+    if (this.preset) {
+      this.input_text = this.preset;
+    }
+  },
 };
 </script>
 <style lang="scss">
@@ -49,6 +58,8 @@ export default {
     direction: ltr;
     padding-left: 5px;
     padding-right: 5px;
-    box-shadow: $elevation-default;
+    // box-shadow: $elevation-default;
+    border: 0.5px solid rgba(148, 148, 148, 0.87);
+    font-size: 14px;
   }
 </style>

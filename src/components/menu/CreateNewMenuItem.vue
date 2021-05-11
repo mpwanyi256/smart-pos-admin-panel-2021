@@ -14,7 +14,7 @@
           />
           <v-select
             dense outlined
-            label="Section"
+            label="Department"
             :items="filteredDepartments"
             item-text="name"
             item-value="id"
