@@ -27,7 +27,7 @@ export default {
       const conts = await API.smart(PATH, params);
       if (!conts.error) commit('setColtrols', conts.data);
     },
-    async post({ commit }, payload) {
+    post({ commit }, payload) {
       commit('loading', true);
       const params = new FormData();
       const updateKeys = Object.keys(payload);

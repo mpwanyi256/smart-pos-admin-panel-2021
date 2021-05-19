@@ -9,10 +9,10 @@
            <span class="time_display">
              <v-btn text class="time_display">
               <v-icon class="time_display" left>
-                mdi-clock-outline
+                mdi-calendar
               </v-icon>
+              {{ dayOpenDisplay }} -
               {{ timeNow }}
-              {{ dayOpenDisplay }}
              </v-btn>
            </span>
          </p>
@@ -51,6 +51,12 @@
           @close="viewSales = false"
           :date="dayOpen"
         />
+        <SwitchDayModal
+          v-if="switchDay"
+          @switch="closeDay"
+          :message="errorMessage"
+          :loading="loading"
+        />
     </div>
 </template>
 <script>
@@ -58,6 +64,7 @@ import { mapGetters, mapActions } from 'vuex';
 import SectionsPane from '@/components/pos/order/SectionsPane.vue';
 import ManagerActions from '@/components/pos/manage/ManagerActions.vue';
 import SalesReport from '@/components/Reports/SalesReport.vue';
+import SwitchDayModal from '@/components/pos/manage/SwitchDayModal.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
 
 export default {
@@ -67,6 +74,7 @@ export default {
     SectionsPane,
     ManagerActions,
     SalesReport,
+    SwitchDayModal,
   },
 
   data() {
@@ -76,12 +84,19 @@ export default {
       actions: false,
       viewSales: false,
       timeNow: '',
+      switchDay: false,
+      errorMessage: '',
+      loading: false,
     };
   },
 
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    userRole() {
+      return this.user ? this.user.role : 0;
+    },
 
     activeTables() {
       return this.sections.filter((Section) => !Section.hidden);
@@ -122,6 +137,8 @@ export default {
 
   methods: {
     ...mapActions('pos', ['filterOrders', 'setRunningOrder', 'setRunningOrderId', 'updateOrder']),
+    ...mapActions('auth', ['getUserById']),
+    ...mapActions('reports', ['getReport']),
 
     getTimeNow(unixTimestamp) {
       const date = new Date(unixTimestamp * 1000);
@@ -137,10 +154,12 @@ export default {
     },
 
     actionHandler(action) {
-      console.log(action);
       switch (action) {
         case 'sales':
-          this.viewSales = true;
+          if ([3, 5].includes(this.userRole)) this.viewSales = true;
+          break;
+        case 'open':
+          this.switchDay = true;
           break;
         default:
           console.log('Invalid action');
@@ -148,6 +167,22 @@ export default {
           return;
       }
       this.actions = false;
+    },
+
+    async closeDay(datePicked) {
+      this.loading = true;
+      this.getReport({
+        close_day: this.dayOpen,
+        open_day: datePicked,
+      }).then((response) => {
+        this.errorMessage = response.message;
+        setTimeout(() => {
+          this.switchDay = false;
+          this.errorMessage = '';
+          this.getUserById();
+          this.loading = false;
+        }, 5000);
+      });
     },
 
     async fetchTables() {
@@ -163,7 +198,6 @@ export default {
     async reload() {
       await this.fetchOrders();
       this.$eventBus.$emit('fetch-items');
-      // this.$refs[`order-${this.runningOrderId}`][0].click();
     },
 
     async fetchOrders() {

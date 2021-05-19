@@ -1,29 +1,26 @@
 <template>
     <Basemodal
         :title="`Sales report ${selectedDate}`"
-        :size="1200" @close="$emit('close')">
+        :size="1200" @close="$emit('close')"
+        :fullscreen="true"
+        >
         <template slot="action">
-          <div class="report-actions">
+          <div ref="salesReport" class="report-actions">
             <BaseTooltip
               class="pdf"
-              @button="shiftItem = true"
+              @button="printReport"
               color="red"
-              message="Download pdf"
-              icon="file-pdf-box"
+              message="Print"
+              icon="printer"
             />
             <DatePickerBeta
               message="Select date"
               @picked="selectedDate = $event"
             />
           </div>
-          <!-- <v-btn icon class="red--text darken 3 ml-2">
-            <v-icon>mdi-file-pdf-box</v-icon>
-          </v-btn> -->
         </template>
-        <div class="sales_report">
-          <template v-if="loading">
-            <LinearLoader />
-          </template>
+        <div ref="salesReport" class="sales_report">
+          <LinearLoader v-if="loading" />
           <template v-else>
               <h3>Sales settlements</h3>
               <PaymentSettlements
@@ -38,9 +35,12 @@
                 :data="report.department_settlements"
               />
               <DepartmentSale
-                v-for="(dep, i) in departmentItemSales"
+                v-for="(dep, i) in report.department_item_sales"
                 :key="i"
                 :info="dep"
+              />
+              <OrdersList
+                :orders="report.orders"
               />
           </template>
         </div>
@@ -51,9 +51,10 @@ import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import PaymentSettlements from '@/components/Reports/generics/PaymentSettlements.vue';
 import DepartmentSale from '@/components/Reports/generics/DepartmentSales.vue';
+import OrdersList from '@/components/Reports/OrdersList.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'SalesReport',
@@ -70,93 +71,52 @@ export default {
     DatePickerBeta,
     LinearLoader,
     BaseTooltip,
+    OrdersList,
   },
   data() {
     return {
       selectedDate: null,
-      report: null,
-      departmentItemSales: [
-        {
-          name: 'Bar',
-          sales: [
-            {
-              name: 'Gordons 1Ltr', quantity: 4, unit_price: '30,000', amount: '120,000',
-            },
-            {
-              name: 'Chardony 1Ltr', quantity: 4, unit_price: '30,000', amount: '120,000',
-            },
-            {
-              name: 'Coffee 1Ltr', quantity: 4, unit_price: '30,000', amount: '120,000',
-            },
-            {
-              name: 'Total', quantity: '', unit_price: '', amount: '360,000',
-            },
-          ],
-        },
-        {
-          name: 'Kitchen',
-          sales: [
-            {
-              name: 'Goat ribs', quantity: 2, unit_price: '40,000', amount: '80,000',
-            },
-            {
-              name: 'Chicken', quantity: 4, unit_price: '20,000', amount: '80,000',
-            },
-            {
-              name: 'Vegetable rice', quantity: 1, unit_price: '30,000', amount: '30,000',
-            },
-            {
-              name: 'Total', quantity: '', unit_price: '', amount: '360,000',
-            },
-          ],
-        },
-        {
-          name: 'Accomodation',
-          sales: [
-            {
-              name: 'Room 1', quantity: 2, unit_price: '40,000', amount: '80,000',
-            },
-            {
-              name: 'Room 5', quantity: 4, unit_price: '20,000', amount: '80,000',
-            },
-            {
-              name: 'Room 7', quantity: 1, unit_price: '30,000', amount: '30,000',
-            },
-            {
-              name: 'Room 5', quantity: 4, unit_price: '20,000', amount: '80,000',
-            },
-            {
-              name: 'Room 7', quantity: 1, unit_price: '30,000', amount: '30,000',
-            },
-            {
-              name: 'Total', quantity: '', unit_price: '', amount: '360,000',
-            },
-          ],
-        },
-      ],
+      report: {},
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters('reports', ['loading']),
+    // ...mapGetters('reports', ['loading']),
   },
   watch: {
     async selectedDate(val) {
+      this.loading = true;
       if (val) await this.fetchReport();
+      this.$refs.salesReport.scrollTo(0, 0);
+      // this.$el.querySelector('.sales_report').scroll(0, 0);
     },
   },
   methods: {
     ...mapActions('reports', ['getReport']),
+
+    printReport() {
+      const divToPrint = this.$refs.salesReport;
+      const newWin = window.open('', 'Print-Window');
+      newWin.document.open();
+      newWin.document.write(`<html><style>@page{size: auto;margin: 0mm;}</style><body onload="window.print(true)">${divToPrint.innerHTML}</body></html>`);
+      newWin.document.close();
+
+      setTimeout(() => {
+        divToPrint.innerHTML = '';
+      }, 10);
+      this.$emit('close');
+    },
 
     async fetchReport() {
       const Report = await this.getReport({
         get_daily_report: this.selectedDate,
       });
       if (!Report.error) this.report = Report.data;
+      this.loading = false;
     },
   },
-  async mounted() {
+  async created() {
     this.selectedDate = this.date;
-    await this.fetchReport();
   },
 };
 </script>
@@ -170,13 +130,12 @@ export default {
   }
 
   .sales_report {
-    height: 90vh;
+    min-height: 100%;
     background-color: $white;
-    overflow-y: auto;
-    overflow-x: hidden;
-    margin-bottom: 25px;
+    overflow: auto;
     background-color: $body-bg;
     font-family: $font-style;
+    scroll-behavior: smooth;
 
     h3 {
       margin: 10px;

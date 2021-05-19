@@ -1,41 +1,34 @@
 <template>
     <Basemodal
-        :title="``"
-        :size="700" @close="$emit('close')">
-        <div class="manager_actions">
-            <TimeDisplay v-if="false" />
-            <DigitalClock />
-            <div class="actions_list">
-              <div class="action"
-                  v-for="(action, i) in actions"
-                  :key="i"
-                  @click="$emit('action', action.action)"
-              >
-                  {{ action.name }}
-              </div>
+      :title="`Actions`"
+      :size="700" @close="$emit('close')">
+      <div class="manager_actions">
+          <div class="actions_list">
+            <div class="action"
+                v-for="(action, i) in actions"
+                :key="i"
+                @click="$emit('action', action.action)"
+            >
+                {{ action.name }}
             </div>
-        </div>
+          </div>
+      </div>
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import TimeDisplay from '@/components/generics/new/TimeDisplay.vue';
-import DigitalClock from '@/components/generics/new/DigitalClock.vue';
 
 export default {
   name: 'ManagerActions',
   components: {
     Basemodal,
-    TimeDisplay,
-    DigitalClock,
   },
   data() {
     return {
       actions: [
         { name: 'View Sales Report', action: 'sales' },
         { name: 'Send email', action: 'email' },
-        { name: 'Close Day', action: 'close' },
-        { name: 'Switch to previous day', action: 'switch' },
+        { name: 'Open new day', action: 'open' },
       ],
     };
   },

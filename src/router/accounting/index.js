@@ -2,7 +2,7 @@ export default {
   path: '/Accounting',
   name: 'accounting',
   meta: {
-    authrequired: false,
+    authrequired: true,
     title: 'SmartPOS :: Accounting',
   },
   component: () => import('@/views/dashboard/Accounting/Home.vue'),
@@ -11,7 +11,7 @@ export default {
       path: '',
       name: 'accountingDashboard',
       meta: {
-        authrequired: false,
+        authrequired: true,
         title: 'SmartPOS :: Accounting dashboard',
       },
       component: () => import('@/views/dashboard/Accounting/pages/Dashboard.vue'),

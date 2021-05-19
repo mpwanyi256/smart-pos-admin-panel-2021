@@ -20,6 +20,7 @@
           <v-date-picker
             v-model="date" no-title
             @change="menu1 = false"
+            :min="min"
           ></v-date-picker>
         </v-menu>
     </div>
@@ -39,6 +40,15 @@ export default {
       type: Boolean,
       required: false,
     },
+    min: {
+      type: String,
+      required: false,
+      // eslint-disable-next-line consistent-return
+      validate: (val) => {
+        if (val) return new Date(val);
+        return '';
+      },
+    },
   },
   data: () => ({
     date: format(parseISO(new Date().toISOString()), 'yyyy-MM-dd'),
@@ -48,6 +58,9 @@ export default {
     date() {
       this.$emit('picked', this.date);
     },
+    min(val) {
+      if (val) this.date = format(parseISO(new Date(val).toISOString()), 'yyyy-MM-dd');
+    },
   },
   computed: {
     computedDateFormattedMomentjs() {
@@ -55,6 +68,7 @@ export default {
     },
   },
   mounted() {
+    if (this.min) this.date = format(parseISO(new Date(this.min).toISOString()), 'yyyy-MM-dd');
     this.$emit('picked', this.date);
   },
 };

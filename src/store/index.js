@@ -8,6 +8,7 @@ import inventory from './inventory';
 import pos from './pos';
 import reports from './reports';
 import settings from './settings';
+import accomodation from './accomodation';
 
 Vue.use(Vuex);
 
@@ -21,5 +22,6 @@ export default new Vuex.Store({
     pos,
     reports,
     settings,
+    accomodation,
   },
 });

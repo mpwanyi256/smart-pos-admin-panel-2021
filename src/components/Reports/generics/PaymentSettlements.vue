@@ -1,8 +1,8 @@
 <template>
     <div class="sales-overview">
         <div class="settled-orders"
-            v-for="item in data"
-            :key="item"
+            v-for="(item, i) in data"
+            :key="i"
         >
             <div class="display">
                 <p>{{ item.name }}</p>
@@ -17,7 +17,8 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true,
+      required: false,
+      default: () => [],
     },
   },
 };

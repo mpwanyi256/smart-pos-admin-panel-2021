@@ -3,21 +3,75 @@
         <NavBar />
         <div class="accomodation_area">
             <div class="routes_area">
-
+                <router-view
+                  v-if="properties.length"
+                  :property="selectedProperty"
+                />
             </div>
-            <PropertiesList />
+            <PropertiesList
+                :properties="properties"
+                @add="addProperty = true"
+                @select="selectedProperty = $event"
+                :selectedProperty="selectedProperty"
+            />
         </div>
+        <CreateProperty
+            v-if="addProperty"
+            @close="addProperty = false"
+            @reload="fetchProperties"
+        />
     </div>
 </template>
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
-import PropertiesList from '@/components/accomodation/PropertiesList.vue';
+import PropertiesList from '@/components/accomodation/properties/PropertiesList.vue';
+import CreateProperty from '@/components/accomodation/manage/CreateProperty.vue';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Accomodation',
   components: {
     NavBar,
     PropertiesList,
+    CreateProperty,
+  },
+  data() {
+    return {
+      properties: [],
+      addProperty: false,
+      selectedProperty: null,
+    };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+  },
+  watch: {
+    selectedProperty() {
+    //   this.$router.push({
+    //     name: this.$route.name,
+    //     params: {
+    //       property: val,
+    //     },
+    //   });
+    },
+  },
+  created() {
+    this.fetchProperties();
+  },
+  methods: {
+    ...mapActions('accomodation', ['post']),
+
+    fetchProperties() {
+      this.post({
+        get_properties: this.user.company_id,
+      }).then((response) => {
+        this.properties = response.data;
+        if (response.data.length) {
+          // eslint-disable-next-line prefer-destructuring
+          if (!this.selectedProperty) this.selectedProperty = response.data[0];
+        }
+      });
+    },
   },
 };
 </script>
@@ -30,7 +84,7 @@ export default {
     overflow: hidden;
     background-color: $bg_color;
     font-size: 14px;
-    font-family: $font-style;
+    font-family: $font-style !important;
 
     // scrollbar-width: thin;
     ::-webkit-scrollbar{

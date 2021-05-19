@@ -53,7 +53,9 @@
                   icon="delete"
                 />
                 <BaseTooltip
-                  v-if="!isPending && companyType == 1"
+                  v-if="
+                    !isPending && companyType == 1
+                  "
                   @button="shiftItem = true"
                   color="blue"
                   message="Shift item"
@@ -104,10 +106,28 @@ export default {
       confirmAction: false,
       cancelOrderItem: false,
       shiftItem: false,
+      allowManagerShiftCODE: 'ALMSIFTB',
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('settings', ['controls']),
+
+    userRole() {
+      return this.user ? this.user.role : 0;
+    },
+
+    allowManagerShitf() {
+      return this.controls.find((Control) => Control.set_code === this.allowManagerShiftCODE);
+    },
+
+    managerCanShiftItem() {
+      return !!this.userRole === 1 && this.allowManagerShitf.status;
+    },
+
+    isSuperUser() {
+      return this.userRole === 5;
+    },
 
     companyType() {
       return this.user ? this.user.company_info.business_type : 0;

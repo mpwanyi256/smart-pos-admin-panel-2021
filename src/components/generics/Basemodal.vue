@@ -1,5 +1,9 @@
 <template>
-    <v-dialog v-model="dialog" :width="size ? size : 500" persistent>
+    <v-dialog
+      v-model="dialog"
+      :width="size ? size : 500"
+      persistent
+      :fullscreen="fullscreen">
         <v-card class="modal_content">
             <v-card-title class="black--text">
                 {{ title ? title : '' }}
@@ -19,9 +23,16 @@ export default {
   props: {
     size: {
       type: Number,
+      required: false,
+      default: 500,
     },
     title: {
       type: String,
+    },
+    fullscreen: {
+      type: Boolean,
+      required: false,
+      default: () => false,
     },
   },
   data() {

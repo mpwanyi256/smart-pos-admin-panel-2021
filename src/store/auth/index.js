@@ -17,7 +17,7 @@ export default {
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      { icon: 'mdi-home', name: 'Accomodation', path: 'accomodation' },
+      { icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_dashboard' },
       { icon: 'mdi-cog', name: 'Settings', path: 'access_controls' },
     ],
   },

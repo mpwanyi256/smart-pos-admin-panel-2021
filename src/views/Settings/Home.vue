@@ -28,7 +28,7 @@ export default {
         { name: 'Company settings', icon: 'mdi-domain', path: 'company_settings' },
         { name: 'Employees', icon: 'mdi-account-group-outline', path: 'company_employees' },
         { name: 'Sections and tables', icon: 'mdi-table-arrow-right', path: 'sections_and_tables' },
-        { name: 'Printer settings', icon: 'mdi-printer', path: 'inv_purchases' },
+        { name: 'Printer settings', icon: 'mdi-printer', path: 'printer_settings' },
         { name: 'Email list', icon: 'mdi-email', path: 'company_mail_list' },
       ],
     };

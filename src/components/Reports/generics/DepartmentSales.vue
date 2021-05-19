@@ -12,7 +12,7 @@
                 </tr>
             </template>
             <template slot="body">
-                <tr v-for="(item, i) in info.sales" :key="i">
+                <tr v-for="(item, i) in info.items_sold" :key="i">
                     <td>
                         <template v-if="item.name == 'Total'">
                             &nbsp;
@@ -38,6 +38,12 @@
                         <template v-else>
                             {{ item.amount }}
                         </template>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong class="float-right">TOTAL</strong></td>
+                    <td>
+                        <strong>{{ info.total_sale }}</strong>
                     </td>
                 </tr>
             </template>
@@ -68,6 +74,7 @@ export default {
     flex-direction: column;
     gap: 10px;
     margin-bottom: 15px;
+    // overflow: auto;
     // border: 1px solid #e2e2e2;
 
     h3 {

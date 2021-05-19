@@ -5,10 +5,12 @@
       <div class="search">
         <input type="text" v-model="menuSearchKey"
           class="search_field" placeholder="Search" />
-        <v-btn @click="$emit('create-order')" text class="btn_create_order">
-          <v-icon left>mdi-plus</v-icon>
+        <v-btn
+          @click="$emit('create-order')"
+          text class="btn_create_order"
+          v-show="companyType == 2">
+            <v-icon left>mdi-plus</v-icon>
           Create new order
-          <!-- TO Do -->
         </v-btn>
       </div>
     </div>
@@ -25,6 +27,7 @@
 </template>
 <script>
 import MenuItem from '@/components/pos/menu/MenuItem.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'MenuItems',
@@ -41,6 +44,12 @@ export default {
     return {
       menuSearchKey: '',
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
   },
   watch: {
     menuSearchKey(val) {

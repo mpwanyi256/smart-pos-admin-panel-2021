@@ -33,14 +33,17 @@
                       </v-btn>
                   </td>
                   <td>
+                    <v-btn small text>
+                      <v-icon left>mdi-printer</v-icon>
+                      Setup printer
+                    </v-btn>
+                  </td>
+                  <td>
                     <BaseSwitch
                       :status="section.hidden"
                       color="red"
                       @change="updateSectionStatus($event, section)"
                     />
-                  </td>
-                  <td>
-                    &nbsp;
                   </td>
               </tr>
           </template>

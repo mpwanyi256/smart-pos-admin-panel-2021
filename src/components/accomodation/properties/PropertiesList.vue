@@ -1,23 +1,26 @@
 <template>
     <div class="properties">
         <div
-            :class="{rs: !rightShadow}"
             class="button-container"
         >
             <v-btn
                 class="iconic transparent secondary"
-                @click="$emit('open-create-modal')"
+                @click="$emit('add')"
             >
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
         </div>
         <div ref="scroll" class="tab-container">
-            <div class="tab"
-                v-for="i in 30"
-                :key="i"
+            <div
+                v-for="property in properties"
+                class="tab"
+                :class="selectedProperty.id == property.id ? 'active' : ''"
+                :key="property.id"
+                @click="$emit('select', property)"
+                :selectedProperty="selectedProperty"
             >
                 <label>
-                    <span>{{ `Property longer name ${i}` }}</span>
+                    <span>{{ property.name }}</span>
                 </label>
             </div>
         </div>
@@ -26,10 +29,20 @@
 <script>
 export default {
   name: 'PropertiesList',
+  props: {
+    properties: {
+      type: Array,
+      required: true,
+    },
+    selectedProperty: {
+      type: Object,
+      required: false,
+    },
+  },
 };
 </script>
 <style scoped lang="scss">
-@import '../../styles/constants.scss';
+@import '@/styles/constants.scss';
 
 .properties {
     height: 52px;
@@ -85,12 +98,20 @@ export default {
         white-space: nowrap;
         overflow-x: auto;
         padding: 0 12px;
-        scrollbar-width: none;
         scroll-behavior: smooth;
+        cursor: pointer;
+
+        .active, .active:hover {
+            background-color: $accent;
+            color: $white;
+            cursor: pointer;
+        }
 
         >div:hover {
             background-color: $light-grey;
             cursor: pointer;
+            // margin-top: 5px;
+            // margin-bottom: 5px;
         }
 
         >div {

@@ -35,7 +35,10 @@ export default {
   },
   watch: {
     input_text(val) {
-      this.$emit('input', val.trim());
+      this.$emit('input', val ? val.trim() : val);
+    },
+    preset(val) {
+      this.input_text = val;
     },
   },
   created() {
