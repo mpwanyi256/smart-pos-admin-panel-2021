@@ -98,15 +98,7 @@ export default {
     background-color: $bg_color;
     display: grid;
     grid-template-columns: 25% 75%;
-    // padding: 5px;
     overflow: hidden;
-    // gap: 10px;
-
-    .calendar_view {
-      // padding: 10px;
-      // overflow-y: auto;
-      // overflow-x: hidden;
-    }
 
     >div {
       background-color: $white;
