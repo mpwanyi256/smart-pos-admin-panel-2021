@@ -15,7 +15,7 @@
                     @button="confirmBooking(1)"
                     message="confirm booking"
                     icon="thumb-up"
-                    color="blue"
+                    color="green"
                 />
                 </template>
                 <template v-else>
@@ -128,7 +128,7 @@ export default {
         confirm_booking: this.booking.booking_id,
         status,
       }).then(() => {
-        this.$eventBus.$emit('reload-bookings', { start: '', end: '' });
+        this.$eventBus.$emit('load-calendar');
         this.$emit('close');
       });
     },

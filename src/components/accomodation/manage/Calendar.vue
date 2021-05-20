@@ -3,7 +3,7 @@
     <v-col>
       <v-sheet height="64">
         <v-toolbar
-          flat
+          flat class="tool_bar"
         >
           <!-- <v-btn
             outlined
@@ -36,41 +36,66 @@
             </v-icon>
           </v-btn>
           <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
+            {{ $refs.calendar.title }} | {{ property.name }}
+
+            <v-btn fab
+                text small
+                color="grey darken-2"
+            >
+                <v-icon small>
+                mdi-pencil
+                </v-icon>
+            </v-btn>
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-menu
-            bottom
-            right
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                outlined
-                color="grey darken-2"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = '4day'">
-                <v-list-item-title>4 days</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          <div class="tool_bar_options">
+            <v-menu
+                bottom
+                right
+            >
+                <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    outlined
+                    color="grey darken-2"
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <span>{{ typeToLabel[type] }}</span>
+                    <v-icon right>
+                    mdi-menu-down
+                    </v-icon>
+                </v-btn>
+                </template>
+                <v-list>
+                <v-list-item @click="type = 'day'">
+                    <v-list-item-title>Day</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'week'">
+                    <v-list-item-title>Week</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'month'">
+                    <v-list-item-title>Month</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = '4day'">
+                    <v-list-item-title>4 days</v-list-item-title>
+                </v-list-item>
+                </v-list>
+            </v-menu>
+            <v-select
+                class="rooms_chooser"
+                :items="rooms"
+                item-text="name"
+                item-value="id"
+                outlined dense
+                v-model="selectedRoom"
+            />
+            <BaseTooltip
+                @button="addUnit = true"
+                message="Add unit"
+                icon="plus"
+                color="blue"
+            />
+          </div>
         </v-toolbar>
       </v-sheet>
       <v-sheet class="calendar_view">
@@ -94,22 +119,53 @@
         @close="viewBooking = false"
         :booking="selectedEvent"
     />
+    <CreateNewUnit
+        v-if="addUnit"
+        @close="addUnit = false"
+        @reload="$emit('reload')"
+        :property="property"
+    />
+    <SelectRoom
+        v-if="pickRoom"
+        :rooms="rooms"
+        @close="pickRoom = false"
+        @picked="openBookingModal"
+    />
+    <BookRoomModal
+        v-if="bookRoom && roomPicked && checkinDatePicked"
+        :room="roomPicked"
+        :checkin="checkinDatePicked"
+        @close="bookRoom = false"
+    />
   </v-row>
 </template>
 <script>
 /* eslint-disable no-plusplus */
 import ViewBookingModal from '@/components/accomodation/manage/ViewBookingModal.vue';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import CreateNewUnit from '@/components/accomodation/dashboard/CreateNewUnit.vue';
+import SelectRoom from '@/components/accomodation/manage/SelectRoom.vue';
+import BookRoomModal from '@/components/accomodation/manage/BookRoomModal.vue';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Calendar',
   props: {
-    bookings: {
+    rooms: {
       type: Array,
       required: true,
+    },
+    property: {
+      type: Object,
+      required: false,
     },
   },
   components: {
     ViewBookingModal,
+    BaseTooltip,
+    CreateNewUnit,
+    BookRoomModal,
+    SelectRoom,
   },
   data() {
     return {
@@ -127,9 +183,19 @@ export default {
       viewBooking: false,
       calendarStartDate: '',
       calendarEndDate: '',
+      selectedRoom: 0,
+      addUnit: false,
+      bookings: [],
+      bookRoom: false,
+      pickRoom: false,
+      roomPicked: null,
+      checkinDatePicked: null,
     };
   },
   computed: {
+    selectedPropertyId() {
+      return this.property.id;
+    },
     selectedEvent() {
       return this.bookings.find((event) => event.booking_id === this.selectedEventId.booking_id);
     },
@@ -146,7 +212,14 @@ export default {
 
   },
   watch: {
+    selectedPropertyId() {
+      this.selectedRoom = 0;
+      this.triggerFetchBookings();
+    },
     calendarEndDate() {
+      this.triggerFetchBookings();
+    },
+    selectedRoom() {
       this.triggerFetchBookings();
     },
   },
@@ -157,12 +230,30 @@ export default {
     this.$refs.calendar.checkChange();
   },
   methods: {
+    ...mapActions('accomodation', ['post']),
+
+    openBookingModal(room) {
+      this.roomPicked = room;
+      this.pickRoom = false;
+      this.bookRoom = true;
+    },
+
     triggerFetchBookings() {
-      this.$eventBus.$emit('reload-bookings', { start: this.calendarStartDate, end: this.calendarEndDate });
+      const params = {
+        start: this.calendarStartDate,
+        end: this.calendarEndDate,
+        fetch_bookings: this.property.id,
+        room_id: this.selectedRoom,
+      };
+      this.post(params).then((response) => {
+        this.bookings = response.data;
+      });
     },
     viewDay({ date }) {
       this.focus = date;
-      this.type = 'day';
+      this.checkinDatePicked = date;
+      this.pickRoom = true;
+      //   this.type = 'day';
       console.log('View Date', date);
     },
     getEventColor(event) {
@@ -170,6 +261,7 @@ export default {
     },
     setToday() {
       this.focus = '';
+      this.pickRoom = true;
     },
     prev() {
       this.$refs.calendar.prev();
@@ -181,14 +273,12 @@ export default {
     //   this.selectedEventId = event.booking_id;
       console.log('View event', event);
       this.selectedEventId = event;
-      //   this.selectedElement = nativeEvent.target;
       this.viewBooking = true;
+      //   this.selectedElement = nativeEvent.target;
     },
     updateRange({ start, end }) {
       this.calendarStartDate = start.date;
       this.calendarEndDate = end.date;
-      this.$emit('refresh', { start, end });
-      console.log('Update', start.date, end.date);
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
@@ -196,9 +286,27 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 .calendar_view {
     height: 100%;
     overflow-y: auto;
+}
+
+.tool_bar_options {
+    display: inherit;
+    gap: 10px;
+
+    .rooms_chooser {
+        height: 36px !important;
+        margin: 0;
+        top: 0;
+        bottom: 0;
+    }
+    /* flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-items: center;
+    height: 100%; */
 }
 </style>

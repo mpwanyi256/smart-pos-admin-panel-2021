@@ -90,6 +90,7 @@
                     <DatePickerBeta
                         message="Check in"
                         @picked="checkInDate = $event"
+                        :min="checkin"
                     />
                 </div>
                 <div>
@@ -133,7 +134,7 @@
                         class="float-right"
                         @click="bookRoom"
                     >
-                        Confirm booking
+                        Save
                     </v-btn>
                 </div>
                 </div>
@@ -155,6 +156,10 @@ export default {
   props: {
     room: {
       type: Object,
+      required: true,
+    },
+    checkin: {
+      type: String,
       required: true,
     },
   },

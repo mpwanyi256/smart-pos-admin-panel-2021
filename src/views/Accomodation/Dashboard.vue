@@ -4,13 +4,13 @@
         :property="property"
         :rooms="rooms"
         @reload="fetchRooms"
-        @viewBookings="loadRoomBookings"
       />
       <div class="calendar_view">
         <Calendar
           ref="calendar"
-          :bookings="calendarBookings"
-          @refresh="refreshCalendar"
+          :rooms="rooms"
+          :property="property"
+          @reload="fetchRooms"
         />
       </div>
     </div>
@@ -35,7 +35,6 @@ export default {
   data() {
     return {
       rooms: [],
-      calendarBookings: [],
       selectedRoom: null,
     };
   },
@@ -60,7 +59,6 @@ export default {
   },
   eventBusCallbacks: {
     'reload-rooms': 'fetchRooms',
-    'reload-bookings': 'refreshCalendar',
   },
 
   methods: {
@@ -70,19 +68,8 @@ export default {
       this.post({
         fetch_rooms: this.property.id,
       }).then((response) => {
-        this.rooms = response.data;
-        this.$eventBus.$emit('load-calendar');
-      });
-    },
-
-    refreshCalendar(dateSet, roomId) {
-      this.post({
-        fetch_bookings: this.property.id,
-        room_id: roomId || 'all',
-        date_from: dateSet.start,
-        date_to: dateSet.end,
-      }).then((response) => {
-        this.calendarBookings = response.data;
+        this.rooms = [{ id: 0, name: 'ALL ROOMS' }, ...response.data];
+        this.$refs.calendar.triggerFetchBookings();
       });
     },
   },
