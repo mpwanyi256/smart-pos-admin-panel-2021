@@ -24,21 +24,9 @@
                 </v-btn>
             </div>
         </div>
-        <BookRoomModal
-            v-if="bookRoom"
-            @close="bookRoom = false"
-            :room="room"
-        />
-        <ViewBookingModal
-            v-if="viewBooking"
-            @close="viewBooking = false"
-            :booking="room"
-        />
     </div>
 </template>
 <script>
-import BookRoomModal from '@/components/accomodation/manage/BookRoomModal.vue';
-import ViewBookingModal from '@/components/accomodation/manage/ViewBookingModal.vue';
 
 export default {
   name: 'Room',
@@ -47,10 +35,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  components: {
-    BookRoomModal,
-    ViewBookingModal,
   },
   data() {
     return {

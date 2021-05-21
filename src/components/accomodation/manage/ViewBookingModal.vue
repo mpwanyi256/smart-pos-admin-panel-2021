@@ -6,22 +6,17 @@
             <div class="actions">
                 <template v-if="booking.confirmed == 0">
                 <BaseTooltip
-                    @button="confirmBooking(9)"
+                    @button="cancelBooking = true"
                     message="Cancel booking"
                     icon="thumb-down"
                     color="red"
                 />
                 <BaseTooltip
-                    @button="confirmBooking(1)"
+                    @button="confirmBookingModal = true"
                     message="confirm booking"
                     icon="thumb-up"
                     color="green"
                 />
-                </template>
-                <template v-else>
-                    <p :style="`color: ${booking.color}; font-weight: bold;`">
-                        {{ booking.confirmed == 1 ? 'Confirmed' : 'Cancelled' }}
-                    </p>
                 </template>
                 <!-- <v-btn text class="green" dark>
                     <v-icon left>mdi-thumb-up</v-icon>
@@ -86,20 +81,129 @@
                     <p>Total bill</p>
                     <p>{{ `${bookingInfo.total_bill} ${booking.currency}` }}</p>
                 </div>
+                <div>
+                    <p>Status</p>
+                    <p :style="`color: ${booking.color}; font-weight: bold;`">
+                        {{ booking.confirmed == 1 ? 'Confirmed' :
+                            booking.confirmed == 3 ? 'Checked-out' : '' }}
+                    </p>
+                </div>
+                <template v-if="booking.confirmed == 1">
+                <div class="mt-6">
+                    <div>
+                        <v-btn text @click="addPayment = true">
+                            <v-icon left>mdi-credit-card</v-icon>
+                            Create payment
+                        </v-btn>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <v-btn text
+                            :disabled="canCheckout"
+                            @click="checkoutClient = true"
+                        >
+                            <v-icon left>mdi-account-check</v-icon>
+                            Checkout
+                        </v-btn>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <v-btn
+                            :loading="sendingEmail"
+                            text
+                            @click="sendClientBookingConfirmation(
+                            {
+                                ...booking, days_of_stay: daysOfStay,
+                                company_name: companyInfo.company_name,
+                                company_email: companyInfo.company_email,
+                                company_location: companyInfo.company_location
+                            }
+                            )">
+                            <v-icon left>mdi-email</v-icon>
+                            Re-send Confirmation Email
+                        </v-btn>
+                    </div>
+                </div>
+                </template>
             </div>
         </div>
+        <div class="booking_payments" v-if="booking.confirmed == 1">
+            <Table>
+              <template slot="header">
+                <tr>
+                  <th>#</th>
+                  <th>Payment Date</th>
+                  <th>Amount</th>
+                  <th>Payment mode</th>
+                  <th>Delete</th>
+                </tr>
+              </template>
+              <template slot="body">
+                <tr
+                  v-for="(pay, i) in payments"
+                  :key="pay.id">
+                  <td>{{ ++i }}</td>
+                  <td>{{ pay.payment_date }}</td>
+                  <td>{{ pay.amount_paid_display }}</td>
+                  <td>{{ pay.payment_mode }}</td>
+                  <td>
+                      <v-btn icon>
+                          <v-icon>mdi-delete</v-icon>
+                      </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </Table>
+        </div>
+        <CreatePayment
+            v-if="addPayment"
+            :booking="booking"
+            @close="addPayment = false"
+            @reloadPayments="refreshPayments"
+        />
+        <ConfirmModal
+            v-if="checkoutClient"
+            title="Are you sure you want to checkout client?"
+            @close="checkoutClient = false"
+            @yes="checkoutHandler"
+        />
+
+        <ConfirmModal
+            v-if="cancelBooking"
+            title="Are you sure you want to cancel booking?"
+            @close="cancelBooking = false"
+            @yes="confirmBooking(9)"
+        />
+
+        <ConfirmModal
+            v-if="confirmBookingModal"
+            title="Are you sure you want to confirm booking?"
+            @close="confirmBookingModal = false"
+            @yes="confirmBooking(1)"
+        />
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
-import { mapActions } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
+import CreatePayment from '@/components/accomodation/manage/CreatePayment.vue';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
+import { mapActions, mapGetters } from 'vuex';
+import EmailMixin from '@/mixins/EmailMixin';
+import moment from 'moment';
 
 export default {
   name: 'ViewBookingModal',
+  mixins: [EmailMixin],
   components: {
     Basemodal,
     BaseTooltip,
+    Table,
+    CreatePayment,
+    ConfirmModal,
   },
   props: {
     booking: {
@@ -107,10 +211,52 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      addPayment: false,
+      payments: [],
+      checkoutClient: false,
+      cancelBooking: false,
+      confirmBookingModal: false,
+    };
+  },
   computed: {
+    ...mapGetters('auth', ['user']),
+
+    dateToday() {
+      return moment().format('Y-MM-D');
+    },
+
+    daysToCheckout() {
+      const oneDay = 24 * 60 * 60 * 1000;
+      const firstDate = new Date(this.booking.check_out);
+      const secondDate = new Date(this.dateToday);
+
+      const days = Math.round((firstDate - secondDate) / oneDay);
+      return days === 0 ? 1 : days;
+    },
+
+    canCheckout() {
+      return (this.totalPaid < this.booking.total_bill_amount) && this.daysToCheckout <= 0;
+    },
+
+    totalPaid() {
+      return this.payments.length
+        ? this.payments.map((i) => i.amount_paid).reduce((a, b) => a + b) : 0;
+    },
+
+    companyInfo() {
+      return this.user.company_info;
+    },
+
+    bookingCharge() {
+      return this.booking.booking_cost;
+    },
+
     bookingInfo() {
       return this.booking;
     },
+
     daysOfStay() {
       const oneDay = 24 * 60 * 60 * 1000;
       const firstDate = new Date(this.bookingInfo.check_in);
@@ -120,16 +266,53 @@ export default {
       return days === 0 ? 1 : days;
     },
   },
+  created() {
+    this.$nextTick(() => {
+      this.refreshPayments();
+    });
+  },
   methods: {
     ...mapActions('accomodation', ['post']),
+
+    checkoutHandler() {
+      this.post({
+        confirm_booking: this.booking.booking_id,
+        status: 3,
+      }).then(async () => {
+        await this.$eventBus.$emit('load-calendar');
+        this.checkoutClient = false;
+      });
+    },
 
     confirmBooking(status) {
       this.post({
         confirm_booking: this.booking.booking_id,
         status,
-      }).then(() => {
+      }).then(async () => {
         this.$eventBus.$emit('load-calendar');
-        this.$emit('close');
+        if (status === 1) {
+          await this.sendClientBookingConfirmation(
+            {
+              ...this.booking,
+              days_of_stay: this.daysOfStay,
+              company_name: this.companyInfo.company_name,
+              company_email: this.companyInfo.company_email,
+              company_location: this.companyInfo.company_location,
+            },
+          );
+        }
+        if (status === 9) this.$emit('close');
+        this.cancelBooking = false;
+        this.confirmBookingModal = false;
+      });
+    },
+
+    refreshPayments() {
+      this.post({
+        fetch_booking_payments: this.booking.booking_id,
+      }).then((response) => {
+        this.addPayment = false;
+        this.payments = response.data;
       });
     },
   },
@@ -151,6 +334,7 @@ export default {
     display: grid;
     grid-template-columns: 50% 50%;
     padding: 15px;
+    // background-color: $gray-95;
 
     >div {
         display: flex;
@@ -184,5 +368,49 @@ export default {
         }
     }
 }
+
+.booking_payments {
+    height: 200px;
+    border: 0.5px solid $border-color;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
 </style>
