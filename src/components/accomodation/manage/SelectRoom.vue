@@ -5,7 +5,7 @@
         <div class="rooms_view">
             <div class="rooms">
                 <div class="room"
-                v-for="room in rooms"
+                v-for="room in propertyRooms"
                 :key="`room-${room.id}`"
                 @click="$emit('picked', room)">
                     {{ room.name }}
@@ -26,6 +26,11 @@ export default {
     rooms: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    propertyRooms() {
+      return this.rooms.filter((room) => room.id > 0);
     },
   },
 };

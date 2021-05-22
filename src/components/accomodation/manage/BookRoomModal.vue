@@ -6,7 +6,7 @@
           <div class="actions_list">
             <div class="frm_entry">
                 <div>
-                    <label>First name {{ checkinFormatted }}</label>
+                    <label>First name</label>
                     <div>
                         <BaseTextfield
                             v-model="firstname"
@@ -223,7 +223,7 @@ export default {
       const secondDate = new Date(this.checkoutDate);
 
       const days = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-      return days === 0 ? 1 : days;
+      return days + 1;
     },
 
     totalCharges() {

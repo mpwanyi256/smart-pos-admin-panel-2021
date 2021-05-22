@@ -53,6 +53,7 @@
         />
         <SwitchDayModal
           v-if="switchDay"
+          @close="switchDay = false"
           @switch="closeDay"
           :message="errorMessage"
           :loading="loading"

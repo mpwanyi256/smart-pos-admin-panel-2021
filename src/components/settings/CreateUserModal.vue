@@ -32,12 +32,6 @@
       <div class="options">
         <v-spacer></v-spacer>
           <v-btn
-            dark
-            class="mr-1 red darken-3"
-            @click="$emit('close')">
-              Cancel
-          </v-btn>
-          <v-btn
               :disabled="!isValidPassword"
               @click="createUserHandler"
               class="ml-1">

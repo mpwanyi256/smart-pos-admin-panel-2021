@@ -18,10 +18,6 @@
                     color="green"
                 />
                 </template>
-                <!-- <v-btn text class="green" dark>
-                    <v-icon left>mdi-thumb-up</v-icon>
-                    Confirm booking
-                </v-btn> -->
             </div>
         </template>
         <div class="booking">
@@ -85,7 +81,8 @@
                     <p>Status</p>
                     <p :style="`color: ${booking.color}; font-weight: bold;`">
                         {{ booking.confirmed == 1 ? 'Confirmed' :
-                            booking.confirmed == 3 ? 'Checked-out' : '' }}
+                            booking.confirmed == 3 ? 'Checked-out' :
+                            booking.confirmed == 0 ? 'Pending' : 'Cancelled' }}
                     </p>
                 </div>
                 <template v-if="booking.confirmed == 1">
@@ -100,7 +97,7 @@
                 <div>
                     <div>
                         <v-btn text
-                            :disabled="canCheckout"
+                            :disabled="!canCheckout"
                             @click="checkoutClient = true"
                         >
                             <v-icon left>mdi-account-check</v-icon>
@@ -233,7 +230,7 @@ export default {
       const secondDate = new Date(this.dateToday);
 
       const days = Math.round((firstDate - secondDate) / oneDay);
-      return days === 0 ? 1 : days;
+      return days + 1;
     },
 
     canCheckout() {
@@ -263,7 +260,7 @@ export default {
       const secondDate = new Date(this.bookingInfo.check_out);
 
       const days = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-      return days === 0 ? 1 : days;
+      return days + 1;
     },
   },
   created() {

@@ -3,6 +3,10 @@
         <NavBar />
         <div class="accomodation_area">
             <div class="routes_area">
+              <SalesNavBar
+                    title="Accomodation Quick Links"
+                    :links="links"
+                />
                 <router-view
                   v-if="properties.length"
                   :property="selectedProperty"
@@ -26,6 +30,7 @@
 import NavBar from '@/components/nav/Navbar.vue';
 import PropertiesList from '@/components/accomodation/properties/PropertiesList.vue';
 import CreateProperty from '@/components/accomodation/manage/CreateProperty.vue';
+import SalesNavBar from '@/components/nav/SalesNavBar.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -34,12 +39,17 @@ export default {
     NavBar,
     PropertiesList,
     CreateProperty,
+    SalesNavBar,
   },
   data() {
     return {
       properties: [],
       addProperty: false,
       selectedProperty: null,
+      links: [
+        { name: 'Calendar', icon: 'mdi-calendar', path: 'accomodation_dashboard' },
+        { name: 'Stats', icon: 'mdi-graph', path: 'accomodation_statistics' },
+      ],
     };
   },
   computed: {
@@ -115,6 +125,8 @@ export default {
         .routes_area {
             display: flex;
             height: calc(100vh - 104px);
+            display: grid;
+            grid-template-columns: 25% 75%;
         }
     }
 }

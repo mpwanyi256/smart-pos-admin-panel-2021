@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue';
+import fbConf from '@/fbConfig';
+import firebase from 'firebase/app';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';
@@ -8,6 +10,9 @@ import vuetify from './plugins/vuetify';
 import './styles/main.scss';
 import eventBus from './plugins/event-bus';
 import EventBusCallbacks from './plugins/Eventbus';
+
+import 'firebase/firebase-analytics';
+import 'firebase/firestore';
 
 // Api server address set
 const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
@@ -43,6 +48,14 @@ new Vue({
     if (LoggedInUser) {
       store.dispatch('auth/getUserById');
       store.dispatch('settings/fetch', { get_access_controls: 'all' });
+      // initialize firebase
+      firebase.initializeApp(fbConf);
+      firebase.firestore().settings({
+        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+      });
+
+      firebase.analytics();
+      firebase.firestore().enablePersistence();
     } else store.replace({ name: 'login' });
   },
   render: (h) => h(App),

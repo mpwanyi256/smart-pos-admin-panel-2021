@@ -1,10 +1,5 @@
 <template>
     <div class="dashboard">
-      <PropertyUnits
-        :property="property"
-        :rooms="rooms"
-        @reload="fetchRooms"
-      />
       <div class="calendar_view">
         <Calendar
           ref="calendar"
@@ -16,14 +11,12 @@
     </div>
 </template>
 <script>
-import PropertyUnits from '@/components/accomodation/dashboard/PropertyUnits.vue';
 import Calendar from '@/components/accomodation/manage/Calendar.vue';
 import { mapActions } from 'vuex';
 
 export default {
   name: 'Dashboard',
   components: {
-    PropertyUnits,
     Calendar,
   },
   props: {
@@ -36,6 +29,10 @@ export default {
     return {
       rooms: [],
       selectedRoom: null,
+      links: [
+        { name: 'Calendar', icon: 'mdi-calendar', path: 'accomodation_dashboard' },
+        { name: 'Stats', icon: 'mdi-graph', path: 'accomodation_statistics' },
+      ],
     };
   },
   computed: {
@@ -79,12 +76,9 @@ export default {
 @import '@/styles/constants.scss';
 
 .dashboard {
-    display: flex;
     height: calc(100vh - 104px);
-    width: 100vw;
-    background-color: $bg_color;
-    display: grid;
-    grid-template-columns: 25% 75%;
+    width: 100%;
+    background-color: $white;
     overflow: hidden;
 
     >div {

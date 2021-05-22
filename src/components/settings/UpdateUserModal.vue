@@ -24,12 +24,6 @@
       <div class="options">
         <v-spacer></v-spacer>
           <v-btn
-            dark
-            class="mr-1 red darken-3"
-            @click="$emit('close')">
-              Cancel
-          </v-btn>
-          <v-btn
               :disabled="!hasChange"
               @click="createUserHandler"
               class="ml-1">
@@ -67,7 +61,8 @@ export default {
     ...mapGetters('auth', ['user']),
 
     hasChange() {
-      return this.name.length > 3 && this.employee.user_name !== this.name;
+      return (this.name.length > 3 && this.employee.user_name !== this.name)
+      || this.employee.role_id !== this.role;
     },
   },
   async created() {

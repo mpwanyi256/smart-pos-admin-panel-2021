@@ -288,7 +288,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .calendar_view {
-    height: 100%;
+    height: calc(100vh - 168px);
     overflow-y: auto;
 }
 

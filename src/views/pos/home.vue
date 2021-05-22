@@ -112,9 +112,9 @@ export default {
         font-size: 14px;
         font-family: $font-style;
 
-        scrollbar-width: thin;
         ::-webkit-scrollbar{
           width: 5px;
+          height: 5px;
         }
 
         ::-webkit-scrollbar-thumb {

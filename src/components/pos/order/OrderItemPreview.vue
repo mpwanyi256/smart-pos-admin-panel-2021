@@ -31,37 +31,51 @@
                       {{ orderItem.notes }}
                     </small>
                 </template>
+                <!-- <div class="add_ons">
+                  <v-chip class="addon"
+                    :class="isPending ? 'white' : ''"
+                    :close="isPending"
+                    @click:close="dropAddon"
+                  >
+                    Addon item name
+                  </v-chip>
+                </div> -->
             </div>
             <div class="options">
+              <template v-if="isPending">
                 <BaseTooltip
-                  v-if="isPending"
                   @button="$emit('delete', orderItem.id)"
                   message="Delete item"
                   icon="delete"
                 />
                 <BaseTooltip
-                  v-if="isPending"
                   @button="addNote = !addNote"
                   message="Add notes"
                   icon="note"
                 />
+                <!-- TO DO :: implement addons -->
+                <!-- <BaseTooltip
+                  @button="cancelOrderItem = true"
+                  message="Select addon"
+                  icon="plus"
+                /> -->
+              </template>
+              <template v-else>
                 <BaseTooltip
-                  v-if="!isPending"
                   @button="cancelOrderItem = true"
                   color="blue"
                   message="Cancel item"
                   icon="delete"
                 />
                 <BaseTooltip
-                  v-if="
-                    !isPending && companyType == 1
-                  "
+                  v-if="companyType == 1"
                   @button="shiftItem = true"
                   color="blue"
                   message="Shift item"
                   icon="arrow-expand"
                 />
                 <!-- TO DO :: Check if user is alllowed to perform this action -->
+              </template>
             </div>
             <ConfirmModal
               v-if="cancelOrderItem"
@@ -144,6 +158,10 @@ export default {
   methods: {
     ...mapActions('pos', ['updateRunningOrder', 'updateOrder']),
 
+    dropAddon() {
+      console.log('Drop add on');
+    },
+
     async shiftOrderItemHandler(table) {
       const tableOrder = {
         create_new_order: this.user.company_id,
@@ -211,6 +229,19 @@ export default {
       background-color: $header !important;
     }
 
+    .add_ons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .addon {
+        width: auto;
+      }
+    }
+
     .order_item {
         min-height: 130px;
         background-color: $white;
@@ -220,6 +251,11 @@ export default {
         padding: 10px;
         display: flex;
         flex-direction: column;
+
+        ::-webkit-scrollbar{
+          width: 5px;
+          height: 5px;
+        }
 
         .item_name_display {
           display: flex;
