@@ -23,6 +23,16 @@ export default {
       commit('loading', false);
       return API.smart(PATH, params);
     },
+    getPdf({ commit }, payload) {
+      commit('loading', true);
+      const params = new FormData();
+      const updateKeys = Object.keys(payload.query);
+      updateKeys.forEach((key) => {
+        params.append(key, payload.query[`${key}`]);
+      });
+      commit('loading', false);
+      return API.smart(payload.path, params);
+    },
   },
   getters: {
     loading: (state) => state.loading,

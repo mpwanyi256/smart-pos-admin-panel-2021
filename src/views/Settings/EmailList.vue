@@ -19,7 +19,7 @@
                 </tr>
             </template>
             <template slot="body">
-                <tr v-for="(email, i) in mails" :key="i">
+                <tr v-for="(email, i) in filteredEmails" :key="i">
                     <td class="section_name"
                         @click="updateEmail(email)"
                     >
@@ -77,6 +77,11 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+
+    filteredEmails() {
+      return this.mails.filter((mail) => mail.email
+        .toLowercase().match(this.search.toLowercase));
+    },
   },
   created() {
     this.fetchEmails();

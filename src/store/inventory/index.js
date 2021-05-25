@@ -8,6 +8,7 @@ export default {
     storeItems: [],
     measures: [],
     categories: [],
+    loading: false,
   },
   mutations: {
     setStoreItems(state, payload) {
@@ -18,6 +19,9 @@ export default {
     },
     setCategories(state, payload) {
       state.categories = payload;
+    },
+    loading(state, payload) {
+      state.loading = payload;
     },
   },
   actions: {
@@ -57,7 +61,7 @@ export default {
       const params = new FormData();
       const updateKeys = Object.keys(payload);
       updateKeys.forEach((key) => {
-        params.append(key, payload.[`${key}`]);
+        params.append(key, payload[key]);
       });
       commit('loading', true);
       return API.smart(PATH, params);
@@ -67,7 +71,7 @@ export default {
       const params = new FormData();
       const updateKeys = Object.keys(payload);
       updateKeys.forEach((key) => {
-        params.append(key, payload.[`${key}`]);
+        params.append(key, payload[key]);
       });
       params.append('create_store_item', 'new');
       commit('loading', true);

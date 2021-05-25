@@ -106,6 +106,8 @@
           :events="eventsClean"
           :event-color="getEventColor"
           :type="type"
+          :event-overlap-mode="mode"
+          :event-overlap-threshold="30"
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
@@ -190,6 +192,8 @@ export default {
       pickRoom: false,
       roomPicked: null,
       checkinDatePicked: null,
+      mode: 'stack',
+      modes: ['stack', 'column'],
     };
   },
   computed: {
@@ -207,6 +211,7 @@ export default {
         name: event.name,
         timed: event.timed,
         booking_id: event.booking_id,
+        time: '09:00',
       }));
     },
 
@@ -216,8 +221,12 @@ export default {
       this.selectedRoom = 0;
       this.triggerFetchBookings();
     },
-    calendarEndDate() {
-      this.triggerFetchBookings();
+    async type() {
+      await this.triggerFetchBookings();
+    },
+    async calendarEndDate() {
+      console.log('Refresh');
+      await this.triggerFetchBookings();
     },
     selectedRoom() {
       this.triggerFetchBookings();

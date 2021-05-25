@@ -8,7 +8,7 @@
           <div ref="salesReport" class="report-actions">
             <BaseTooltip
               class="pdf"
-              @button="printReport"
+              @button="printPdf"
               color="red"
               message="Print"
               icon="printer"
@@ -54,7 +54,7 @@ import DepartmentSale from '@/components/Reports/generics/DepartmentSales.vue';
 import OrdersList from '@/components/Reports/OrdersList.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SalesReport',
@@ -81,18 +81,53 @@ export default {
     };
   },
   computed: {
-    // ...mapGetters('reports', ['loading']),
+    ...mapGetters('auth', ['user']),
+
+    companyInfo() {
+      return this.user.company_info;
+    },
+
+    serverIP() {
+      const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
+      return IPAddress ? `http://${IPAddress}/papi/` : 'http://localhost:80/papi/';
+    },
   },
   watch: {
     async selectedDate(val) {
       this.loading = true;
       if (val) await this.fetchReport();
       this.$refs.salesReport.scrollTo(0, 0);
-      // this.$el.querySelector('.sales_report').scroll(0, 0);
     },
   },
   methods: {
-    ...mapActions('reports', ['getReport']),
+    ...mapActions('reports', ['getReport', 'getPdf']),
+
+    printPdf() {
+      const route = {
+        path: 'pdf/salesReport.php/',
+        query: {
+          company_name: this.companyInfo.company_name,
+          location: this.companyInfo.company_location,
+          tin: this.companyInfo.company_tin,
+          user_name: this.user.user_name,
+          date: this.selectedDate,
+          print_sales: true,
+        },
+      };
+      // console.log('fetch report', route);
+      // window.open(`${this.serverIP}/pdf/salesReport.php?
+      //       ${this.companyInfo.company_name}}${this.companyInfo.company_location}}
+      //       ${this.companyInfo.company_tin}}${this.user.user_name}}
+      //       ${this.selectedDate}`,
+      // '_blank',
+      // 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400');
+      this.getPdf(route)
+        .then((response) => {
+          console.log('Sales pdf', response);
+        }).catch((e) => {
+          console.log('Sales pdf', e);
+        });
+    },
 
     printReport() {
       const divToPrint = this.$refs.salesReport;
