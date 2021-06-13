@@ -45,6 +45,9 @@ export default {
     toggleLoading(state, payload) {
       state.loading = payload;
     },
+    loading(state, payload) {
+      state.loading = payload;
+    },
   },
   actions: {
 

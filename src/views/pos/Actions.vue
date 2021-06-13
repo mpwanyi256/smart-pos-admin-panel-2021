@@ -1,26 +1,32 @@
 <template>
     <div class="actions_pane">
-        <div class="action_item"
-          v-for="(action, i) in actions" :key="i"
+      <template
+          v-for="(action, i) in actions">
+        <div :key="i" class="action_item"
           @click="listen(action.name)"
+          v-if="isAllowedAction(action.name)"
         >
             <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p class="name">{{ action.name }}</p>
+            <p class="name">{{ action.name }}
+            </p>
         </div>
+      </template>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import ControlsMixin from '@/mixins/ControlsMixin';
 
 export default {
   name: 'Actions',
+  mixins: [ControlsMixin],
   data() {
     return {
       actions: [
-        { name: 'Confirm', icon: 'mdi-thumb-up' },
-        { name: 'Bill', icon: 'mdi-note' },
-        { name: 'Settle', icon: 'mdi-credit-card' },
-        { name: 'Discount', icon: 'mdi-sale' },
+        { name: 'Confirm', icon: 'mdi-thumb-up', allow: true },
+        { name: 'Bill', icon: 'mdi-note', allow: this.waiterCanPrintBill },
+        { name: 'Settle', icon: 'mdi-credit-card', allow: true },
+        { name: 'Discount', icon: 'mdi-sale', allow: true },
       ],
     };
   },
@@ -45,6 +51,28 @@ export default {
   },
   methods: {
     ...mapActions('pos', ['addOrderItem']),
+
+    isAllowedAction(action) {
+      let allowed = false;
+      switch (action) {
+        case 'Bill':
+          allowed = this.userCanPrintBill;
+          break;
+        case 'Waiter':
+          allowed = this.allowAddWaiter;
+          break;
+        case 'Settle':
+          allowed = this.allowSettleBill;
+          break;
+        case 'Discount':
+          allowed = this.userCanDiscount;
+          break;
+        default:
+          allowed = true;
+          break;
+      }
+      return allowed;
+    },
 
     listen(action) {
       this.$eventBus.$emit('fetch-orders');

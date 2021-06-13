@@ -1,12 +1,5 @@
 <template>
   <Basemodal :title="item.name" :size="700" @close="$emit('close')">
-  <template slot="action">
-    <BaseTooltip class="mr-3"
-      @button="deleteItem"
-      :message="`Delete ${item.name}`" icon="delete"
-      color="red"
-    />
-  </template>
     <div class="update_area">
         <div class="frm_entry">
           <div class="label">Item Name</div>
@@ -58,7 +51,9 @@
           </div>
         </div>
         <div class="frm_entry">
-          <div class="label">&nbsp;</div>
+          <div class="label">&nbsp;
+            <v-btn dark class="red darken-3" text @click="deleteItem">Delete</v-btn>
+          </div>
           <div class="actions">
             <v-btn text @click="updateStoreItem">Update</v-btn>
           </div>
@@ -72,7 +67,6 @@
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -87,7 +81,6 @@ export default {
     Basemodal,
     BaseAlert,
     LinearLoader,
-    BaseTooltip,
   },
   data() {
     return {
@@ -139,7 +132,7 @@ export default {
       const updated = this.updateItem({ delete_store_item: this.item.id });
       this.loading = false;
       if (updated.error) this.error = updated.message;
-      else this.$emit('reload');
+      this.$emit('reload');
     },
   },
   async created() {

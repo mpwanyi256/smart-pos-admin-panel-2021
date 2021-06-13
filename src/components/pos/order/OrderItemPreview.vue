@@ -44,6 +44,12 @@
             <div class="options">
               <template v-if="isPending">
                 <BaseTooltip
+                  v-if="
+                    companyType == 2
+                    || managerCanDeleteItem
+                    || waiterCanDeleteItem
+                    || cashierCanDeleteItem
+                  "
                   @button="$emit('delete', orderItem.id)"
                   message="Delete item"
                   icon="delete"
@@ -62,13 +68,15 @@
               </template>
               <template v-else>
                 <BaseTooltip
+                  v-if="companyType == 2 || managerCanCancelItem
+                  || cashierCanCancelItem || waiterCanCancelItem"
                   @button="cancelOrderItem = true"
                   color="blue"
                   message="Cancel item"
                   icon="delete"
                 />
                 <BaseTooltip
-                  v-if="companyType == 1"
+                  v-if="companyType == 1 && (managerCanShiftItem || cashierCanShiftItem)"
                   @button="shiftItem = true"
                   color="blue"
                   message="Shift item"
@@ -97,11 +105,12 @@ import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import ShiftOrderItem from '@/components/pos/order/manage/ShiftOrderItem.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
+import ControlsMixin from '@/mixins/ControlsMixin';
 
 export default {
   name: 'OrderItemPreview',
-  mixins: [TimezoneMixin],
+  mixins: [TimezoneMixin, ControlsMixin],
   props: {
     orderItem: {
       type: Object,
@@ -120,40 +129,15 @@ export default {
       confirmAction: false,
       cancelOrderItem: false,
       shiftItem: false,
-      allowManagerShiftCODE: 'ALMSIFTB',
     };
   },
   computed: {
-    ...mapGetters('auth', ['user']),
-    ...mapGetters('settings', ['controls']),
-
-    userRole() {
-      return this.user ? this.user.role : 0;
-    },
-
-    allowManagerShitf() {
-      return this.controls.find((Control) => Control.set_code === this.allowManagerShiftCODE);
-    },
-
-    managerCanShiftItem() {
-      return !!this.userRole === 1 && this.allowManagerShitf.status;
-    },
-
-    isSuperUser() {
-      return this.userRole === 5;
-    },
-
-    companyType() {
-      return this.user ? this.user.company_info.business_type : 0;
-    },
-
-    dayOpen() {
-      return this.user ? this.user.company_info.day_open : null;
-    },
-
     isPending() {
       return this.orderItem.status === '0';
     },
+  },
+  created() {
+    this.itemNotes = this.orderItem.notes;
   },
   methods: {
     ...mapActions('pos', ['updateRunningOrder', 'updateOrder']),
@@ -215,10 +199,6 @@ export default {
       this.$emit('note', filter);
       this.addNote = false;
     },
-  },
-
-  created() {
-    this.itemNotes = this.orderItem.notes;
   },
 };
 </script>

@@ -5,6 +5,12 @@
       <div class="search">
         <input type="text" v-model="menuSearchKey"
           class="search_field" placeholder="Search" />
+        <BaseTooltip
+            @button="addClient = true"
+            message="Add client"
+            icon="account"
+            color="grey"
+        />
         <v-btn
           @click="$emit('create-order')"
           text class="btn_create_order"
@@ -23,16 +29,24 @@
         />
       </div>
     </div>
+    <CreateClientMOdal
+      v-if="addClient"
+      @close="addClient = false"
+    />
   </div>
 </template>
 <script>
 import MenuItem from '@/components/pos/menu/MenuItem.vue';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import CreateClientMOdal from '@/components/pos/manage/CreateClientModal.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'MenuItems',
   components: {
     MenuItem,
+    BaseTooltip,
+    CreateClientMOdal,
   },
   props: {
     items: {
@@ -43,6 +57,7 @@ export default {
   data() {
     return {
       menuSearchKey: '',
+      addClient: false,
     };
   },
   computed: {

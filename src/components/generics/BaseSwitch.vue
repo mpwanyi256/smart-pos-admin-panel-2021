@@ -1,7 +1,9 @@
 <template>
     <v-switch
-        v-model="data"
-        :color="data ? color ? color : 'green' : 'primary'"
+        v-model="status"
+        :color="status ? color ? color : 'green' : 'primary'"
+        :disabled="disabled"
+        :label="label"
         hide-details
     />
 </template>
@@ -13,9 +15,19 @@ export default {
       type: Boolean,
       required: true,
     },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: () => false,
+    },
     color: {
       type: String,
       required: false,
+    },
+    label: {
+      type: String,
+      required: false,
+      default: () => '',
     },
   },
   data() {

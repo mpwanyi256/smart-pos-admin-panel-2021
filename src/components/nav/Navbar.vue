@@ -6,7 +6,15 @@
           <div class="menu_icons">
             <v-app-bar-nav-icon class="d-none d-sm-flex d-md-none"
               @click="drawer = true" />
-            <p>Smart POS</p>
+            <p>Smart POS |
+              <small class="user_name">
+                {{ userName }} -
+              <!-- <v-icon class="time_display">
+                mdi-calendar
+              </v-icon> -->
+              {{ companyInfo.day_open_display }}
+              </small>
+            </p>
           </div>
         </div>
         <div class="menu">

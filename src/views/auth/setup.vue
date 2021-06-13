@@ -13,6 +13,7 @@
                             </div>
                             <v-text-field v-model.trim="ipAddress" label="Enter IP Address" />
                             <v-btn type="submit" block class="btn-login">Set UP</v-btn>
+                            <p @click="goToLogin" class="login_instead">login instead</p>
                         </v-card-text>
                         </v-form>
                         <BaseAlert v-if="error.status" :message="error.message" />
@@ -46,12 +47,16 @@ export default {
   methods: {
     ...mapActions('auth', ['setError']),
 
+    goToLogin() {
+      this.$router.replace({ name: 'login' });
+    },
+
     setIPaddress() {
       if (this.ipAddress.split('.').length <= 2) {
         this.setError('Invalid IP Address set');
       } else {
         localStorage.setItem('smartpos_ipaddress_set', this.ipAddress);
-        this.$router.push({ name: 'login' });
+        this.$router.replace({ name: 'login' });
       }
     },
 
@@ -60,6 +65,8 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+@import '../../styles/constants.scss';
+
   .btn-login {
     background-color: white!important;
     color: black;
@@ -67,11 +74,21 @@ export default {
   }
 
   .main-login {
-      height: 100vh;
-      width: 100vw;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f2f2f7;
+    height: 100vh;
+    width: 100vw;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../../assets/rocket.jpeg');
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+
+  .login_instead {
+    color: $accent;
+    margin-top: 16px;
+    text-align: right;
+    font-size: 16px;
+    cursor: pointer;
   }
 </style>

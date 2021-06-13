@@ -79,7 +79,7 @@ export default {
         commit('setUser', userInfo);
 
         if (userInfo.role === 5) {
-          router.push({ name: 'overview' });
+          router.push({ name: 'pos' });
           dispatch('settings/fetch', { get_access_controls: 'all' });
         } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
           router.push({ name: 'pos' });

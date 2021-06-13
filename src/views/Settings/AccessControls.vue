@@ -15,7 +15,7 @@
                     <td>
                       <p>
                         <strong>
-                          {{ setting.title }}
+                          {{ setting.title.toUpperCase() }} | {{ setting.set_code }}
                         </strong>
                       </p>
                       <p>
@@ -23,10 +23,14 @@
                       </p>
                     </td>
                     <td>
-                      <BaseSwitch
-                        :status="setting.status"
-                        @change="toggleAction($event, setting)"
-                      />
+                      <v-btn
+                        @click="toggleAction(!setting.status, setting.id)"
+                        :disabled="loading"
+                        :color="setting.status ? 'green' : 'red'"
+                        dark
+                      >
+                        {{ setting.status ? 'YES' : 'NO' }}
+                      </v-btn>
                     </td>
                 </tr>
             </template>
@@ -36,7 +40,6 @@
 <script>
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
-import BaseSwitch from '@/components/generics/BaseSwitch.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -44,11 +47,11 @@ export default {
   components: {
     Table,
     BaseTextfield,
-    BaseSwitch,
   },
   data() {
     return {
       search: '',
+      loading: false,
     };
   },
   computed: {
@@ -60,25 +63,21 @@ export default {
     },
   },
   methods: {
-    ...mapActions('settings', ['fetch']),
-
-    descriptionDisplay(desc) {
-      return desc.replaceAll('<P>', '').replaceAll('</P>', '').replaceAll('<p>')
-        .replaceAll('</p>')
-        .split('<br>');
-    },
+    ...mapActions('settings', ['fetch', 'post']),
 
     async getAccessControls() {
       await this.fetch({ get_access_controls: 'all' });
     },
 
-    async toggleAction(status, setting) {
+    async toggleAction(status, settingId) {
+      this.loading = true;
       const filter = {
-        update_access_setting: setting.id,
+        update_access_setting: settingId,
         status: status ? 'YES' : 'NO',
       };
-      await this.fetch(filter);
+      await this.post(filter);
       await this.getAccessControls();
+      this.loading = false;
     },
   },
 };

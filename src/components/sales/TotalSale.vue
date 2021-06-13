@@ -7,7 +7,7 @@
             <div class="sale-value display-1 text-center">
                 {{ `${sale.total_sale ? sale.total_sale : 0} ${companyInfo.company_currency}` }}
             </div>
-            <h6 class="text-center">
+            <h6 class="text-center" @click="showReport = true">
                 <v-icon small color="black">mdi-calendar</v-icon>
                 {{ companyInfo.day_open_display }}
             </h6>
@@ -15,13 +15,27 @@
                 {{ `${companyInfo.days_left }`}} Days left
             </h6>
         </template>
+        <SalesReport
+            v-if="showReport"
+            @close="showReport = false"
+            :date="companyInfo.day_open"
+        />
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import SalesReport from '@/components/Reports/SalesReport.vue';
 
 export default {
   name: 'TotalSale',
+  components: {
+    SalesReport,
+  },
+  data() {
+    return {
+      showReport: false,
+    };
+  },
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('sales', ['sale']),

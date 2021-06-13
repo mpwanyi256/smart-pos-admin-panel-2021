@@ -8,7 +8,7 @@
           <div ref="salesReport" class="report-actions">
             <BaseTooltip
               class="pdf"
-              @button="printPdf"
+              @button="printReport"
               color="red"
               message="Print"
               icon="printer"

@@ -76,6 +76,12 @@
           display: flex;
           flex-direction: row;
           gap: 10px;
+
+          .user_name {
+            font-weight: normal;
+            font-family: inherit;
+            color: black;
+          }
         }
       }
 

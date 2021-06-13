@@ -7,11 +7,11 @@
         >
          <p>
            <span class="time_display">
+              Welcome
              <v-btn text class="time_display">
               <v-icon class="time_display" left>
                 mdi-calendar
               </v-icon>
-              {{ dayOpenDisplay }} -
               {{ timeNow }}
              </v-btn>
            </span>
@@ -95,6 +95,10 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
 
+    userName() {
+      return this.user ? this.user.user_name : '';
+    },
+
     userRole() {
       return this.user ? this.user.role : 0;
     },
@@ -120,14 +124,14 @@ export default {
     },
   },
 
-  async created() {
+  async mounted() {
     await this.fetchOrders();
     await this.fetchTables();
 
     setInterval(() => {
       const timeKati = new Date().getTime();
       const extract = new Date(timeKati);
-      this.timeNow = `${extract.getHours()}:${extract.getMinutes()}:${extract.getSeconds()}`;
+      this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
     }, 1000);
   },
 
@@ -140,6 +144,11 @@ export default {
     ...mapActions('pos', ['filterOrders', 'setRunningOrder', 'setRunningOrderId', 'updateOrder']),
     ...mapActions('auth', ['getUserById']),
     ...mapActions('reports', ['getReport']),
+    ...mapActions('email', ['sendEmail']),
+
+    padZero(Val) {
+      return Val > 9 ? Val : `0${Val}`;
+    },
 
     actionHandler(action) {
       switch (action) {
@@ -149,12 +158,25 @@ export default {
         case 'open':
           this.switchDay = true;
           break;
+        case 'email':
+          this.sendSalesReport();
+          break;
         default:
           console.log('Invalid action');
           this.actions = true;
           return;
       }
       this.actions = false;
+    },
+
+    async sendSalesReport() {
+      const sales = await this.getReport({ get_daily_report: this.dayOpen }).catch(() => null);
+      console.log('Sales report', sales.data);
+      // if (sales) {
+      //   const send = this.sendEmail({
+      //     send_sales_report: sales,
+      //   });
+      // }
     },
 
     async closeDay(datePicked) {
