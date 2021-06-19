@@ -6,8 +6,10 @@
           @click="actions = true"
         >
          <p>
-           <span class="time_display">
-              Welcome
+           <span class="time_display" v-if="timeNow">
+             <span :class="{ days_warning : daysLeft <= 10  }">
+              {{ `${daysLeft} Days` }}
+             </span>
              <v-btn text class="time_display">
               <v-icon class="time_display" left>
                 mdi-calendar
@@ -94,6 +96,10 @@ export default {
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    daysLeft() {
+      return this.user ? this.user.company_info.days_left : '';
+    },
 
     userName() {
       return this.user ? this.user.user_name : '';
@@ -246,6 +252,14 @@ export default {
 
         .time_display {
           color: $accent-color;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .days_warning {
+            color: $red;
+          }
         }
 
         .day_open {

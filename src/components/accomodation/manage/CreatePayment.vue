@@ -1,7 +1,7 @@
 <template>
     <Basemodal
       :title="`Payment for ${booking.name}`"
-      :size="1020" @close="$emit('close')">
+      :size="700" @close="$emit('close')">
         <div class="payment_view">
             <div>
                 <p>{{ `Amount (${booking.currency})` }}</p>

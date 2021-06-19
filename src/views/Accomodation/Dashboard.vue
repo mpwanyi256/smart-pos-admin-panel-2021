@@ -6,6 +6,7 @@
           :rooms="rooms"
           :property="property"
           @reload="fetchRooms"
+          v-if="property"
         />
       </div>
     </div>
@@ -67,6 +68,9 @@ export default {
       }).then((response) => {
         this.rooms = [{ id: 0, name: 'ALL ROOMS' }, ...response.data];
         this.$refs.calendar.triggerFetchBookings();
+      }).catch((e) => {
+        console.info('error fetching rooms', e);
+        this.rooms = [{ id: 0, name: 'ALL ROOMS' }];
       });
     },
   },

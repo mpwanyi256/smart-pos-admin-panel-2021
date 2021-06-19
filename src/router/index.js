@@ -26,6 +26,7 @@ const routes = [
   POS,
   Accomodation,
   Settings,
+  { path: '*', component: () => import('@/views/auth/login.vue') },
 ];
 
 const router = new VueRouter({
@@ -54,8 +55,6 @@ router.beforeEach((to, from, next) => {
     next();
   } else {
     next();
-    // eslint-disable-next-line no-restricted-globals
-    // location.href = to.fullPath;
   }
 });
 

@@ -55,16 +55,6 @@ export default {
   computed: {
     ...mapGetters('auth', ['user']),
   },
-  watch: {
-    selectedProperty() {
-    //   this.$router.push({
-    //     name: this.$route.name,
-    //     params: {
-    //       property: val,
-    //     },
-    //   });
-    },
-  },
   created() {
     this.fetchProperties();
   },
@@ -80,6 +70,8 @@ export default {
           // eslint-disable-next-line prefer-destructuring
           if (!this.selectedProperty) this.selectedProperty = response.data[0];
         }
+      }).catch((e) => {
+        console.info('Error fetching properties', e);
       });
     },
   },

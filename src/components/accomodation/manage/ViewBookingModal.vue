@@ -146,7 +146,7 @@
                   <td>{{ pay.amount_paid_display }}</td>
                   <td>{{ pay.payment_mode }}</td>
                   <td>
-                      <v-btn icon>
+                      <v-btn icon @click="dropPayment(pay.id)">
                           <v-icon>mdi-delete</v-icon>
                       </v-btn>
                   </td>
@@ -179,6 +179,13 @@
             title="Are you sure you want to confirm booking?"
             @close="confirmBookingModal = false"
             @yes="confirmBooking(1)"
+        />
+
+        <ConfirmModal
+            v-if="confirmPaymentDelete && bookingToDelete"
+            title="Are you sure you want to delete payment?"
+            @close="cancelBooking = false"
+            @yes="DeleteBookingPayment"
         />
     </Basemodal>
 </template>
@@ -215,6 +222,8 @@ export default {
       checkoutClient: false,
       cancelBooking: false,
       confirmBookingModal: false,
+      bookingToDelete: null,
+      confirmPaymentDelete: false,
     };
   },
   computed: {
@@ -270,6 +279,24 @@ export default {
   },
   methods: {
     ...mapActions('accomodation', ['post']),
+
+    dropPayment(paymentId) {
+      this.bookingToDelete = paymentId;
+      this.confirmPaymentDelete = true;
+    },
+
+    DeleteBookingPayment() {
+      this.post({
+        delete_booking_payment_by_id: this.bookingToDelete,
+      }).then(async () => {
+        await this.refreshPayments();
+        this.confirmPaymentDelete = false;
+        this.bookingToDelete = null;
+      }).catch(() => {
+        this.confirmPaymentDelete = false;
+        this.bookingToDelete = null;
+      });
+    },
 
     checkoutHandler() {
       this.post({
