@@ -4,8 +4,9 @@
             <template slot="header">
                 <tr>
                     <th>
-                        <BaseTextfield
-                          v-model="search" placeholder="Search ..." />
+                      <div class="search_field">
+                        <BaseTextfield v-model="search" placeholder="Search ..." />
+                      </div>
                     </th>
                     <th>STATUS</th>
                 </tr>
@@ -18,9 +19,9 @@
                           {{ setting.title.toUpperCase() }} | {{ setting.set_code }}
                         </strong>
                       </p>
-                      <p>
+                      <div class="setting_description">
                         {{ setting.description }}
-                      </p>
+                      </div>
                     </td>
                     <td>
                       <v-btn
@@ -99,6 +100,18 @@ export default {
 }
 
 .search_field {
-  width: 350px;
+  max-width: 350px;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0 !important;
+}
+
+.setting_description {
+  display:block;
+  max-width: 550px;
+  word-wrap:break-word;
+  white-space: normal;
+  color: $grey;
 }
 </style>

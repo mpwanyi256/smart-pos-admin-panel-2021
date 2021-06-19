@@ -9,7 +9,9 @@
             message="Create Item" icon="plus"
           />
         </div>
-        <div><v-text-field dense outlined label="Search" v-model="search" /> </div>
+          <div>
+          <v-text-field dense outlined label="Search" v-model="search" />
+          </div>
       </div>
     </div>
     <div class="items_list">
@@ -56,6 +58,11 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+  },
+  watch: {
+    display() {
+      this.reloadItems();
+    },
   },
   methods: {
     ...mapActions('inventory', ['getStoreItems']),

@@ -142,7 +142,7 @@ export default {
       await this.fetchMenuItems();
     },
   },
-  async mounted() {
+  async created() {
     this.fetchMenuDepartments();
     this.fetchMenuItems();
   },

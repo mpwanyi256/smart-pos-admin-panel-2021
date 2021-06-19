@@ -10,7 +10,15 @@
                 message="Download receipes" icon="download"
                 color="green"
               />
-              <BaseTextfield v-model="search" placeholder="Search for a menu item" />
+              <BaseTextfield v-model="search" placeholder="Search" />
+              <v-select
+                dense outlined
+                label="Department"
+                :items="departments"
+                item-text="name"
+                item-value="id"
+                v-model="display"
+              />
             </div>
           </th>
           <th>Category</th>
@@ -19,7 +27,14 @@
           <th>Recipe</th>
         </tr>
       </template>
-      <template slot="body">
+      <template slot="body" v-if="loading">
+        <tr>
+          <td colspan="5">
+            <LinearLoader />
+          </td>
+        </tr>
+      </template>
+      <template slot="body" v-else>
         <tr v-for="item in filteredMenuItems" :key="item.id">
           <td>{{ item.name }}</td>
             <td>{{ item.category }}</td>
@@ -47,6 +62,7 @@ import Table from '@/components/generics/new/Table.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import MenuItemRecipeModal from '@/components/inventory/store/MenuItemRecipeModal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+import LinearLoader from '@/components/generics/Loading.vue';
 import DownloadCSVMixin from '@/mixins/DownloadCSVMixin';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -58,27 +74,40 @@ export default {
     MenuItemRecipeModal,
     BaseTextfield,
     BaseTooltip,
+    LinearLoader,
   },
   data() {
     return {
       showRecipe: false,
       menuItemSelected: null,
       search: '',
+      display: 0,
+      loading: false,
     };
   },
   computed: {
-    ...mapGetters('menu', ['menuItems']),
+    ...mapGetters('menu', ['menuItems', 'departments']),
 
     filteredMenuItems() {
       return this.menuItems.filter((Item) => Item.name.toLowerCase()
         .match(this.search.toLowerCase()));
     },
   },
+  watch: {
+    display() {
+      this.reloadReceipes();
+    },
+  },
   async created() {
     await this.getMenuItems({ department_id: 'all' });
+    await this.fetchMenuDepartments();
   },
   methods: {
-    ...mapActions('menu', ['getMenuItems']),
+    ...mapActions('menu', ['getMenuItems', 'getDepartments']),
+
+    async fetchMenuDepartments() {
+      await this.getDepartments(0);
+    },
 
     downloadCSV() {
       this.reloadReceipes();
@@ -92,8 +121,10 @@ export default {
     },
 
     async reloadReceipes() {
+      this.loading = true;
       this.showRecipe = false;
-      await this.getMenuItems({ department_id: 'all' });
+      await this.getMenuItems({ department_id: this.display });
+      this.loading = false;
     },
 
     viewRecipeInfo(item) {
@@ -117,11 +148,12 @@ export default {
 
   .item_name {
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: left;
-    align-items: center;
+    display: inline-flex;
+    gap: 15px;
+    padding-top: 5px;
+    direction: ltr;
+    padding-right: 15px;
+    text-align: left;
 
     .download_btn {
       background-color: $green !important;
@@ -131,5 +163,10 @@ export default {
 
   .no_purchases {
     color: $red;
+  }
+
+  ::v-deep .v-input__control {
+    top: 0;
+    bottom: 0;
   }
 </style>

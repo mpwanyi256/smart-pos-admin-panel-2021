@@ -22,22 +22,6 @@
           </tr>
       </template>
     </Table>
-    <!--
-    <div class="items_list">
-      <div class="item" v-for="item in filteredItems" :key="item.id">
-        <div>{{ item.name }}</div>
-        <div>{{ item.category }}</div>
-        <div>{{ item.unit_price_display }}</div>
-        <div>{{ item.pack_size }}</div>
-        <div>{{ item.unit_measure }}</div>
-        <div>{{ item.min_stock }}</div>
-        <div>
-          <v-btn @click="$emit('update', item)" class="action" small icon>
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 <script>
@@ -72,7 +56,7 @@ export default {
     ...mapGetters('inventory', ['storeItems']),
 
     filteredItems() {
-      return this.search ? this.storeItems
+      return this.search.length ? this.storeItems
         .filter((item) => item.name.toLowerCase()
           .match(this.search.toLowerCase())) : this.storeItems;
     },
@@ -89,68 +73,5 @@ export default {
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-
-    .header {
-      height: 40px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 20% 20% 10% 20% 10% 10% 10%;
-      color: $black;
-
-      > div {
-        width: 100%;
-        height: 100%;
-        text-align: left;
-        font-weight: bold;
-        padding-left: 15px;
-        display: flex;
-        align-items: center;
-      }
-    }
-
-    .items_list {
-      max-height: calc(100vh - 144px);
-      width: 100%;
-      display: grid;
-      flex-direction: column;
-      overflow: auto;
-
-      .item:hover {
-        background-color: $light-grey;
-      }
-
-      > div {
-        height: 40px;
-        display: grid;
-        grid-template-columns: 20% 20% 10% 20% 10% 10% 10%;
-
-        > div {
-          width: 100%;
-          height: 100%;
-          border: 1px solid $light-grey;
-          display: flex;
-          text-align: left;
-          align-items: center;
-          overflow: hidden;
-          padding-left: 15px;
-        }
-
-        > div:first-child {
-          justify-content: left;
-          padding-left: 5px;
-        }
-
-        > div:last-child {
-          display: flex;
-          align-items: center;
-          justify-content: right;
-          text-align: right;
-
-          .action {
-            margin: auto;
-          }
-        }
-      }
-    }
   }
 </style>

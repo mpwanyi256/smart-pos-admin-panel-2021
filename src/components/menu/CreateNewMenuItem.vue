@@ -103,7 +103,6 @@ export default {
       this.alert = 'success';
       this.errorMessage = create.message;
       this.error = true;
-      console.log('new itemm', create);
       this.loading = false;
     },
   },
