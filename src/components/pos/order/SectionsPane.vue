@@ -88,7 +88,7 @@ export default {
     },
 
     activeTables(section) {
-      return section.tables.filter((Table) => !Table.hidden);
+      return section.tables.filter((Table) => Table.hidden === false);
     },
 
     ordersCount(section) {

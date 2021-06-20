@@ -64,8 +64,8 @@ export default {
     ...mapGetters('auth', ['user']),
 
     inventoryFiltered() {
-      return this.inventory.data.length
-        ? this.inventory.data.filter((Item) => Item.item_name.toLowerCase()
+      return this.inventory.length
+        ? this.inventory.filter((Item) => Item.item_name.toLowerCase()
           .match(this.search.toLowerCase())) : [];
     },
 
@@ -86,9 +86,14 @@ export default {
 
     async fetchInventory() {
       this.loading = true;
-      this.inventory = await this.updateItem({ get_inventory_status: this.dateSelected })
-        .catch(() => []);
-      this.loading = false;
+      this.updateItem({ get_inventory_status: this.dateSelected })
+        .then((inv) => {
+          this.inventory = inv.data;
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
 
     downloadCSV() {

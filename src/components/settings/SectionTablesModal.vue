@@ -7,18 +7,15 @@
                 <template slot="header">
                 <tr>
                     <th>
+                      <div class="add_options">
+                        <v-btn icon @click="openCreateTableModal = true">
+                          <v-icon>mdi-plus</v-icon>
+                        </v-btn>
                         <BaseTextfield v-model="search" placeholder="Search" />
+                      </div>
                     </th>
                     <th>
-                        <v-btn
-                            class="float-right"
-                            @click="openCreateTableModal = true"
-                        >
-                            <v-icon left>
-                                mdi-plus
-                            </v-icon>
-                            Add table
-                        </v-btn>
+                      Active
                     </th>
                 </tr>
             </template>
@@ -30,11 +27,13 @@
                         {{ table.name }}
                     </td>
                     <td>
-                      <BaseSwitch class="float-right"
-                        :status="table.hidden"
-                        color="red"
-                        @change="$emit('updateTableStatus', { status: $event, table_id: table.id })"
-                      />
+                      <v-btn dark
+                        :class="table.hidden ? 'red' : 'green'"
+                        @click="$emit('updateTableStatus',
+                        { status: !table.hidden, table_id: table.id })"
+                      >
+                        {{ table.hidden ? 'No' : 'Yes' }}
+                      </v-btn>
                     </td>
                 </tr>
             </template>
@@ -57,7 +56,6 @@
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import BaseSwitch from '@/components/generics/BaseSwitch.vue';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import CreateNewTableModal from '@/components/settings/CreateNewTableModal.vue';
@@ -69,7 +67,6 @@ export default {
     Basemodal,
     Table,
     BaseTextfield,
-    BaseSwitch,
     CreateNewTableModal,
     SingleFieldUpdateModal,
   },
@@ -144,6 +141,12 @@ export default {
   overflow-y: auto;
   color: $black;
   font-size: 14px !important;
+}
+
+.add_options {
+  display: inline-flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 </style>

@@ -1,6 +1,5 @@
 export default {
   path: '/Accounting',
-  name: 'accounting',
   meta: {
     authrequired: true,
     title: 'SmartPOS :: Accounting',

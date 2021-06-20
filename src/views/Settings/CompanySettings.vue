@@ -61,18 +61,20 @@
                 </div>
                 <div>
                     <BaseAlert v-if="message" type="success" message="Success" />
+                    <div>
+                    <v-btn
+                        @click="updateCompanyInfo"
+                        class="float-right blue"
+                        dark
+                    >
+                    <v-icon left>mdi-save</v-icon>
+                    Update info</v-btn>
+                    </div>
                 </div>
 
             </div>
          </div>
         <div class="actions">
-            <v-btn
-                @click="updateCompanyInfo"
-                class="float-right blue"
-                dark
-            >
-            <v-icon left>mdi-save</v-icon>
-            Update info</v-btn>
         </div>
         </div>
     </div>

@@ -2,38 +2,40 @@
     <div class="emails">
         <Table>
             <template slot="header">
-                <tr>
-                    <th>
-                        <BaseTextfield v-model="search" placeholder="Search" />
-                    </th>
-                    <th>
-                      <v-btn
-                        class="float-right"
-                        @click="addMail = true">
-                          <v-icon left>
-                              mdi-plus
-                          </v-icon>
-                          Add email
-                      </v-btn>
-                    </th>
-                </tr>
+              <tr>
+                <th>#</th>
+                <th>
+                    Email address
+                </th>
+                <th>
+                  <v-btn
+                    class="float-right"
+                    @click="addMail = true">
+                      <v-icon left>
+                          mdi-plus
+                      </v-icon>
+                      Add email
+                  </v-btn>
+                </th>
+              </tr>
             </template>
             <template slot="body">
-                <tr v-for="(email, i) in filteredEmails" :key="i">
-                    <td class="section_name"
-                        @click="updateEmail(email)"
-                    >
-                        {{ email.email }}
-                    </td>
-                    <td>
-                        <BaseSwitch
-                            class="float-right"
-                            :status="email.is_active"
-                            color="green"
-                            @change="updateEmailStatus($event, email.id)"
-                        />
-                    </td>
-                </tr>
+              <tr v-for="(email, i) in mails" :key="i">
+                <td>{{ i +1 }}</td>
+                  <td class="email_address"
+                      @click="updateEmail(email)"
+                  >
+                      {{ email.email }}
+                  </td>
+                  <td>
+                    <BaseSwitch
+                        class="float-right"
+                        :status="email.is_active"
+                        color="green"
+                        @change="updateEmailStatus($event, email.id)"
+                    />
+                  </td>
+              </tr>
             </template>
         </Table>
         <SingleFieldUpdateModal
@@ -54,7 +56,6 @@
 <script>
 import Table from '@/components/generics/new/Table.vue';
 import BaseSwitch from '@/components/generics/BaseSwitch.vue';
-import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import SingleFieldUpdateModal from '@/components/generics/new/SingleFieldUpdateModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -62,7 +63,6 @@ export default {
   name: 'EmailList',
   components: {
     Table,
-    BaseTextfield,
     BaseSwitch,
     SingleFieldUpdateModal,
   },
@@ -70,7 +70,6 @@ export default {
     return {
       mails: [],
       addMail: false,
-      search: '',
       selectedEmail: null,
       editMail: false,
     };
@@ -79,8 +78,8 @@ export default {
     ...mapGetters('auth', ['user']),
 
     filteredEmails() {
-      return this.mails.filter((mail) => mail.email
-        .toLowercase().match(this.search.toLowercase));
+      return this.mails.filter((Email) => Email.email
+        .toLowercase().match(this.search.toLowercase()));
     },
   },
   created() {
@@ -133,3 +132,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+  .email_address {
+    cursor: pointer;
+  }
+</style>

@@ -22,7 +22,7 @@
         <div class="order_list">
             <SectionsPane
               v-if="companyType == 1"
-              :sections="activeTables"
+              :sections="activeSections"
               :user="user"
               :dayOpen="dayOpen"
             />
@@ -109,8 +109,8 @@ export default {
       return this.user ? this.user.role : 0;
     },
 
-    activeTables() {
-      return this.sections.filter((Section) => !Section.hidden);
+    activeSections() {
+      return this.sections.filter((Section) => Section.hidden === false);
     },
 
     companyType() {

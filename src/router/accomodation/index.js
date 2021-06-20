@@ -1,6 +1,6 @@
 export default {
   path: '/Accomodation',
-  name: 'accomodation',
+  // name: 'accomodation',
   meta: {
     authrequired: false,
     title: 'SmartPOS :: Dashboard',

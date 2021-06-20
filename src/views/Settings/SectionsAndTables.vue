@@ -4,18 +4,15 @@
           <template slot="header">
               <tr>
                   <th>
+                    <div class="add_options">
+                      <v-btn icon @click="addNewSection = true">
+                        <v-icon>mdi-plus</v-icon>
+                      </v-btn>
                       <BaseTextfield v-model="search" placeholder="Search" />
+                    </div>
                   </th>
                   <th>TABLES</th>
-                  <th>IS HIDDEN</th>
-                  <th>
-                    <v-btn @click="addNewSection = true">
-                        <v-icon left>
-                            mdi-plus
-                        </v-icon>
-                        Add section
-                    </v-btn>
-                  </th>
+                  <th>Active</th>
               </tr>
           </template>
           <template slot="body">
@@ -33,17 +30,12 @@
                       </v-btn>
                   </td>
                   <td>
-                    <v-btn small text>
-                      <v-icon left>mdi-printer</v-icon>
-                      Setup printer
+                    <v-btn dark
+                      :class="section.hidden ? 'red' : 'green'"
+                      @click="updateSectionStatus(!section.hidden, section)"
+                    >
+                      {{ section.hidden ? 'No' : 'Yes' }}
                     </v-btn>
-                  </td>
-                  <td>
-                    <BaseSwitch
-                      :status="section.hidden"
-                      color="red"
-                      @change="updateSectionStatus($event, section)"
-                    />
                   </td>
               </tr>
           </template>
@@ -74,7 +66,6 @@
 </template>
 <script>
 import Table from '@/components/generics/new/Table.vue';
-import BaseSwitch from '@/components/generics/BaseSwitch.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import SectionTablesModal from '@/components/settings/SectionTablesModal.vue';
 import SingleFieldUpdateModal from '@/components/generics/new/SingleFieldUpdateModal.vue';
@@ -84,7 +75,6 @@ export default {
   name: 'SectionsAndTables',
   components: {
     Table,
-    BaseSwitch,
     BaseTextfield,
     SectionTablesModal,
     SingleFieldUpdateModal,
@@ -214,13 +204,19 @@ export default {
 }
 
 .sections_and_tables {
-    height: calc(100vh - 52px);
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    color: $black;
-    font-size: 13px !important;
+  height: calc(100vh - 52px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  color: $black;
+  font-size: 13px !important;
+}
+
+.add_options {
+  display: inline-flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 </style>
