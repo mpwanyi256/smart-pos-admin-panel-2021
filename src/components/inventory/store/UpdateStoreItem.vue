@@ -1,5 +1,12 @@
 <template>
   <Basemodal :title="item.name" :size="700" @close="$emit('close')">
+  <template slot="action">
+    <v-btn icon class="red" dark
+      @click="confirmDelete = true"
+    >
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
+  </template>
     <div class="update_area">
         <div class="frm_entry">
           <div class="label">Item Name</div>
@@ -51,15 +58,19 @@
           </div>
         </div>
         <div class="frm_entry">
-          <div class="label">&nbsp;
-            <v-btn dark class="red darken-3" text @click="deleteItem">Delete</v-btn>
-          </div>
-          <div class="actions">
-            <v-btn text @click="updateStoreItem">Update</v-btn>
+          <div>&nbsp;</div>
+          <div>
+            <v-btn class="float-right" @click="updateStoreItem">Update</v-btn>
           </div>
         </div>
         <BaseAlert v-if="error" alert="info" :message="error" />
         <LinearLoader v-if="loading" />
+        <ConfirmModal
+          v-if="confirmDelete"
+          :title="`Are you sure you want to delete ${name}?`"
+          @close="confirmDelete = false"
+          @yes="deleteItem"
+        />
     </div>
   </Basemodal>
 </template>
@@ -67,6 +78,7 @@
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -81,6 +93,7 @@ export default {
     Basemodal,
     BaseAlert,
     LinearLoader,
+    ConfirmModal,
   },
   data() {
     return {
@@ -93,6 +106,7 @@ export default {
       categoryId: '',
       error: '',
       loading: false,
+      confirmDelete: false,
     };
   },
   computed: {

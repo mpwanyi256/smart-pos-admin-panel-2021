@@ -2,11 +2,13 @@
     <Basemodal :size="700" :title="modalTitle" @close="$emit('close')">
         <div>
             <v-spacer></v-spacer>
-            <v-btn small @click="printBill" class="ma-2 float-right" outlined fab color="teal">
+            <v-btn small @click="performBillPrint"
+                class="ma-2 float-right" outlined fab color="teal">
                 <v-icon>mdi-printer</v-icon>
             </v-btn>
         </div>
         <div ref="tableView">
+            <PageAlert v-if="errorMessage" :message="errorMessage" @close="errorMessage= ''" />
             <div class="order_view">
             <table class="tableView" style="margin:0px;padding:0px;font-family:sans-serif;
             width: 100%;background-color:rgba(255, 255, 255, 0.91);top:0;left:0;">
@@ -122,11 +124,15 @@
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import { mapActions, mapGetters } from 'vuex';
+import PrintMixin from '@/mixins/PrintingMixin';
+import PageAlert from '@/components/alerts/PageAlert.vue';
 
 export default {
   name: 'BillModal',
+  mixins: [PrintMixin],
   components: {
     Basemodal,
+    PageAlert,
   },
   props: {
     order: {
@@ -140,12 +146,21 @@ export default {
       orderItems: [],
       billDiscount: 0,
       finalBillAmount: 0,
+      errorMessage: '',
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
     company() {
       return this.user ? this.user.company_info : null;
+    },
+  },
+  watch: {
+    errorMessage(val) {
+      if (!val) return;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
     },
   },
   methods: {
@@ -155,25 +170,18 @@ export default {
     async printBill() {
       this.updateOrder({ update_bill_print_status: this.order.order_id })
         .then((res) => {
-          if (res.error) return;
+          if (res.error) {
+            this.errorMessage = 'Error printing bill';
+            return;
+          }
           this.$eventBus.$emit('reload-order');
-          //    TO DO use the thermal printer based on settings
-          const divToPrint = this.$refs.tableView;
-          const newWin = window.open('', 'Print-Window');
-          newWin.document.open();
-          newWin.document.write(`<html><style>@page{size: auto;margin: 0mm;}</style><body onload="window.print(true)">${divToPrint.innerHTML}</body></html>`);
-          newWin.document.close();
-
-          setTimeout(() => {
-            divToPrint.innerHTML = '';
-          }, 10);
           this.$emit('close');
         }).catch((e) => {
           console.log('Error updating bill was printed', e);
         });
     },
   },
-  async mounted() {
+  async created() {
     this.$eventBus.$emit('fetch-orders');
     const items = await this.getOrderItems(this.order.order_id);
     if (!items.error) {

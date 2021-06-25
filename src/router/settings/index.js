@@ -26,6 +26,15 @@ export default {
       component: () => import('@/views/Settings/CompanySettings.vue'),
     },
     {
+      path: 'CompanyDepartments',
+      name: 'company_departments',
+      meta: {
+        authrequired: true,
+        title: 'SmartPOS :: Company departments',
+      },
+      component: () => import('@/views/Settings/Departments.vue'),
+    },
+    {
       path: 'Employees',
       name: 'company_employees',
       meta: {

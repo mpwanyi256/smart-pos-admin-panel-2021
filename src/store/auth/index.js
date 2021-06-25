@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 // import * as firebase from 'firebase'
 import API from '@/api';
+import firebase from 'firebase/app';
 import router from '../../router';
 
 const PATH = 'auth/';
@@ -20,8 +21,12 @@ export default {
       { icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_dashboard' },
       { icon: 'mdi-cog', name: 'Settings', path: 'access_controls' },
     ],
+    license: null,
   },
   mutations: {
+    setLicense(state, payload) {
+      state.license = payload;
+    },
     setCompanyDay(state, dayOpen) {
       state.user.company_info.day_open = dayOpen.day;
       localStorage.setItem('smart_company_day_open', dayOpen.day);
@@ -50,6 +55,39 @@ export default {
     },
   },
   actions: {
+    async updateFbLicense({ commit }, licenseId) {
+      await firebase.firestore().collection('licenses')
+        .doc(licenseId).update({ status: 1 })
+        .then(() => {
+          commit('setLicense', null);
+          router.replace({ name: 'pos' });
+        })
+        .catch((e) => {
+          console.error('Error updating doc', e);
+        });
+    },
+    async getActiveLicense({ commit }, companyEmail) {
+      const LICENSES = firebase.firestore().collection('licenses');
+      const activeLicense = await LICENSES
+        .where('company', '==', companyEmail)
+        .where('status', '==', 0)
+        .limit(1)
+        .get()
+        .catch((e) => {
+          console.log('Firebase error', e);
+        });
+
+      const setMutation = (data) => {
+        commit('setLicense', data);
+      };
+
+      if (!activeLicense.empty) {
+        activeLicense.forEach((doc) => {
+          console.log('Firebase data', doc.data());
+          setMutation({ ...doc.data(), id: doc.id });
+        });
+      }
+    },
     setLoading({ commit }, payload) {
       commit('toggleLoading', payload);
     },
@@ -76,7 +114,17 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
         commit('setUser', userInfo);
+
+        const DAYSLEFT = userInfo.company_info.days_left;
+        if (DAYSLEFT <= 0) {
+          dispatch('setError', 'Sorry, you license expired');
+          dispatch();
+          router.replace({ name: 'login' });
+          commit('toggleLoading', false);
+          return;
+        }
 
         if (userInfo.role === 5) {
           router.push({ name: 'pos' });
@@ -112,7 +160,16 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
         commit('setUser', userInfo);
+
+        const DAYSLEFT = userInfo.company_info.days_left;
+        if (DAYSLEFT <= 0) {
+          dispatch('setError', 'Sorry, you license expired');
+          router.replace({ name: 'login' });
+          commit('toggleLoading', false);
+          return;
+        }
 
         if (userInfo.role === 5) {
           if (payload && payload.match('login')) router.push({ name: 'overview' });
@@ -140,11 +197,20 @@ export default {
       const companyDay = await API.smart(PATH, params);
       commit('setCompanyDay', { day: companyDay.data, display: companyDay.day_display });
     },
+    async performLicenseExtension({ commit }, payload) {
+      commit('toggleLoading', true);
+      const frm = new FormData();
+      frm.append('extend_license', payload.extend_license);
+      frm.append('duration', payload.duration);
+      commit('toggleLoading', false);
+      return API.smart(PATH, frm);
+    },
   },
   getters: {
     error: (state) => state.error,
     loading: (state) => state.loading,
     user: (state) => state.user,
     routes: (state) => state.routes,
+    license: (state) => state.license,
   },
 };

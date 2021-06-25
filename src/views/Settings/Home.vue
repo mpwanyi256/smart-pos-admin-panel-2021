@@ -26,6 +26,7 @@ export default {
       links: [
         { name: 'Access controls', icon: 'mdi-security', path: 'access_controls' },
         { name: 'Company settings', icon: 'mdi-domain', path: 'company_settings' },
+        { name: 'Department Sections', icon: 'mdi-blur', path: 'company_departments' },
         { name: 'Employees', icon: 'mdi-account-group-outline', path: 'company_employees' },
         { name: 'Sections and tables', icon: 'mdi-table-arrow-right', path: 'sections_and_tables' },
         { name: 'Printer settings', icon: 'mdi-printer', path: 'printer_settings' },

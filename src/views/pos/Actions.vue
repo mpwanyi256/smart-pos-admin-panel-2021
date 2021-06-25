@@ -1,8 +1,15 @@
 <template>
     <div class="actions_pane">
+      <v-alert
+        v-if="errorMessage"
+        outlined dense
+        type="error"
+        class="white--text">
+        {{ errorMessage }}
+      </v-alert>
       <template
           v-for="(action, i) in actions">
-        <div :key="i" class="action_item"
+        <div :key="`action-${i}`" class="action_item"
           @click="listen(action.name)"
           v-if="isAllowedAction(action.name)"
         >
@@ -16,10 +23,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import ControlsMixin from '@/mixins/ControlsMixin';
+import PrintMixin from '@/mixins/PrintingMixin';
 
 export default {
   name: 'Actions',
-  mixins: [ControlsMixin],
+  mixins: [ControlsMixin, PrintMixin],
   data() {
     return {
       actions: [
@@ -28,11 +36,20 @@ export default {
         { name: 'Settle', icon: 'mdi-credit-card', allow: true },
         { name: 'Discount', icon: 'mdi-sale', allow: true },
       ],
+      errorMessage: '',
     };
   },
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
     ...mapGetters('auth', ['user']),
+
+    company() {
+      return this.user ? this.user.company_info : null;
+    },
+
+    order() {
+      return this.runningOrder;
+    },
 
     companyType() {
       return this.user ? this.user.company_info.business_type : 0;
@@ -40,6 +57,14 @@ export default {
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
+    },
+  },
+  watch: {
+    errorMessage(val) {
+      if (!val) return;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
     },
   },
   created() {
@@ -75,10 +100,14 @@ export default {
     },
 
     listen(action) {
+      if (!this.order) {
+        this.errorMessage = 'Select order';
+        return;
+      }
       this.$eventBus.$emit('fetch-orders');
       switch (action) {
         case 'Confirm':
-          this.confirmOrder();
+          this.performKotPrint();
           break;
         case 'Bill':
           this.$eventBus.$emit('print-bill');

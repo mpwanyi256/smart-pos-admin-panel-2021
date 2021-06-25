@@ -10,6 +10,7 @@ import reports from './reports';
 import settings from './settings';
 import accomodation from './accomodation';
 import mail from './email';
+import print from './print';
 
 Vue.use(Vuex);
 
@@ -25,5 +26,6 @@ export default new Vuex.Store({
     settings,
     accomodation,
     mail,
+    print,
   },
 });

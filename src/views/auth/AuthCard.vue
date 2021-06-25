@@ -14,17 +14,24 @@
         </v-form>
         <BaseAlert v-if="error.status" :message="error.message" />
         <v-progress-linear v-if="loading" indeterminate color="black" />
+
+        <LicenseModal
+          v-if="openLicenseModal"
+          @close="openLicenseModal = false"
+        />
     </v-card>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import BaseAlert from '@/components/alerts/BaseAlert.vue';
+import LicenseModal from '@/components/pos/manage/LicenseModal.vue';
 
 export default {
   name: 'AuthCard',
 
   components: {
     BaseAlert,
+    LicenseModal,
   },
 
   data() {
@@ -33,11 +40,12 @@ export default {
       Password: '',
       passwordReset: false,
       createAccountModal: false,
+      openLicenseModal: false,
     };
   },
 
   computed: {
-    ...mapGetters('auth', ['loading', 'error']),
+    ...mapGetters('auth', ['loading', 'error', 'user', 'license']),
     userId() {
       return localStorage.getItem('smart_user_id');
     },
@@ -46,15 +54,23 @@ export default {
     },
   },
 
-  created() {
+  async created() {
     const LoggedInUser = localStorage.getItem('smart_user_id');
     if (LoggedInUser) {
       this.getUserById(this.routeOn);
+      if (this.error.message === 'Sorry, you license expired') {
+        this.getLicense();
+      }
     }
   },
 
   methods: {
-    ...mapActions('auth', ['performLogin', 'setError', 'getUserById', 'clearError']),
+    ...mapActions('auth',
+      ['performLogin',
+        'setError',
+        'getUserById',
+        'clearError',
+        'getActiveLicense']),
 
     async loginUser() {
       if (this.Username.toLowerCase() === 'x' && this.Password.toLowerCase() === 'x') {
@@ -71,7 +87,17 @@ export default {
           username: this.Username,
           password: this.Password,
         };
-        this.performLogin(credentials);
+        await this.performLogin(credentials);
+        if (this.error.message === 'Sorry, you license expired') {
+          this.getLicense();
+        }
+      }
+    },
+
+    async getLicense() {
+      if (this.user) {
+        await this.getActiveLicense(this.user.company_info.company_email);
+        this.openLicenseModal = true;
       }
     },
 

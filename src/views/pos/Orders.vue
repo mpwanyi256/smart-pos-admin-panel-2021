@@ -3,21 +3,20 @@
         <div
           class="day_open"
           v-show="dayOpen"
-          @click="actions = true"
         >
-         <p>
-           <span class="time_display" v-if="timeNow">
-             <span :class="{ days_warning : daysLeft <= 10  }">
-              {{ `${daysLeft} Days` }}
-             </span>
-             <v-btn text class="time_display">
-              <v-icon class="time_display" left>
-                mdi-calendar
-              </v-icon>
-              {{ timeNow }}
-             </v-btn>
-           </span>
-         </p>
+          <v-btn text
+            v-if="timeNow"
+            @click="actions = true"
+            class="time_display"
+            :class="daysLeft < 10 ? 'days_warning' : ''"
+          >
+          <v-icon
+            :class="daysLeft < 10 ? 'days_warning' : ''"
+            class="time_display" left>
+            mdi-calendar
+          </v-icon>
+          {{ `${daysLeft} Days ${timeNow}` }}
+          </v-btn>
         </div>
         <div class="order_list">
             <SectionsPane
@@ -60,6 +59,10 @@
           :message="errorMessage"
           :loading="loading"
         />
+        <LicenseModal
+          v-if="openLicenseModal"
+          @close="openLicenseModal = false"
+        />
     </div>
 </template>
 <script>
@@ -68,6 +71,7 @@ import SectionsPane from '@/components/pos/order/SectionsPane.vue';
 import ManagerActions from '@/components/pos/manage/ManagerActions.vue';
 import SalesReport from '@/components/Reports/SalesReport.vue';
 import SwitchDayModal from '@/components/pos/manage/SwitchDayModal.vue';
+import LicenseModal from '@/components/pos/manage/LicenseModal.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
 
 export default {
@@ -78,6 +82,7 @@ export default {
     ManagerActions,
     SalesReport,
     SwitchDayModal,
+    LicenseModal,
   },
 
   data() {
@@ -90,6 +95,8 @@ export default {
       switchDay: false,
       errorMessage: '',
       loading: false,
+      openLicenseModal: false,
+      persistLicense: false,
     };
   },
 
@@ -130,6 +137,16 @@ export default {
     },
   },
 
+  watch: {
+    daysLeft(val) {
+      if (val && val <= 0) {
+        // notify client
+        this.persistLicense = true;
+        this.openLicenseModal = true;
+      }
+    },
+  },
+
   async mounted() {
     await this.fetchOrders();
     await this.fetchTables();
@@ -152,6 +169,10 @@ export default {
     ...mapActions('reports', ['getReport']),
     ...mapActions('email', ['sendEmail']),
 
+    closeLicenseModal() {
+      this.openLicenseModal = false;
+    },
+
     padZero(Val) {
       return Val > 9 ? Val : `0${Val}`;
     },
@@ -166,6 +187,10 @@ export default {
           break;
         case 'email':
           this.sendSalesReport();
+          break;
+        case 'license':
+          this.actions = false;
+          this.openLicenseModal = true;
           break;
         default:
           console.log('Invalid action');
@@ -256,17 +281,17 @@ export default {
           display: flex;
           align-items: center;
           justify-content: center;
+        }
 
-          .days_warning {
-            color: $red;
-          }
+        .days_warning {
+          color: $red !important;
         }
 
         .day_open {
           height: 50px;
           background-color: $white;
           color: $accent-color;
-          display: flex;
+          display: inline-flex;
           justify-content: center;
           align-items: center;
           font-size: 16px;

@@ -54,10 +54,6 @@ export default {
     OrderSettlementModal,
     WaitersModal,
   },
-  computed: {
-    ...mapGetters('auth', ['user']),
-    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
-  },
   data() {
     return {
       dayOpenPoll: null,
@@ -67,8 +63,28 @@ export default {
       showWaiters: false,
     };
   },
-  created() {
-    const setPolling = () => {
+  computed: {
+    ...mapGetters('auth', ['user']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+
+    daysLeft() {
+      return this.user ? this.user.company_info.days_left : '';
+    },
+  },
+
+  watch: {
+    daysLeft(val) {
+      if (val <= 0) {
+        // notify client
+      }
+    },
+  },
+
+  async created() {
+    if (this.user) {
+      await this.getActiveLicense(this.user.company_info.company_email);
+    }
+    const setPolling = async () => {
       if (!this.user) {
         clearInterval(this.polling);
       } else {
@@ -85,7 +101,7 @@ export default {
     'add-waiter': 'addWaiter',
   },
   methods: {
-    ...mapActions('auth', ['getDayOpen']),
+    ...mapActions('auth', ['getDayOpen', 'getActiveLicense']),
 
     addWaiter() {
       if (this.runningOrderId) this.showWaiters = true;

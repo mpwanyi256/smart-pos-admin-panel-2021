@@ -29,6 +29,7 @@ export default {
         { name: 'View Sales Report', action: 'sales' },
         { name: 'Send email', action: 'email' },
         { name: 'Open new day', action: 'open' },
+        { name: 'Extend License', action: 'license' },
       ],
     };
   },

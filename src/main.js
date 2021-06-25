@@ -56,6 +56,11 @@ new Vue({
 
       firebase.analytics();
       firebase.firestore().enablePersistence();
+      firebase.firestore().collection('licenses')
+        .onSnapshot(async () => {
+          const compEmail = localStorage.getItem('smart_company_email');
+          if (compEmail) await store.dispatch('auth/getActiveLicense', compEmail);
+        });
     } else store.replace({ name: 'login' });
   },
   render: (h) => h(App),
