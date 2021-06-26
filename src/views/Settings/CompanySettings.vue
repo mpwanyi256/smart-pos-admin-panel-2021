@@ -67,7 +67,7 @@
                         class="float-right blue"
                         dark
                     >
-                    <v-icon left>mdi-save</v-icon>
+                    <!-- <v-icon left>mdi-info</v-icon> -->
                     Update info</v-btn>
                     </div>
                 </div>
@@ -187,7 +187,7 @@ export default {
 
             .entry_form {
                 display: grid;
-                grid-template-columns: 50% 50%;
+                grid-template-columns: 45% 45%;
                 gap: 15px;
 
                 >div {
@@ -197,6 +197,7 @@ export default {
                     gap: 5px;
                     padding-right: 10px;
                     color: $black;
+                    justify-content: center;
                 }
             }
         }

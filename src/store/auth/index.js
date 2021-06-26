@@ -12,14 +12,25 @@ export default {
     user: {},
     loading: false,
     error: { status: false, message: '' },
+    reviewLink: 'https://g.page/prodev-group-kampala/review?nr',
     routes: [
-      { icon: 'mdi-cart', name: 'Pos', path: 'pos' },
-      { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
+      {
+        icon: 'mdi-cart', name: 'Pos', path: 'pos', allowedUsers: [1, 2, 3, 5, 6],
+      },
+      {
+        icon: 'mdi-sale', name: 'Sales', path: 'overview', allowedUsers: [1, 5, 6],
+      },
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
-      { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
+      {
+        icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard', allowedUsers: [1, 5, 6, 8],
+      },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      { icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_dashboard' },
-      { icon: 'mdi-cog', name: 'Settings', path: 'access_controls' },
+      {
+        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_dashboard', allowedUsers: [1, 5, 6, 9],
+      },
+      {
+        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],
+      },
     ],
     license: null,
   },
@@ -56,7 +67,8 @@ export default {
   },
   actions: {
     async updateFbLicense({ commit }, licenseId) {
-      await firebase.firestore().collection('licenses')
+      const DB = firebase.firestore().collection('licenses');
+      await DB
         .doc(licenseId).update({ status: 1 })
         .then(() => {
           commit('setLicense', null);
@@ -83,7 +95,6 @@ export default {
 
       if (!activeLicense.empty) {
         activeLicense.forEach((doc) => {
-          console.log('Firebase data', doc.data());
           setMutation({ ...doc.data(), id: doc.id });
         });
       }
@@ -212,5 +223,6 @@ export default {
     user: (state) => state.user,
     routes: (state) => state.routes,
     license: (state) => state.license,
+    reviewLink: (state) => state.reviewLink,
   },
 };

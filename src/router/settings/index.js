@@ -61,14 +61,5 @@ export default {
       },
       component: () => import('@/views/Settings/EmailList.vue'),
     },
-    {
-      path: 'Printers',
-      name: 'printer_settings',
-      meta: {
-        authrequired: true,
-        title: 'SmartPOS :: Printer Settings',
-      },
-      component: () => import('@/views/Settings/Printers.vue'),
-    },
   ],
 };

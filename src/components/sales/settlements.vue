@@ -70,7 +70,6 @@ import BillModal from '@/components/sales/modals/Bill.vue';
 import CancelOrderItemModal from '@/components/sales/modals/cancelItem.vue';
 import CreditorsList from '@/components/sales/Creditors.vue';
 import RunningOrders from '@/components/sales/RunningOrders.vue';
-// import BaseLoading from '@/components/generics/BaseLoading.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -82,7 +81,6 @@ export default {
     CancelOrderItemModal,
     CreditorsList,
     RunningOrders,
-    // SalesGraph,
   },
   data() {
     return {

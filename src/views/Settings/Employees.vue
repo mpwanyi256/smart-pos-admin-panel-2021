@@ -43,10 +43,13 @@
                         </v-btn>
                     </td>
                     <td>
-                      <BaseSwitch
-                        :status="employee.is_active"
-                        @change="updateEmployeeStatus($event, employee)"
-                      />
+                      <v-btn small
+                        @click="updateEmployeeStatus(!employee.is_active, employee)"
+                        :color="employee.is_active ? 'green' : 'red'"
+                        dark
+                      >
+                        {{ employee.is_active ? 'YES' : 'NO' }}
+                      </v-btn>
                     </td>
                     <td>
                         <v-btn small
@@ -81,7 +84,6 @@
 </template>
 <script>
 import Table from '@/components/generics/new/Table.vue';
-import BaseSwitch from '@/components/generics/BaseSwitch.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import PasswordResetModal from '@/components/settings/PasswordResetModal.vue';
 import CreateUserModal from '@/components/settings/CreateUserModal.vue';
@@ -93,7 +95,6 @@ export default {
   components: {
     Table,
     BaseTextfield,
-    BaseSwitch,
     PasswordResetModal,
     CreateUserModal,
     UpateUserModal,

@@ -60,6 +60,12 @@ new Vue({
         .onSnapshot(async () => {
           const compEmail = localStorage.getItem('smart_company_email');
           if (compEmail) await store.dispatch('auth/getActiveLicense', compEmail);
+          if (compEmail === 'prodevgroup256@gmail.com') await store.dispatch('manage/fetchClientLicenses');
+        });
+      firebase.firestore().collection('Companies')
+        .onSnapshot(async () => {
+          const compEmail = localStorage.getItem('smart_company_email');
+          if (compEmail === 'prodevgroup256@gmail.com') await store.dispatch('manage/fetchClients', compEmail);
         });
     } else store.replace({ name: 'login' });
   },

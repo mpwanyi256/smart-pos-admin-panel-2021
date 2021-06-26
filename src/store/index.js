@@ -11,6 +11,7 @@ import settings from './settings';
 import accomodation from './accomodation';
 import mail from './email';
 import print from './print';
+import manage from './manage';
 
 Vue.use(Vuex);
 
@@ -27,5 +28,6 @@ export default new Vuex.Store({
     accomodation,
     mail,
     print,
+    manage,
   },
 });

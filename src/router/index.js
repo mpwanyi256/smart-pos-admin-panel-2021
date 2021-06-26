@@ -10,6 +10,7 @@ import Accounting from './accounting';
 import POS from './pos';
 import Accomodation from './accomodation';
 import Settings from './settings';
+import Manage from './manage';
 
 Vue.use(VueRouter);
 Vue.use(Meta, {
@@ -26,6 +27,7 @@ const routes = [
   POS,
   Accomodation,
   Settings,
+  Manage,
   { path: '*', component: () => import('@/views/auth/login.vue') },
 ];
 

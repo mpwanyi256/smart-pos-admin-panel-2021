@@ -24,8 +24,13 @@
                 to the internet to get your activation code.
             </p>
             <p class="black--text">
-                <v-btn text small>
-                    <v-icon left>mdi-reload</v-icon>Retry fetching key
+                <v-btn text
+                  small
+                  :loading="loading"
+                  @click="fetchUserLicense"
+                >
+                  <v-icon left>mdi-reload</v-icon>
+                  Click to Retry fetching key
                 </v-btn>
             </p>
             <p class="grey--text">
@@ -86,7 +91,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions('auth', ['performLicenseExtension', 'updateFbLicense', 'getUserById']),
+    ...mapActions('auth',
+      ['performLicenseExtension',
+        'updateFbLicense',
+        'getUserById',
+        'getActiveLicense',
+      ]),
+
+    async fetchUserLicense() {
+      this.loading = true;
+      const compEmail = localStorage.getItem('smart_company_email');
+      if (compEmail) await this.getActiveLicense(compEmail);
+      this.loading = false;
+    },
 
     extendLicense() {
       this.loading = true;

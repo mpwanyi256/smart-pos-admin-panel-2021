@@ -16,7 +16,7 @@
                     <td>
                       <p>
                         <strong>
-                          {{ setting.title.toUpperCase() }} | {{ setting.set_code }}
+                          {{ setting.title.toUpperCase() }}
                         </strong>
                       </p>
                       <div class="setting_description" v-html="setting.description" />

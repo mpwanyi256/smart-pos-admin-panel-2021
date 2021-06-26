@@ -6,7 +6,7 @@ export default {
     ...mapGetters('auth', ['user']),
   },
   methods: {
-    ...mapActions('print', ['sendPrintJob']),
+    ...mapActions('print', ['sendPrintJob', 'sendKotJob']),
 
     async performBillPrint() {
       const bill = {
@@ -42,6 +42,7 @@ export default {
         waiter: this.order.waiter,
         exceptions_category_id: this.user.exception_category_id || 0,
         receipt_message: this.company.company_receipt,
+        run_kot_print_job: true,
       };
 
       await this.printBarKot(params);
@@ -50,14 +51,14 @@ export default {
     },
 
     async printBarKot(params) {
-      this.sendPrintJob({ ...params, department_id: 1 })
+      this.sendKotJob({ ...params, department_id: 1 })
         .catch(() => {
           this.errorMessage = 'Check bar printer';
         });
     },
 
     async printKitchen(params) {
-      this.sendPrintJob({ ...params, department_id: 2 })
+      this.sendKotJob({ ...params, department_id: 2 })
         .catch(() => {
           this.errorMessage = 'Check kitchen printer';
         });

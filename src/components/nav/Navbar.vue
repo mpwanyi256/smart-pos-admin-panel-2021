@@ -6,12 +6,15 @@
           <div class="menu_icons">
             <v-app-bar-nav-icon class="d-none d-sm-flex d-md-none"
               @click="drawer = true" />
-            <p>Smart POS |
+            <p>
+              <!-- <v-btn fab x-small>
+                <v-icon class="time_display">
+                  mdi-message-draw
+                </v-icon>
+              </v-btn> -->
+              Smart POS |
               <small class="user_name">
                 {{ userName }} -
-              <!-- <v-icon class="time_display">
-                mdi-calendar
-              </v-icon> -->
               {{ companyInfo.day_open_display }}
               </small>
             </p>
@@ -21,13 +24,23 @@
           <div class="tray">
             <div
             :class="isActiveRoute(link.name) ? 'active' : 'item'"
-              v-for="(link, index) in routes" :key="index"
+              v-for="(link, index) in filteredRoutes" :key="index"
               :to="{ name: link.path }"
               @click="gotTopage(link)">
               <v-icon small class="icon" left>
                 {{ link.icon }}
               </v-icon>
               {{ link.name }}
+            </div>
+            <div
+              v-if="isProtectedManageAccount"
+              :class="isActiveRoute(manageRoute.name) ? 'active' : 'item'"
+              :to="{ name: manageRoute.path }"
+              @click="gotTopage(manageRoute)">
+              <v-icon small class="icon" left>
+                mdi-security
+              </v-icon>
+              Manage
             </div>
             <div class="auth" @click="performLogout()">
               <v-icon small class="icon" dark>

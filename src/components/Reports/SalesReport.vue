@@ -96,7 +96,7 @@ export default {
     async selectedDate(val) {
       this.loading = true;
       if (val) await this.fetchReport();
-      this.$refs.salesReport.scrollTo(0, 0);
+      this.$refs.salesReport.scroll(0, 0);
     },
   },
   methods: {
@@ -114,13 +114,6 @@ export default {
           print_sales: true,
         },
       };
-      // console.log('fetch report', route);
-      // window.open(`${this.serverIP}/pdf/salesReport.php?
-      //       ${this.companyInfo.company_name}}${this.companyInfo.company_location}}
-      //       ${this.companyInfo.company_tin}}${this.user.user_name}}
-      //       ${this.selectedDate}`,
-      // '_blank',
-      // 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400');
       this.getPdf(route)
         .then((response) => {
           console.log('Sales pdf', response);
@@ -142,12 +135,17 @@ export default {
       this.$emit('close');
     },
 
-    async fetchReport() {
-      const Report = await this.getReport({
+    fetchReport() {
+      this.loading = true;
+      this.getReport({
         get_daily_report: this.selectedDate,
+      }).then((res) => {
+        if (!res.error) this.report = res.data;
+        this.loading = false;
+      }).catch((e) => {
+        console.log('Error', e);
+        this.loading = false;
       });
-      if (!Report.error) this.report = Report.data;
-      this.loading = false;
     },
   },
   async created() {
