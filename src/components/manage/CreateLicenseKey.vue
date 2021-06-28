@@ -35,12 +35,12 @@
                     </tr>
                 </template>
                 <template slot="body">
-                <tr v-for="License in licenses" :key="License.id">
+                <tr v-for="License in clientLicenses" :key="License.id">
                     <td>{{ License.key }}</td>
                     <td>{{ License.duration }}</td>
                     <td>{{ License.status }}</td>
                     <td>
-                        <v-btn fab small @click="deleteLicense(License)" >
+                        <v-btn icon small @click="deleteLicense(License)" >
                           <v-icon>mdi-delete</v-icon>
                         </v-btn>
                     </td>
@@ -79,6 +79,10 @@ export default {
   },
   computed: {
     ...mapGetters('manage', ['licenses', 'error']),
+
+    clientLicenses() {
+      return this.licenses.filter((Lic) => Lic.company === this.client.Email);
+    },
 
     dayMonth() {
       return moment(new Date()).format('MMMYY');

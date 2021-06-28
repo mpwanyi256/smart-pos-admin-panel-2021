@@ -73,7 +73,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('menu', ['menuItems', 'departments']),
+    ...mapGetters('menu', ['departments']),
 
     actualDepartments() {
       return this.departments.filter((Dep) => Dep.id !== 0);
@@ -84,7 +84,7 @@ export default {
     this.getBarPrinterConf();
   },
   methods: {
-    ...mapActions('menu', ['getMenuItems', 'getDepartments']),
+    ...mapActions('menu', ['getDepartments']),
     ...mapActions('settings', ['post']),
 
     getBarPrinterConf() {
@@ -92,7 +92,6 @@ export default {
         get_department_printer_config: 0,
       }).then((res) => {
         this.billConf.printer = res.data;
-        console.log(res);
       });
     },
 

@@ -12,6 +12,7 @@ import accomodation from './accomodation';
 import mail from './email';
 import print from './print';
 import manage from './manage';
+import kds from './kds';
 
 Vue.use(Vuex);
 
@@ -29,5 +30,6 @@ export default new Vuex.Store({
     mail,
     print,
     manage,
+    kds,
   },
 });

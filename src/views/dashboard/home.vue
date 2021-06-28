@@ -37,6 +37,9 @@ export default {
       setPolling();
     }, 3000);
   },
+  beforeDestroy() {
+    // clearInterval(this.polling);
+  },
   methods: {
     ...mapActions('auth', ['getDayOpen']),
   },

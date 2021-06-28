@@ -6,7 +6,7 @@ export default {
       .then((response) => response.data)
       .catch(() => {
         if (path.localeCompare('auth/')) {
-          this.$store.dispatch('auth/setLoading', false);
+          // this.$store.dispatch('auth/setLoading', false);
         }
       });
   },

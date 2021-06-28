@@ -31,6 +31,9 @@ export default {
       {
         icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],
       },
+      {
+        icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8],
+      },
     ],
     license: null,
   },

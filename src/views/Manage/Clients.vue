@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('manage', ['clients']),
+    ...mapGetters('manage', ['clients', 'fetchClients']),
   },
   async created() {
     await this.fetchClients();

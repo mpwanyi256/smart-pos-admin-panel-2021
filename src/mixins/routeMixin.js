@@ -36,7 +36,7 @@ export default {
     },
 
     userName() {
-      return this.user ? this.user.user_name.split(' ')[0] : '';
+      return this.user && this.user.user_name ? this.user.user_name.split(' ')[0] : '';
     },
 
     activeRoute() {

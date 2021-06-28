@@ -11,6 +11,7 @@ import POS from './pos';
 import Accomodation from './accomodation';
 import Settings from './settings';
 import Manage from './manage';
+import KDS from './kds';
 
 Vue.use(VueRouter);
 Vue.use(Meta, {
@@ -28,6 +29,7 @@ const routes = [
   Accomodation,
   Settings,
   Manage,
+  KDS,
   { path: '*', component: () => import('@/views/auth/login.vue') },
 ];
 

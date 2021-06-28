@@ -64,8 +64,7 @@ new Vue({
         });
       firebase.firestore().collection('Companies')
         .onSnapshot(async () => {
-          const compEmail = localStorage.getItem('smart_company_email');
-          if (compEmail === 'prodevgroup256@gmail.com') await store.dispatch('manage/fetchClients', compEmail);
+          store.dispatch('manage/fetchClients');
         });
     } else store.replace({ name: 'login' });
   },

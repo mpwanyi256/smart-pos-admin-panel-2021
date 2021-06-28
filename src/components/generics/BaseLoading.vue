@@ -5,35 +5,37 @@
 </template>
 
 <script>
-    export default {
-        name: 'BaseLoading',
+export default {
+  name: 'BaseLoading',
 
-        mounted() {
-            this.populateElementStyles(this.$attrs);
-        },
+  mounted() {
+    this.populateElementStyles(this.$attrs);
+  },
 
-        methods: {
-            populateElementStyles(styles) {
-                for (let key in styles) {
-                    if (key == 'styles') {
-                        this.populateElementStyles(styles[key]);
-                    } else {
-                        this.$el.style[key] = styles[key];
-                    }
-                }
-            }
+  methods: {
+    populateElementStyles(styles) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in styles) {
+        if (key === 'styles') {
+          this.populateElementStyles(styles[key]);
+        } else {
+          this.$el.style[key] = styles[key];
         }
-    };
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-    @import '@/styles/constants.scss';
+@import '@/styles/constants.scss';
 
     .base-loading {
         position: relative;
         display: inline-block;
         overflow: hidden;
-        background-color: $dark-grey;
+        background-color: $quaternary;
+        border-radius: $corner-radius;
 
         &::after {
             display: block;
