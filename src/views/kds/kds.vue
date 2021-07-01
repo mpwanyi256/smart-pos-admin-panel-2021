@@ -3,13 +3,13 @@
         <NavBar />
         <div class="toggle_display">
             <div>
-                <h1 v-if="dayOpenDisplay">{{ `Display Screen ${dayOpenDisplay}`}}</h1>
+              <h1 v-if="dayOpenDisplay">{{ `Display Screen ${dayOpenDisplay}`}}</h1>
             </div>
             <div>
                 <div>
-                    <v-btn icon small @click="fetchRunningOrders(true)">
-                        <v-icon>mdi-refresh</v-icon>
-                    </v-btn>
+                  <v-btn icon small @click="fetchRunningOrders(true)">
+                    <v-icon>mdi-refresh</v-icon>
+                  </v-btn>
                 </div>
                 <div>
                     <v-select
@@ -43,6 +43,8 @@
                                 :key="kot.id"
                                 :kot="kot"
                                 :column="column.name"
+                                :checkoutId="column.checkout_id"
+                                :department="selectedDepartment"
                                 :columnClass="displayColorCode(column.name)"
                                 @reload="fetchRunningOrders"
                             />
@@ -72,10 +74,18 @@ export default {
       runningOrders: [],
       selectedDepartment: 0,
       displayRows: [
-        { name: 'New orders', min: 0, max: 5 },
-        { name: 'Running Late', min: 5, max: 8 },
-        { name: 'Delayed', min: 8, max: 1000000 },
-        // { name: 'Ready', min: 8, max: 1000000 },
+        {
+          name: 'New orders', min: 0, max: 5, checkout_id: 1,
+        },
+        {
+          name: 'Running Late', min: 5, max: 8, checkout_id: 1,
+        },
+        {
+          name: 'Delayed', min: 8, max: 1000000, checkout_id: 1,
+        },
+        // {
+        //   name: 'Ready', min: 8, max: 1000000, checkout_id: 2,
+        // },
       ],
       loading: true,
       polling: null,
@@ -186,7 +196,7 @@ export default {
     width: 100vw;
     height: 100vh;
     margin: 0;
-    background-color: $body-bg;
+    background-color: $bg_color;
     display: flex;
     flex-direction: column;
     font-family: $font-style !important;
@@ -214,17 +224,21 @@ export default {
         height: calc(100vh - 104px);
         display: flex;
         flex-direction: row;
-
-        > div:last-child {
-            border: none;
-        }
+        background-color: $bg_color;
+        flex-wrap: nowrap;
+        padding: 8px 12px;
+        gap: 16px;
 
         > div {
             width: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border-right: 1px solid $border-color;
+            background-color: $gray-95;
+            box-shadow: 0px 1px 14px rgb(11 13 14 / 10%), 0px 0px 1px rgb(11 13 14 / 10%);
+            border-radius: 4px;
+            padding: 4px 4px;
+            -webkit-tap-highlight-color: transparent;
 
             .kot_list {
                 display: flex;
@@ -237,32 +251,20 @@ export default {
             }
 
             .column_header {
-                height: 52px !important;
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-                font-size: large;
-                color: $black;
-            }
-
-            .just_in {
-                background-color: $blue;
-                color: $white;
-            }
-
-            .delaying {
-                background-color: $orange;
-                color: $white;
-            }
-
-            .delayed {
-                background-color: $red;
-                color: $white !important;
-            }
-
-            .ready {
-                background-color: $green !important;
-                color: $white !important;
+              height: 52px !important;
+              display: inline-flex;
+              justify-content: left;
+              align-items: center;
+              color: $kds-text-header-color;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              font-style: normal;
+              font-size: 14px;
+              line-height: 150%;
+              letter-spacing: -0.005em;
+              border-bottom: 1px solid $bg_color;
+              padding-left: 16px;
             }
         }
     }
@@ -276,15 +278,16 @@ export default {
         align-items: center;
 
         > div :first-child {
-            padding-left: 10px;
-            color: $black;
+          padding-left: 10px;
+          color: $black;
+          display: flex;
+          align-items: center;
+          font-size: 18px;
         }
 
         > div:last-child {
             direction: rtl;
             padding-right: 10px;
-            // display: inline-flex;
-            // justify-content: center;
 
             > div {
                 display: inline-flex;

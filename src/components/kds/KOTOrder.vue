@@ -1,18 +1,29 @@
 <template>
-    <div class="kot_order">
+    <v-card class="kot_order">
         <div class="kot_head" :class="columnClass">
             <div>
+            <BaseTooltip
+              v-if="allowItemsCheckoout && department !== 0"
+              @button="markAllItemsReady"
+              message="Mark all items as ready"
+              icon="thumb-up"
+              color="green"
+              :class="columnClass"
+              :small="true"
+              class="float-right"
+            />
             {{ `${kot.table_name} #${kot.kot_id} (${kot.waiter})` }}
             </div>
             <div class="text-right">
-                <BaseTooltip
-                    v-if="allowItemsCheckoout"
+                <!-- <BaseTooltip
+                    v-if="allowItemsCheckoout && department !== 0"
                     @button="markAllItemsReady"
                     message="Mark all items as ready"
                     icon="thumb-up"
                     color="green"
                     :class="columnClass"
-                />
+                    class="float-right"
+                /> -->
             </div>
         </div>
         <div class="kots_list">
@@ -21,6 +32,7 @@
                 :key="`kot-${item.id}`"
                 :menuItem="item"
                 :showPreparationTime="isReadyColumn"
+                :columnClass="columnClass"
                 @mark-as-served="markItemAsServed($event)"
             />
         </div>
@@ -37,7 +49,7 @@
             @close="checkoutAllItems = false"
             @yes="performAllItemsCheckout"
         />
-    </div>
+    </v-card>
 </template>
 <script>
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
@@ -48,6 +60,10 @@ import { mapActions } from 'vuex';
 export default {
   name: 'KOTOrder',
   props: {
+    checkoutId: {
+      type: Number,
+      required: true,
+    },
     kot: {
       type: Object,
       required: true,
@@ -58,6 +74,10 @@ export default {
     },
     columnClass: {
       type: String,
+      required: true,
+    },
+    department: {
+      type: Number,
       required: true,
     },
   },
@@ -86,7 +106,7 @@ export default {
         notColor = 'just_in';
       } else if (this.column === 'Running Late') {
         notColor = 'delaying';
-      } else if (this.column === 'Running Late') {
+      } else if (this.column === 'Ready') {
         notColor = 'ready';
       } else {
         notColor = 'delayed';
@@ -109,6 +129,8 @@ export default {
         checkout_all_items: this.kot.kot_id,
         time_in: this.kot.items[0].time,
         date: this.kot.date,
+        checkout_status: this.checkoutId,
+        department_selected: this.department,
       }).then((res) => {
         if (!res.error) {
           this.checkoutAllItems = false;
@@ -129,10 +151,13 @@ export default {
       this.markItemServed = true;
     },
     performItemCheckout() {
+      // Add dynamic status in the api params
       this.queryKds({
         checkout_item: this.selectedKOT.id,
         time_in: this.selectedKOT.time,
         date: this.selectedKOT.date,
+        checkout_status: this.checkoutId,
+        department_selected: this.department,
       }).then((res) => {
         if (!res.error) {
           this.markItemServed = false;
@@ -157,47 +182,41 @@ export default {
     border: 0.5px solid $border-color;
     display: flex;
     flex-direction: column;
-    border-radius: 15px;
-
-    .just_in {
-        background-color: $white;
-        color: $black;
-    }
-
-    .delaying {
-        background-color: $orange;
-        color: $black;
-    }
-
-    .delayed {
-        background-color: $red;
-        color: $white !important;
-    }
+    // border-radius: 15px;
 
     .kot_head {
         display: grid;
         grid-template-columns: 80% 20%;
-        gap: 0;
-        height: 50px;
-        // margin-bottom: 5px;
-        // background-color: $header;
-        // color: $black-text;
-        // margin-bottom: 5px;
-        font-size: large;
+        font-weight: bold;
+        height: 52px !important;
+        display: inline-flex;
+        justify-content: left;
+        align-items: center;
+        color: $kds-text-header-color;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-style: normal;
+        font-size: 14px;
+        line-height: 150%;
+        letter-spacing: -0.005em;
+        border-bottom: 1px solid $bg_color;
 
         >div {
-            width: 100%;
-            display: flex;
-            justify-content: left;
-            align-items: center;
-            padding-left: 10px;
-            flex-direction: row;
-            gap: 5px;
+          width: 100%;
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          padding-left: 10px;
+          flex-direction: row;
+          gap: 5px;
         }
 
         >div:last-child {
-            direction: rtl;
-            padding-right: 5px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // padding-right: 5px;
         }
 
     }
@@ -207,23 +226,27 @@ export default {
     }
 
     .just_in {
-        background-color: $blue !important;
-        color: $white;
+        background-color: $white;
+        color: $blue;
     }
 
     .delaying {
-        background-color: $orange !important;
-        color: $white;
+        background-color: $white;
+        color: $orange;
     }
 
     .delayed {
-        background-color: $red !important;
-        color: $white !important;
+        background-color: $white;
+        color: $red !important;
     }
 
     .ready {
-        background-color: $green !important;
-        color: $white !important;
+        background-color: $bg_color !important;
+        color: $green !important;
     }
+}
+
+.kot_order:hover {
+  box-shadow: $elevation-mid;
 }
 </style>

@@ -77,8 +77,8 @@ export default {
           commit('setLicense', null);
           router.replace({ name: 'pos' });
         })
-        .catch((e) => {
-          console.error('Error updating doc', e);
+        .catch(() => {
+          console.error('Error updating doc');
         });
     },
     async getActiveLicense({ commit }, companyEmail) {
@@ -88,8 +88,8 @@ export default {
         .where('status', '==', 0)
         .limit(1)
         .get()
-        .catch((e) => {
-          console.log('Firebase error', e);
+        .catch(() => {
+          console.log('Firebase error');
         });
 
       const setMutation = (data) => {

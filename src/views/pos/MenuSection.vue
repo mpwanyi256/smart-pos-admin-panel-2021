@@ -4,9 +4,11 @@
         :categories="filteredCategories"
         @filterMenu="filterMenuByCategory"
         @search="categorySearchKey = $event"
+        :loading="loading"
       />
       <MenuItems
         :items="filteredMenuItems"
+        :loading="loading"
         @searchMenu="searchForAMenuItem"
         @create-order="createOrder"
         @addItem="addItemToOrder"
@@ -34,6 +36,7 @@ export default {
     return {
       categorySearchKey: '',
       quantity: 1,
+      loading: true,
     };
   },
   computed: {
@@ -148,9 +151,11 @@ export default {
       this.getMenuItems({ category_id: categoryId, item_name: 'all' });
     },
   },
-  created() {
-    this.getMenuItems({ category_id: 'all', item_name: 'all' });
-    this.getMenuCategories();
+  async created() {
+    this.loading = true;
+    await this.getMenuItems({ category_id: 'all', item_name: 'all' });
+    await this.getMenuCategories();
+    this.loading = false;
   },
 };
 </script>

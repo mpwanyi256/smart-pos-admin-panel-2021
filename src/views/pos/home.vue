@@ -72,14 +72,6 @@ export default {
     },
   },
 
-  watch: {
-    daysLeft(val) {
-      if (val <= 0) {
-        // notify client
-      }
-    },
-  },
-
   async created() {
     if (this.user) {
       await this.getActiveLicense(this.user.company_info.company_email);

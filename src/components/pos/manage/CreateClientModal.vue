@@ -1,74 +1,47 @@
 <template>
     <Basemodal
-      :title="`Create new client`"
+      :title="`Add client details to order`"
       :size="1020" @close="$emit('close')">
       <div class="manager_actions">
-          <div class="actions_list">
-            <div class="frm_entry">
-                <div>
-                    <label>First name</label>
-                    <div>
-                        <BaseTextfield
-                            v-model="firstname"
-                            :preset="firstname"
-                            placeholder="First name"
-                        />
-                    </div>
-                </div><div>
-                    <label>Last name</label>
-                    <BaseTextfield
-                        v-model="lastname"
-                        :preset="lastname"
-                        placeholder="Last name"
-                    />
+        <v-tabs v-model="tab" background-color="transparent"
+          color="basil" grow
+        >
+          <v-tab v-for="item in tabs" :key="item">
+            {{ item }}
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="tab">
+          <v-tab-item>
+            <v-card flat>
+              <v-card-title>
+                <div class="selected-client">
+                  <BaseTextfield v-model="search" />
                 </div>
+                <div v-if="errorMessage">{{ errorMessage }}</div>
+              </v-card-title>
+              <div class="client_list">
+                <Client
+                  v-for="client in filteredClients"
+                  :key="client.id"
+                  :client="client"
+                  @select="setClientInfoOnBill($event)"
+                />
+              </div>
+            </v-card>
+          </v-tab-item>
+          <v-tab-item>
+            <div class="client_list">
+              <CreateNewClient />
             </div>
-            <div class="frm_entry">
-                <div>
-                    <label>Address</label>
-                    <BaseTextfield
-                    v-model="address"
-                    :preset="address"
-                    placeholder="Address"
-                    />
-                </div><div>
-                    <label>Email address</label>
-                    <BaseTextfield
-                        v-model="email"
-                        :preset="email"
-                        placeholder="email"
-                    />
-                </div>
-            </div>
-            <div class="frm_entry">
-                <div>
-                    <label>Contact number</label>
-                    <BaseTextfield
-                        v-model="contactNumber"
-                        :preset="contactNumber"
-                        placeholder="+256780101601"
-                    />
-                </div>
-                <div>
-                    <div>
-                    <v-btn
-                        :disabled="!isValid"
-                        class="mt-8 float-right"
-                        @click="saveClient"
-                    >
-                        Save
-                    </v-btn>
-                    </div>
-                </div>
-            </div>
-            <div class="frm_entry">
-            </div>
-          </div>
+          </v-tab-item>
+        </v-tabs-items>
       </div>
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
+import CreateNewClient from '@/components/pos/manage/CreateNewClient.vue';
+import Client from '@/components/pos/manage/Client.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import { mapActions, mapGetters } from 'vuex';
 import validators from '@/mixins/validators';
@@ -80,17 +53,20 @@ export default {
   },
   components: {
     Basemodal,
+    CreateNewClient,
+    Client,
     BaseTextfield,
   },
   data() {
     return {
       loading: false,
       message: '',
-      firstname: '',
-      lastname: '',
-      address: '',
-      email: '',
-      contactNumber: '',
+      tabs: ['Existing client', 'New client'],
+      tab: null,
+      clients: [],
+      search: '',
+      selectedClient: null,
+      errorMessage: '',
     };
   },
   watch: {
@@ -102,6 +78,12 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('pos', ['runningOrderId']),
+
+    filteredClients() {
+      return this.clients.filter((C) => C.full_name
+        .toLowerCase().match(this.search.toLowerCase()));
+    },
 
     isValid() {
       return !!(this.firstname.length && this.lastname.length
@@ -112,10 +94,31 @@ export default {
       return this.isEmail(this.email);
     },
   },
-  created() {
+  async created() {
+    await this.fetchClients();
   },
   methods: {
     ...mapActions('settings', ['post']),
+    ...mapActions('sales', ['getClients', 'addClientInfo']),
+
+    async setClientInfoOnBill(client) {
+      const response = await this.addClientInfo({
+        add_client_info: client.id,
+        order_id: this.runningOrderId,
+      }).catch(() => null);
+
+      if (response && !response.error) {
+        await this.$eventBus.$emit('fetch-orders');
+        this.$emit('close');
+      } else {
+        this.errorMessage = response.message;
+      }
+    },
+
+    async fetchClients() {
+      const posClients = await this.getClients('all');
+      if (!posClients.error) this.clients = posClients.data;
+    },
 
     saveClient() {
       const info = {
@@ -140,47 +143,32 @@ export default {
 <style scoped lang="scss">
 @import '@/styles/constants.scss';
 
-.manager_actions {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  min-height: 400px;
-  color: $black;
-  padding: 15px;
+  .manager_actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 400px;
+    color: $black;
+    padding: 15px;
+  }
 
-  .actions_list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 15px;
+  .client_list {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid $border_color;
+  }
 
-        .frm_entry {
-            display: grid;
-            grid-template-columns: 50% 50%;
-            gap: 15px;
-            padding: 0;
-            top: 0;
-            bottom: 0;
-
-            >div {
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-
-                .known_client {
-                    color: $white;
-                    font-weight: bold;
-                    padding: 10px;
-                    background-color: $green;
-                    cursor: pointer;
-                    margin: 10px;
-                    border-radius: 5px;
-                }
-            }
-        }
-
-    }
-
+  .selected-client {
+    display: inline-flex;
+    align-content: center;
+    gap: 15px;
+    height: 64px;
+    width: 100%;
+    border-bottom: 1px solid $border_color;
+    padding: 8px;
   }
 
 </style>

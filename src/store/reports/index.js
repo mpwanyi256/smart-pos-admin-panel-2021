@@ -2,6 +2,17 @@ import API from '@/api';
 
 const PATH = 'reports/';
 
+// var db = firebase.firestore();
+// var batch = db.batch()
+
+// save(docs: any[]) {
+//   docs.forEach((doc) => {
+//     var docRef = db.collection("col").doc(); //automatically generate unique id
+//     batch.set(docRef, doc);
+//   });
+//   return batch.commit();
+// }
+
 export default {
   namespaced: true,
   state: {

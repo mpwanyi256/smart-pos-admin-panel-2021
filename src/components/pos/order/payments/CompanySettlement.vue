@@ -8,17 +8,12 @@
                 v-model.trim="clientName"
             />
             <div class="clients_list">
-              <div class="client_list_item"
-                v-for="client in filteredClients"
-                :key="client.id"
-                @click="selectClient(client)"
-                :class="isSelected(client.id) ? 'selected' : ''"
-              >
-                <p>{{ `${client.full_name} (${client.address})` }}
-                  <br>
-                  {{ `${client.contact}, ${client.email}` }}
-                </p>
-              </div>
+              <Client
+                  v-for="client in filteredClients"
+                  :key="`client-${client.id}`"
+                  :client="client"
+                  @select="selectClient(client)"
+                />
             </div>
         </div>
         <div class="settlement_area">
@@ -34,6 +29,7 @@
 </template>
 <script>
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+import Client from '@/components/pos/manage/Client.vue';
 
 export default {
   name: 'CompanySettlement',
@@ -53,6 +49,7 @@ export default {
   },
   components: {
     BaseTextfield,
+    Client,
   },
   data() {
     return {
@@ -62,7 +59,7 @@ export default {
   },
   computed: {
     filteredClients() {
-      return this.clients.filter((Client) => Client.full_name
+      return this.clients.filter((c) => c.full_name
         .toLowerCase().match(this.clientName.toLowerCase()));
     },
   },

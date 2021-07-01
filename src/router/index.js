@@ -54,11 +54,16 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const LoggedInUser = localStorage.getItem('smart_user_id');
+  if (to.authrequired && !LoggedInUser) {
+    router.push({ name: 'login' });
+  }
   if (to.matched.length) {
     document.title = to.meta.title;
     next();
   } else {
-    next();
+    document.title = 'Page not found';
+    router.push({ name: 'login' });
   }
 });
 

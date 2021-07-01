@@ -6,10 +6,11 @@
         <input type="text" v-model="menuSearchKey"
           class="search_field" placeholder="Search" />
         <BaseTooltip
-            @button="addClient = true"
-            message="Add client"
-            icon="account"
-            color="grey"
+          v-if="runningOrderId"
+          @button="addClient = true"
+          message="Add client"
+          icon="plus"
+          color="grey"
         />
         <v-btn
           @click="$emit('create-order')"
@@ -22,11 +23,20 @@
     </div>
     <div class="menu_items_list">
       <div class="menu">
+        <template v-if="loading">
+        <LoadingKds
+          v-for="i in 4"
+          :key="`cat-holder-key-${i}`"
+          :count="8"
+        />
+      </template>
+      <template v-else>
         <MenuItem
           v-for="item in items" :key="item.id"
           :item="item"
           @addItem="$emit('addItem', $event)"
         />
+      </template>
       </div>
     </div>
     <CreateClientMOdal
@@ -39,6 +49,7 @@
 import MenuItem from '@/components/pos/menu/MenuItem.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import CreateClientMOdal from '@/components/pos/manage/CreateClientModal.vue';
+import LoadingKds from '@/components/kds/LoadingKds.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -47,10 +58,15 @@ export default {
     MenuItem,
     BaseTooltip,
     CreateClientMOdal,
+    LoadingKds,
   },
   props: {
     items: {
       type: Array,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
       required: true,
     },
   },
@@ -62,6 +78,8 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+    ...mapGetters('pos', ['runningOrderId']),
+
     companyType() {
       return this.user ? this.user.company_info.business_type : 0;
     },

@@ -9,25 +9,40 @@
       </div>
     </div>
     <div class="categories_list">
+      <template v-if="loading">
+        <MenuLoader
+          v-for="i in 4"
+          :key="`cat-holder-key-${i}`"
+          :count="8"
+        />
+      </template>
+      <template v-else>
       <CategoryItem
         v-for="category in categories" :key="category.id"
         :category="category"
         @filter="$emit('filterMenu', $event)"
       />
+      </template>
     </div>
   </div>
 </template>
 <script>
 import CategoryItem from '@/components/pos/menu/CategoryItem.vue';
+import MenuLoader from '@/components/pos/menu/MenuLoader.vue';
 
 export default {
   name: 'Categories',
   components: {
     CategoryItem,
+    MenuLoader,
   },
   props: {
     categories: {
       type: Array,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
       required: true,
     },
   },

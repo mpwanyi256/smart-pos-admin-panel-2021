@@ -105,15 +105,15 @@ export default {
     ...mapGetters('pos', ['runningOrderId', 'orders']),
 
     daysLeft() {
-      return this.user ? this.user.company_info.days_left : '';
+      return (this.user && this.user.company_info) ? this.user.company_info.days_left : '';
     },
 
     userName() {
-      return this.user ? this.user.user_name : '';
+      return (this.user && this.user.company_info) ? this.user.user_name : '';
     },
 
     userRole() {
-      return this.user ? this.user.role : 0;
+      return (this.user && this.user.company_info) ? this.user.role : 0;
     },
 
     activeSections() {
@@ -121,7 +121,7 @@ export default {
     },
 
     companyType() {
-      return this.user ? this.user.company_info.business_type : 0;
+      return (this.user && this.user.company_info) ? this.user.company_info.business_type : 0;
     },
 
     pendingOrders() {

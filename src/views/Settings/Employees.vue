@@ -24,7 +24,10 @@
             <template slot="body">
                 <tr v-for="(employee, i) in filteredEmployees" :key="i">
                     <td>
+                      <div class="user_avatar">
+                        <Avatar src="" />
                         {{ employee.user_name }}
+                      </div>
                     </td>
                     <td>
                       {{ employee.role }}
@@ -88,6 +91,7 @@ import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import PasswordResetModal from '@/components/settings/PasswordResetModal.vue';
 import CreateUserModal from '@/components/settings/CreateUserModal.vue';
 import UpateUserModal from '@/components/settings/UpdateUserModal.vue';
+import Avatar from '@/components/generics/new/Avatar.vue';
 import { mapActions } from 'vuex';
 
 export default {
@@ -98,6 +102,7 @@ export default {
     PasswordResetModal,
     CreateUserModal,
     UpateUserModal,
+    Avatar,
   },
   data() {
     return {
@@ -165,6 +170,12 @@ export default {
   overflow-y: auto;
   color: $black;
   font-size: 13px !important;
+}
+
+.user_avatar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 </style>

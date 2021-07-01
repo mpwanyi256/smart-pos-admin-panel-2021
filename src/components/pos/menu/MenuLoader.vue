@@ -1,8 +1,5 @@
 <template>
     <div class="skeleton-loader">
-        <!-- Loading 4 BaseLoading components
-            This displays 4 loading components vertically
-        -->
         <BaseLoading
             v-for="i in count"
             :key="i"
@@ -14,7 +11,7 @@
 import BaseLoading from '@/components/generics/BaseLoading.vue';
 
 export default {
-  name: 'LoadingKds',
+  name: 'MenuLoader',
   props: {
     count: {
       type: Number,

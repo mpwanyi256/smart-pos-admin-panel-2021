@@ -27,6 +27,16 @@ export default {
     },
   },
   actions: {
+    async addClientInfo({ commit }, payload) {
+      commit('toggleLoading', false);
+      const data = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((key) => {
+        data.append(key, payload[key]);
+      });
+
+      return API.smart(PATH, data);
+    },
     async getOrders({ commit }, dayOpen) {
       const DayOpen = dayOpen || localStorage.getItem('smart_company_day_open');
       if (DayOpen) {
