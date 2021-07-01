@@ -1,26 +1,26 @@
 <template>
     <div class="employees">
         <Table>
-            <template slot="header">
-                <tr>
-                    <th>
-                        <BaseTextfield
-                          v-model="search" placeholder="Search" />
-                    </th>
-                    <th>ROLE</th>
-                    <th>JOINED</th>
-                    <th>RESET</th>
-                    <th>IS ACTIVE</th>
-                    <th>
-                        <v-btn @click="openAddUserModal = true">
-                            <v-icon left>
-                                mdi-plus
-                            </v-icon>
-                            Add user
-                        </v-btn>
-                    </th>
-                </tr>
-            </template>
+          <template slot="header">
+              <tr>
+                  <th>
+                      <BaseTextfield
+                        v-model="search" placeholder="Search" />
+                  </th>
+                  <th>ROLE</th>
+                  <th>JOINED</th>
+                  <th>RESET</th>
+                  <th>IS ACTIVE</th>
+                  <th>
+                      <v-btn @click="openAddUserModal = true">
+                          <v-icon left>
+                              mdi-plus
+                          </v-icon>
+                          Add user
+                      </v-btn>
+                  </th>
+              </tr>
+          </template>
             <template slot="body">
                 <tr v-for="(employee, i) in filteredEmployees" :key="i">
                     <td>

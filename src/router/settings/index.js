@@ -61,5 +61,14 @@ export default {
       },
       component: () => import('@/views/Settings/EmailList.vue'),
     },
+    {
+      path: 'Clients',
+      name: 'company_clients',
+      meta: {
+        authrequired: true,
+        title: 'SmartPOS :: Clients',
+      },
+      component: () => import('@/views/Settings/Clients.vue'),
+    },
   ],
 };

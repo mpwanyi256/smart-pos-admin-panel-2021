@@ -16,6 +16,9 @@
                       <v-icon small class="clock_icon">mdi-account</v-icon>
                       {{ order.waiter ? order.waiter.split(' ')[0] : '' }}
                     </span>
+                    <span v-if="clientName">
+                      {{ clientName }}
+                    </span>
                     <span v-if="companyType == 1">
                       <BaseTooltip
                         :small="true"
@@ -93,6 +96,11 @@ export default {
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
     ...mapGetters('auth', ['user']),
+
+    clientName() {
+      const name = this.order.client_info.firstname;
+      return name || '';
+    },
 
     companyType() {
       return this.user ? this.user.company_info.business_type : 0;

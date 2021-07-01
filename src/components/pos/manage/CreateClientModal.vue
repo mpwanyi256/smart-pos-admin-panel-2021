@@ -31,7 +31,9 @@
           </v-tab-item>
           <v-tab-item>
             <div class="client_list">
-              <CreateNewClient />
+              <CreateNewClient
+                @add="setClientInfoOnBill({ id: $event })"
+              />
             </div>
           </v-tab-item>
         </v-tabs-items>
@@ -44,11 +46,9 @@ import CreateNewClient from '@/components/pos/manage/CreateNewClient.vue';
 import Client from '@/components/pos/manage/Client.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import { mapActions, mapGetters } from 'vuex';
-import validators from '@/mixins/validators';
 
 export default {
   name: 'CreateClientMOdal',
-  mixins: [validators],
   props: {
   },
   components: {
@@ -69,36 +69,18 @@ export default {
       errorMessage: '',
     };
   },
-  watch: {
-    message() {
-      setTimeout(() => {
-        this.message = '';
-      }, 3000);
-    },
-  },
   computed: {
-    ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId']),
 
     filteredClients() {
       return this.clients.filter((C) => C.full_name
         .toLowerCase().match(this.search.toLowerCase()));
     },
-
-    isValid() {
-      return !!(this.firstname.length && this.lastname.length
-        && this.address.length && this.email.length && this.contactNumber.length);
-    },
-
-    isEmailAddress() {
-      return this.isEmail(this.email);
-    },
   },
   async created() {
     await this.fetchClients();
   },
   methods: {
-    ...mapActions('settings', ['post']),
     ...mapActions('sales', ['getClients', 'addClientInfo']),
 
     async setClientInfoOnBill(client) {
@@ -109,6 +91,7 @@ export default {
 
       if (response && !response.error) {
         await this.$eventBus.$emit('fetch-orders');
+        await this.fetchClients();
         this.$emit('close');
       } else {
         this.errorMessage = response.message;
@@ -118,24 +101,6 @@ export default {
     async fetchClients() {
       const posClients = await this.getClients('all');
       if (!posClients.error) this.clients = posClients.data;
-    },
-
-    saveClient() {
-      const info = {
-        firstname: this.firstname,
-        lastname: this.lastname,
-        address: this.address,
-        email: this.email,
-        contact_number: this.contactNumber,
-        company_id: this.user.company_id,
-        create_new_client: true,
-      };
-      this.post(info)
-        .then((res) => {
-          console.log('Response', res);
-        }).catch((e) => {
-          console.error('Error', e);
-        });
     },
   },
 };
@@ -153,7 +118,7 @@ export default {
   }
 
   .client_list {
-    height: 300px;
+    height: 350px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
