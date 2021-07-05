@@ -82,6 +82,7 @@ export default {
         3, 6, 9, 11, 12,
       ],
       clients: [],
+      errorMessage: '',
     };
   },
   computed: {
@@ -116,6 +117,8 @@ export default {
         this.setRunningOrderId(null);
         this.setRunningOrder(null);
         this.$emit('close');
+      } else {
+        this.errorMessage = settleOrder.error_message;
       }
     },
 

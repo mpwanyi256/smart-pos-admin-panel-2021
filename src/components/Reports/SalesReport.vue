@@ -10,8 +10,8 @@
               class="pdf"
               @button="printReport"
               color="red"
-              message="Print"
-              icon="printer"
+              message="Print report"
+              icon="pdf"
             />
             <DatePickerBeta
               message="Select date"
@@ -91,6 +91,10 @@ export default {
       const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
       return IPAddress ? `http://${IPAddress}/papi/` : 'http://localhost:80/papi/';
     },
+
+    reportURL() {
+      return `${this.serverIP}pdf/salesReport.php?report=${this.selectedDate},${this.user.company_id}`;
+    },
   },
   watch: {
     async selectedDate(val) {
@@ -123,15 +127,7 @@ export default {
     },
 
     printReport() {
-      const divToPrint = this.$refs.salesReport;
-      const newWin = window.open('', 'Print-Window');
-      newWin.document.open();
-      newWin.document.write(`<html><style>@page{size: auto;margin: 0mm;}</style><body onload="window.print(true)">${divToPrint.innerHTML}</body></html>`);
-      newWin.document.close();
-
-      setTimeout(() => {
-        divToPrint.innerHTML = '';
-      }, 10);
+      window.open(this.reportURL, '_blank').focus();
       this.$emit('close');
     },
 

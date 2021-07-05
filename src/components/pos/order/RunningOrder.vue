@@ -35,10 +35,10 @@
         <div class="items_list">
             <div class="items">
                 <OrderItem
-                    v-for="item in orderItems"
-                    :key="item.id"
-                    :item="item"
-                    @viewItems="viewPendingItems"
+                  v-for="item in orderItems"
+                  :key="item.id"
+                  :item="item"
+                  @viewItems="viewPendingItems"
                 />
             </div>
         </div>
@@ -97,6 +97,10 @@ export default {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
     ...mapGetters('auth', ['user']),
 
+    itemsCount() {
+      return this.orderItems.length;
+    },
+
     clientName() {
       const name = this.order.client_info.firstname;
       return name || '';
@@ -116,9 +120,14 @@ export default {
   },
 
   watch: {
-    orderId(val) {
-      this.$eventBus.$emit('reload-order', val);
-      this.fetchOrderItems();
+    async orderId(val) {
+      await this.$eventBus.$emit('reload-order', val);
+      await this.fetchOrderItems();
+    },
+    itemsCount() {
+      this.$nextTick(async () => {
+        await this.reloadOrderDisplay();
+      });
     },
 
     errorMessage(val) {
@@ -142,7 +151,20 @@ export default {
 
   methods: {
     ...mapActions('sales', ['getOrderItems']),
-    ...mapActions('pos', ['updateOrder']),
+    ...mapActions('pos', ['updateOrder', 'filterOrders', 'setRunningOrder']),
+
+    reloadOrderDisplay() {
+      this.filterOrders({
+        bill_no: this.order.order_id,
+        from: '',
+        to: '',
+        client_id: '',
+      }).then((orders) => {
+        const OrderFetched = orders.data.orders;
+        if (!OrderFetched.length) return;
+        this.setRunningOrder(OrderFetched[0]);
+      });
+    },
 
     async shiftOrder(tableId) {
       const filter = {

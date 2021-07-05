@@ -95,8 +95,8 @@ export default {
       return section.tables.filter((Table) => Table.order.id !== null).length;
     },
 
-    setOrder(orderId) {
-      this.$eventBus.$emit('fetch-orders');
+    async setOrder(orderId) {
+      await this.$eventBus.$emit('fetch-orders');
       this.setRunningOrderId(orderId);
     },
 

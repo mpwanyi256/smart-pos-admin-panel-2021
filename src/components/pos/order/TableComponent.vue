@@ -2,12 +2,13 @@
     <div class="table"
         :class="isSelectedTable"
         @click="$emit('order', table)"
+        :ref="`SmartPosTable${table.id}`"
     >
         {{ table.name }}
         <template  v-if="table.order.order_number">
           <br>
           <small>
-              #{{ table.order.order_number }}
+            #{{ table.order.order_number }}
           </small>
           <v-icon
             v-if="table.order.bill_printed"
@@ -31,6 +32,10 @@ export default {
   computed: {
     ...mapGetters('pos', ['runningOrder', 'orders']),
 
+    tableOrderId() {
+      return this.table.order.id;
+    },
+
     tableOrder() {
       return this.orders.find((Order) => Order.order_id.match(this.table.order.order_number));
     },
@@ -46,6 +51,14 @@ export default {
     isSelectedTable() {
       // eslint-disable-next-line no-nested-ternary
       return (this.selectedTable === this.table.id) && this.hasOrder ? 'isSelected' : this.hasOrder ? 'hasOrder' : '';
+    },
+  },
+  eventBusCallbacks: {
+    'toggle-running': 'toggleRunning',
+  },
+  methods: {
+    toggleRunning(orderId) {
+      if (orderId === this.tableOrderId) this.$emit('order', this.table);
     },
   },
 };

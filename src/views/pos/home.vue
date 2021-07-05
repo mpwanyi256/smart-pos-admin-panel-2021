@@ -39,7 +39,7 @@ import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
 import WaitersModal from '@/components/pos/order/AddWaiterModel.vue';
-import { mapActions, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'SmartSalesHome',
@@ -71,30 +71,12 @@ export default {
       return this.user ? this.user.company_info.days_left : '';
     },
   },
-
-  async created() {
-    if (this.user) {
-      await this.getActiveLicense(this.user.company_info.company_email);
-    }
-    const setPolling = async () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getDayOpen(this.user.company_id);
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
-  },
   eventBusCallbacks: {
     'view-bill': 'viewBill',
     'open-settlement-modal': 'settleBill',
     'add-waiter': 'addWaiter',
   },
   methods: {
-    ...mapActions('auth', ['getDayOpen', 'getActiveLicense']),
-
     addWaiter() {
       if (this.runningOrderId) this.showWaiters = true;
     },

@@ -65,6 +65,12 @@ export default {
       discountAmount: 1,
     };
   },
+  async created() {
+    if (!this.runningOrder) this.$emit('close');
+    await this.$eventBus.$emit('toggle-running');
+    await this.$eventBus.$emit('fetch-items');
+    await this.$eventBus.$emit('fetch-orders');
+  },
   computed: {
     ...mapGetters('pos', ['runningOrder']),
     ...mapGetters('auth', ['user']),
@@ -107,10 +113,6 @@ export default {
       this.$eventBus.$emit('reload-order');
       if (!discount.error) this.$emit('close');
     },
-  },
-  created() {
-    if (!this.runningOrder) this.$emit('close');
-    this.$eventBus.$emit('fetch-items');
   },
 };
 </script>

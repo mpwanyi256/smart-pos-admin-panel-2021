@@ -104,6 +104,11 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
 
+    serverIP() {
+      const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
+      return IPAddress ? `http://${IPAddress}/smartAdmin/` : 'http://localhost:80/smartAdmin/';
+    },
+
     daysLeft() {
       return (this.user && this.user.company_info) ? this.user.company_info.days_left : '';
     },
@@ -180,7 +185,7 @@ export default {
     actionHandler(action) {
       switch (action) {
         case 'sales':
-          if ([3, 5].includes(this.userRole)) this.viewSales = true;
+          if ([1, 5].includes(this.userRole)) this.viewSales = true;
           break;
         case 'open':
           this.switchDay = true;
@@ -201,13 +206,9 @@ export default {
     },
 
     async sendSalesReport() {
-      const sales = await this.getReport({ get_daily_report: this.dayOpen }).catch(() => null);
-      console.log('Sales report', sales.data);
-      // if (sales) {
-      //   const send = this.sendEmail({
-      //     send_sales_report: sales,
-      //   });
-      // }
+      // TO DO -> Refactor to send via email
+      // const sales = await this.getReport({ get_daily_report: this.dayOpen }).catch(() => null);
+      // console.log('Sales report', sales.data);
     },
 
     async closeDay(datePicked) {
@@ -222,7 +223,8 @@ export default {
           this.errorMessage = '';
           this.getUserById();
           this.loading = false;
-        }, 5000);
+          window.location(this.serverIP).focus();
+        }, 1000);
       });
     },
 

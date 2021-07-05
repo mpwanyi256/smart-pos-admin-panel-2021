@@ -72,24 +72,25 @@ export default {
       const order = await this.createNewOrder({
         ...payload,
         company_id: this.user.company_id,
-        user_id: this.user.id,
+        user_id: 0,
         date: this.dayOpen,
         time: this.time,
       });
-      await this.$eventBus.$emit('fetch-orders');
       if (!order.error) {
+        await this.$eventBus.$emit('fetch-orders');
         this.setRunningOrderId(order.order_id);
-        const orders = await this.filterOrders({
+        this.filterOrders({
           bill_no: order.order_id,
           from: '',
           to: '',
           client_id: '',
+        }).then((orders) => {
+          const OrderFetched = orders.data.orders;
+          if (!OrderFetched.length) return;
+          this.setRunningOrder(OrderFetched[0]);
+          this.$eventBus.$emit('toggle-running', order.order_id);
+          this.$eventBus.$emit('reload-order', order.order_id);
         });
-
-        const OrderFetched = orders.data.orders;
-        if (!OrderFetched.length) return;
-        this.setRunningOrder(OrderFetched[0]);
-        this.$eventBus.$emit('reload-order');
       } else console.info(order.message);
     },
 

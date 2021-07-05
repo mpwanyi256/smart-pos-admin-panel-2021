@@ -10,40 +10,12 @@
 </template>
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'home',
   components: {
     NavBar,
   },
-  data() {
-    return {
-      dayOpenPoll: null,
-    };
-  },
-  computed: {
-    ...mapGetters('auth', ['user']),
-  },
-  created() {
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getDayOpen(11);
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
-  },
-  beforeDestroy() {
-    // clearInterval(this.polling);
-  },
-  methods: {
-    ...mapActions('auth', ['getDayOpen']),
-  },
-
 };
 </script>
 <style scoped lang="scss">

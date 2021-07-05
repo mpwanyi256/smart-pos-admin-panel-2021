@@ -9,12 +9,12 @@
             </div>
             <div class="search_area">
                 <v-select
-                    outlined
-                    label="Department"
-                    v-model="departmentSelected" dense
-                    item-text="name"
-                    item-value="id"
-                    :items="departments"
+                  outlined
+                  label="Department"
+                  v-model="departmentSelected" dense
+                  item-text="name"
+                  item-value="id"
+                  :items="departments"
                 />
                 <v-text-field :label="`Search ${selectedDepartmentName} items`"
                   v-model="itemSearch" dense outlined placeholder="Search" />

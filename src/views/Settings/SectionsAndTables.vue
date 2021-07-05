@@ -104,6 +104,9 @@ export default {
   async created() {
     await this.fetchTables();
   },
+  eventBusCallbacks: {
+    'toggle-running': 'fetchTables',
+  },
   methods: {
     ...mapActions('pos', ['updateOrder']),
     ...mapActions('settings', ['post']),
