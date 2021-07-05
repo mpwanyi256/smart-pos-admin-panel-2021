@@ -5,7 +5,7 @@
                 Total
             </div>
             <div class="item_price">
-                {{ order ? order.final_amount : '' }}
+                {{ order ? order.bill_sum_display : '' }}
             </div>
             <div class="item_actions">
                 &nbsp;

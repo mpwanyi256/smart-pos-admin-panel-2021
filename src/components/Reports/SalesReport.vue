@@ -19,9 +19,8 @@
             />
           </div>
         </template>
-        <div ref="salesReport" class="sales_report">
-          <LinearLoader v-if="loading" />
-          <template v-else>
+          <div v-if="!loading" ref="salesReport" class="sales_report">
+            <!-- <LinearLoader v-if="loading" /> -->
               <h3>Sales settlements</h3>
               <PaymentSettlements
                 :data="report.payments"
@@ -42,8 +41,10 @@
               <OrdersList
                 :orders="report.orders"
               />
-          </template>
-        </div>
+          </div>
+          <div v-else class="loading_section">
+            <LoadingSpinner class="large" />
+          </div>
     </Basemodal>
 </template>
 <script>
@@ -53,7 +54,8 @@ import PaymentSettlements from '@/components/Reports/generics/PaymentSettlements
 import DepartmentSale from '@/components/Reports/generics/DepartmentSales.vue';
 import OrdersList from '@/components/Reports/OrdersList.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
-import LinearLoader from '@/components/generics/Loading.vue';
+import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
+// import LinearLoader from '@/components/generics/Loading.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -69,7 +71,8 @@ export default {
     PaymentSettlements,
     DepartmentSale,
     DatePickerBeta,
-    LinearLoader,
+    LoadingSpinner,
+    // LinearLoader,
     BaseTooltip,
     OrdersList,
   },
@@ -145,7 +148,9 @@ export default {
     },
   },
   async created() {
-    this.selectedDate = this.date;
+    this.$nextTick(() => {
+      this.selectedDate = this.date;
+    });
   },
 };
 </script>
@@ -156,6 +161,15 @@ export default {
     display: flex;
     flex-direction: row;
     gap: 10px;
+  }
+
+  .loading_section {
+    min-height: calc(100vh - 52px);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   .sales_report {
