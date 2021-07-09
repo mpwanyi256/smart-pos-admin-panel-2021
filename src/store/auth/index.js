@@ -26,7 +26,7 @@ export default {
       },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
       {
-        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_dashboard', allowedUsers: [1, 5, 6, 9],
+        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9],
       },
       {
         icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],

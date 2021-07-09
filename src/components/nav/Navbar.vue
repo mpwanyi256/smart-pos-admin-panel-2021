@@ -1,5 +1,5 @@
 <template>
-    <div class="nav">
+    <div class="nav" v-if="companyInfo">
     <div class="wrapper">
       <div class="nav-content">
         <div class="title">

@@ -80,13 +80,13 @@ export default {
 @import '@/styles/constants.scss';
 
 .dashboard {
-    height: calc(100vh - 104px);
-    width: 100%;
-    background-color: $white;
-    overflow: hidden;
+  height: calc(100vh - 104px);
+  width: 100%;
+  background-color: $white;
+  overflow: hidden;
 
-    >div {
-      background-color: $white;
-    }
+  >div {
+    background-color: $white;
+  }
 }
 </style>

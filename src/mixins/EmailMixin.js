@@ -15,8 +15,7 @@ export default {
       this.sendEmail({
         send_booking_confirmation: 1,
         ...booking,
-      }).then((Response) => {
-        console.log(Response);
+      }).then(() => {
         this.sendingEmail = false;
       }).catch((e) => {
         console.error('error', e);

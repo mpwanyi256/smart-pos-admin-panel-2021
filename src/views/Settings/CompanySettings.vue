@@ -37,11 +37,9 @@
                 </div>
                 <div>
                     <p>Email Address</p>
-                    <BaseTextfield
-                        :preset="email"
-                        v-model="email"
-                        placeholder="Email address"
-                    />
+                    <p class="grey--text darken-3">
+                      {{ email }}
+                    </p>
                 </div>
                 <div>
                     <p>Currency prefix</p>

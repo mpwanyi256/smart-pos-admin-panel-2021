@@ -4,7 +4,7 @@
         <div class="accomodation_area">
             <div class="routes_area">
               <SalesNavBar
-                    title="Accomodation Quick Links"
+                    :title="selectedProperty? selectedProperty.name : 'Accomodation Quick Links'"
                     :links="links"
                 />
                 <router-view
@@ -47,8 +47,8 @@ export default {
       addProperty: false,
       selectedProperty: null,
       links: [
-        { name: 'Calendar', icon: 'mdi-calendar', path: 'accomodation_dashboard' },
-        { name: 'Stats', icon: 'mdi-graph', path: 'accomodation_statistics' },
+        { name: 'Dashboard', icon: 'mdi-graph', path: 'accomodation_statistics' },
+        { name: 'Bookings', icon: 'mdi-calendar', path: 'accomodation_dashboard' },
       ],
     };
   },

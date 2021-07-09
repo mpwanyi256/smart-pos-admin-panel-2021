@@ -11,7 +11,7 @@
               @button="printReport"
               color="red"
               message="Print report"
-              icon="pdf"
+              icon="file-pdf"
             />
             <DatePickerBeta
               message="Select date"

@@ -117,9 +117,9 @@
     </v-col>
 
     <ViewBookingModal
-        v-if="viewBooking"
-        @close="viewBooking = false"
-        :booking="selectedEvent"
+      v-if="viewBooking"
+      @close="closeBookingModal"
+      :booking="selectedEvent"
     />
     <CreateNewUnit
         v-if="addUnit"
@@ -240,6 +240,11 @@ export default {
   },
   methods: {
     ...mapActions('accomodation', ['post']),
+
+    async closeBookingModal() {
+      this.viewBooking = false;
+      await this.triggerFetchBookings();
+    },
 
     openBookingModal(room) {
       this.roomPicked = room;

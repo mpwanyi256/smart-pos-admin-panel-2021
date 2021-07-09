@@ -1,6 +1,5 @@
 export default {
   path: '/Accomodation',
-  // name: 'accomodation',
   meta: {
     authrequired: false,
     title: 'SmartPOS :: Dashboard',
@@ -12,7 +11,7 @@ export default {
       name: 'accomodation_dashboard',
       meta: {
         authrequired: false,
-        title: 'SmartPOS :: Dashboard',
+        title: 'SmartPOS | Dashboard',
       },
       component: () => import('@/views/Accomodation/Dashboard.vue'),
     },
@@ -21,7 +20,7 @@ export default {
       name: 'accomodation_statistics',
       meta: {
         authrequired: false,
-        title: 'SmartPOS :: Statistics',
+        title: 'SmartPOS | Statistics',
       },
       component: () => import('@/views/Accomodation/Stats.vue'),
     },

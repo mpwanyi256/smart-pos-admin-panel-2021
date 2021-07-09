@@ -18,6 +18,14 @@
                     color="green"
                 />
                 </template>
+                <template v-if="booking.confirmed == 1 && canDeleteBooking">
+                  <BaseTooltip
+                    @button="deleteConfirmedBooking = true"
+                    message="Delete booking"
+                    icon="delete"
+                    color="red"
+                />
+                </template>
             </div>
         </template>
         <div class="booking">
@@ -48,7 +56,7 @@
                 </div>
                 <div>
                     <p>Checkout</p>
-                    <p>{{ bookingInfo.check_out_display }}</p>
+                    <p>{{ bookingInfo.client_checkout }}</p>
                 </div>
                 <div>
                     <p>Number of adults</p>
@@ -89,8 +97,12 @@
                 <div class="mt-6">
                     <div>
                         <v-btn text @click="addPayment = true">
-                            <v-icon left>mdi-credit-card</v-icon>
-                            Create payment
+                          <v-icon left>mdi-credit-card</v-icon>
+                          Create payment
+                        </v-btn>
+                        <v-btn text @click="viewBookingPdf">
+                          <v-icon left>mdi-file-pdf</v-icon>
+                          Checkout form
                         </v-btn>
                     </div>
                 </div>
@@ -182,10 +194,17 @@
         />
 
         <ConfirmModal
-            v-if="confirmPaymentDelete && bookingToDelete"
-            title="Are you sure you want to delete payment?"
-            @close="cancelBooking = false"
-            @yes="DeleteBookingPayment"
+          v-if="confirmPaymentDelete && bookingToDelete"
+          title="Are you sure you want to delete payment?"
+          @close="cancelBooking = false"
+          @yes="DeleteBookingPayment"
+        />
+
+        <ConfirmModal
+          v-if="deleteConfirmedBooking"
+          title="Are you sure you want to delete booking?"
+          @close="deleteConfirmedBooking = false"
+          @yes="deleteConfirmedBookingById"
         />
     </Basemodal>
 </template>
@@ -197,11 +216,12 @@ import CreatePayment from '@/components/accomodation/manage/CreatePayment.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import { mapActions, mapGetters } from 'vuex';
 import EmailMixin from '@/mixins/EmailMixin';
+import externalLinkMixin from '@/mixins/externalLinkMixin';
 import moment from 'moment';
 
 export default {
   name: 'ViewBookingModal',
-  mixins: [EmailMixin],
+  mixins: [EmailMixin, externalLinkMixin],
   components: {
     Basemodal,
     BaseTooltip,
@@ -224,10 +244,19 @@ export default {
       confirmBookingModal: false,
       bookingToDelete: null,
       confirmPaymentDelete: false,
+      deleteConfirmedBooking: false,
     };
   },
   computed: {
     ...mapGetters('auth', ['user']),
+
+    userRole() {
+      return this.user ? this.user.role : 0;
+    },
+
+    canDeleteBooking() {
+      return !![1, 5].includes(this.userRole);
+    },
 
     dateToday() {
       return moment().format('Y-MM-D');
@@ -279,6 +308,19 @@ export default {
   },
   methods: {
     ...mapActions('accomodation', ['post']),
+
+    deleteConfirmedBookingById() {
+      this.post({
+        delete_booking_by_id: this.booking.booking_id,
+      }).then(async () => {
+        this.$emit('close');
+      });
+    },
+
+    viewBookingPdf() {
+      const bookingUrl = `pdf/bookingConfirmation.php?BookingConfirmation=${this.booking.booking_id},${this.user.company_id}`;
+      this.openExternalLink(bookingUrl);
+    },
 
     dropPayment(paymentId) {
       this.bookingToDelete = paymentId;
