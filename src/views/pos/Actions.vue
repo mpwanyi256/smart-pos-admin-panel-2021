@@ -3,7 +3,7 @@
       <v-alert
         v-if="errorMessage"
         outlined dense
-        type="error"
+        type="info"
         class="white--text">
         {{ errorMessage }}
       </v-alert>
@@ -51,8 +51,12 @@ export default {
       return this.runningOrder;
     },
 
+    hasWaiter() {
+      return this.order ? !!this.order.waiter : false;
+    },
+
     companyType() {
-      return this.user ? this.user.company_info.business_type : 0;
+      return this.user.company_info ? this.user.company_info.business_type : 0;
     },
 
     orderId() {
@@ -68,11 +72,13 @@ export default {
     },
   },
   created() {
-    if (this.companyType === 1) {
-      this.actions.unshift(
-        { name: 'Waiter', icon: 'mdi-account' },
-      );
-    }
+    this.$nextTick(() => {
+      if (this.companyType === 1) {
+        this.actions.unshift(
+          { name: 'Waiter', icon: 'mdi-account' },
+        );
+      }
+    });
   },
   methods: {
     ...mapActions('pos', ['addOrderItem']),
@@ -107,7 +113,9 @@ export default {
       this.$eventBus.$emit('fetch-orders');
       switch (action) {
         case 'Confirm':
-          this.performKotPrint();
+          if (this.hasWaiter) this.performKotPrint();
+          // else this.errorMessage = 'Please add a waiter';
+          else this.$eventBus.$emit('add-waiter');
           break;
         case 'Bill':
           this.$eventBus.$emit('print-bill');

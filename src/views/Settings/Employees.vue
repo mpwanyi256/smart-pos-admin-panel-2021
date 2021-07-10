@@ -4,9 +4,9 @@
           <template slot="header">
               <tr>
                   <th>
-                      <BaseTextfield
-                        v-model="search" placeholder="Search" />
+                    <BaseTextfield v-model="search" placeholder="Search" />
                   </th>
+                  <th>USERNAME</th>
                   <th>ROLE</th>
                   <th>JOINED</th>
                   <th>RESET</th>
@@ -26,9 +26,10 @@
                     <td>
                       <div class="user_avatar">
                         <Avatar src="" />
-                        {{ employee.user_name }}
+                        {{ employee.full_name }}
                       </div>
                     </td>
+                    <td>{{ employee.user_name }}</td>
                     <td>
                       {{ employee.role }}
                     </td>

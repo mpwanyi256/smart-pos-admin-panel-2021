@@ -1,16 +1,26 @@
 <template>
     <v-card class="auth_card">
         <v-form @submit.prevent="loginUser">
-        <v-card-text>
+        <v-card-text v-if="viewMode == 1">
             <div class="text-center mb-3">
-                <h1>Smart client</h1>
-                <!-- <p class="grey--text mt-2">Sign in to your Smart POS</p> -->
+              <h1>Smart Client POS</h1>
             </div>
             <v-text-field v-model.trim="Username" label="Username"></v-text-field>
             <v-text-field v-model.trim="Password" label="Password" type="password">
             </v-text-field>
             <v-btn type="submit" block class="btn-login">Login</v-btn>
+            <div class="sign_up_div">
+              <p>New here? <span @click="viewMode = 2">Create account</span></p>
+            </div>
         </v-card-text>
+        <CreateAccount v-else-if="viewMode == 2"
+          @login="switchView(1)"
+          @next="switchView(3)"
+        />
+        <SelectPackage
+          v-else-if="viewMode == 3"
+          @previous="switchView(2)"
+        />
         </v-form>
         <BaseAlert v-if="error.status" :message="error.message" />
         <v-progress-linear v-if="loading" indeterminate color="black" />
@@ -25,6 +35,9 @@
 import { mapActions, mapGetters } from 'vuex';
 import BaseAlert from '@/components/alerts/BaseAlert.vue';
 import LicenseModal from '@/components/pos/manage/LicenseModal.vue';
+import CreateAccount from '@/views/auth/CreateAccount.vue';
+import SelectPackage from '@/views/auth/SelectPackage.vue';
+import idb from '@/mixins/idb';
 
 export default {
   name: 'AuthCard',
@@ -32,6 +45,8 @@ export default {
   components: {
     BaseAlert,
     LicenseModal,
+    CreateAccount,
+    SelectPackage,
   },
 
   data() {
@@ -41,6 +56,8 @@ export default {
       passwordReset: false,
       createAccountModal: false,
       openLicenseModal: false,
+      viewMode: 1,
+      idb_key: 'smart_auth',
     };
   },
 
@@ -54,14 +71,24 @@ export default {
     },
   },
 
-  async created() {
-    const LoggedInUser = localStorage.getItem('smart_user_id');
-    if (LoggedInUser) {
-      this.getUserById(this.routeOn);
-      if (this.error.message === 'Sorry, you license expired') {
-        this.getLicense();
+  watch: {
+    viewMode() {
+      this.syncData();
+    },
+  },
+
+  created() {
+    this.$nextTick(async () => {
+      const LoggedInUser = localStorage.getItem('smart_user_id');
+      const lastStep = await idb.get(this.idb_key);
+      this.viewMode = lastStep ? lastStep.step : 1;
+      if (LoggedInUser) {
+        this.getUserById(this.routeOn);
+        if (this.error.message === 'Sorry, you license expired') {
+          this.getLicense();
+        }
       }
-    }
+    });
   },
 
   methods: {
@@ -71,6 +98,16 @@ export default {
         'getUserById',
         'clearError',
         'getActiveLicense']),
+
+    async syncData() {
+      const step = { data_key: this.idb_key, step: this.viewMode };
+      await idb.add(step).catch(() => { idb.update(step); });
+    },
+
+    switchView(view) {
+      this.viewMode = view;
+      this.syncData();
+    },
 
     async loginUser() {
       if (this.Username.toLowerCase() === 'x' && this.Password.toLowerCase() === 'x') {
@@ -107,10 +144,30 @@ export default {
 <style scoped lang="scss">
 @import '../../styles/constants.scss';
 
-    .auth_card {
-        background-color: $white;
-        opacity: 0.7.5;
+  .sign_up_div {
+    width: 100%;
+    margin-top: 15px;
+    display: inline-flex;
+    align-items: center;
+
+    p {
+      font-size: 14px;
+      color: $black;
+      text-align: right;
+      width: 100%;
+      line-height: 1.5;
+
+      span {
+        color: $accent;
+        cursor: pointer;
+      }
     }
+  }
+
+  .auth_card {
+    background-color: $white;
+    opacity: 0.7.5;
+  }
 
   .btn-login {
     background-color: white!important;
@@ -119,11 +176,11 @@ export default {
   }
 
   .main-login {
-      height: 100vh;
-      width: 100vw;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #f2f2f7;
+    height: 100vh;
+    width: 100vw;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f2f2f7;
   }
 </style>

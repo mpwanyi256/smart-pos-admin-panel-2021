@@ -57,6 +57,10 @@ export default {
     bottom: 0;
     color: $black;
 
+    >div {
+        cursor: pointer;
+    }
+
     .button-container {
         display: inline-flex;
         align-items: center;
@@ -110,8 +114,6 @@ export default {
         >div:hover {
             background-color: $light-grey;
             cursor: pointer;
-            // margin-top: 5px;
-            // margin-bottom: 5px;
         }
 
         >div {

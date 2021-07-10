@@ -152,15 +152,17 @@ export default {
     },
   },
 
-  async mounted() {
-    await this.fetchOrders();
-    await this.fetchTables();
+  async created() {
+    this.$nextTick(async () => {
+      await this.fetchOrders();
+      await this.fetchTables();
 
-    setInterval(() => {
-      const timeKati = new Date().getTime();
-      const extract = new Date(timeKati);
-      this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
-    }, 1000);
+      setInterval(() => {
+        const timeKati = new Date().getTime();
+        const extract = new Date(timeKati);
+        this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
+      }, 1000);
+    });
   },
 
   eventBusCallbacks: {

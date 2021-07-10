@@ -10,6 +10,7 @@ import vuetify from './plugins/vuetify';
 import './styles/main.scss';
 import eventBus from './plugins/event-bus';
 import EventBusCallbacks from './plugins/Eventbus';
+import idb from './mixins/idb';
 
 import 'firebase/firebase-analytics';
 import 'firebase/firestore';
@@ -43,19 +44,21 @@ new Vue({
   router,
   store,
   vuetify,
-  created() {
+  async created() {
+    // initialize firebase
+    firebase.initializeApp(fbConf);
+    firebase.firestore().settings({
+      cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+    });
+
+    firebase.analytics();
+    firebase.firestore().enablePersistence();
+
+    await idb.init().catch((e) => { console.error(e); });
     const LoggedInUser = localStorage.getItem('smart_user_id');
     if (LoggedInUser) {
       store.dispatch('auth/getUserById');
       store.dispatch('settings/fetch', { get_access_controls: 'all' });
-      // initialize firebase
-      firebase.initializeApp(fbConf);
-      firebase.firestore().settings({
-        cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
-      });
-
-      firebase.analytics();
-      firebase.firestore().enablePersistence();
       firebase.firestore().collection('licenses')
         .onSnapshot(async () => {
           const compEmail = localStorage.getItem('smart_company_email');

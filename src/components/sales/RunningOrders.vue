@@ -4,40 +4,38 @@
             {{ `${runningOrders.length} Running orders` }}
         </div>
         <div class="creditors-list">
-            <div class="creditor-item">
-                <div class="name">
-                    Table
-                </div>
-                <div class="name">
-                    Waiter
-                </div>
-                <div class="amount">
-                    Total
-                </div>
-            </div>
-            <div class="creditor-item"
-                v-for="order in runningOrders"
-                :key="order.order_id"
-                @click="$emit('vieworder', order)"
-            >
-                <div class="name">
-                    {{ order.table }}
-                </div>
-                <div class="name">
-                    {{ order.waiter ? order.waiter : '' }}
-                </div>
-                <div class="amount">
-                    {{ order.bill_sum_display }}
-                </div>
-            </div>
+            <Table>
+                <template slot="header">
+                    <tr>
+                        <th>Section</th>
+                        <th>Served by</th>
+                        <th>Bill Amount</th>
+                    </tr>
+                </template>
+                <template slot="body">
+                    <tr
+                        v-for="order in runningOrders"
+                        :key="`dash-order-${order.order_id}`"
+                        @click="$emit('vieworder', order)"
+                    >
+                        <td>{{ order.table }}</td>
+                        <td>{{ order.waiter ? order.waiter : '' }}</td>
+                        <td>{{ order.bill_sum_display }}</td>
+                    </tr>
+                </template>
+            </Table>
         </div>
     </div>
 </template>
 <script>
+import Table from '@/components/generics/new/Table.vue';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'RunningOrders',
+  components: {
+    Table,
+  },
   computed: {
     ...mapGetters('sales', ['orders']),
     runningOrders() {
@@ -50,7 +48,7 @@ export default {
 @import '../../styles/constants.scss';
 
     .creditors {
-        height: 200px;
+        height: 100%;
         background-color: $white;
         font-family: $font-style;
         font-size: 14px;

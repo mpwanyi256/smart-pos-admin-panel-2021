@@ -33,6 +33,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_menu_items', payload.department_id);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const menuItems = await API.smart(PATH, filters);
       if (!menuItems.error) commit('setMenuItems', menuItems.data);
       if (payload.department_id !== 'download') commit('toggleLoading', false);
@@ -44,6 +45,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_departments', payload);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const departments = await API.smart(PATH, filters);
       if (!departments.error) {
         commit('setDepartments', [{ id: 0, name: 'ALL' }, ...departments.data]);

@@ -1,7 +1,7 @@
 <template>
     <div class="sales">
         <div>
-            <SalesPanel class="dashboard_pane" v-if="user" :user="user" />
+          <SalesPanel class="dashboard_pane" v-if="user" :user="user" />
         </div>
         <div class="sales_pane">
           <router-view></router-view>
@@ -33,17 +33,22 @@ export default {
     ...mapActions('sales', ['getOrders']),
   },
   mounted() {
-    window.scroll(0, 0);
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getOrders();
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
+    // window.scroll(0, 0);
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: 'smooth',
+    });
+    // const setPolling = () => {
+    //   if (!this.user) {
+    //     clearInterval(this.polling);
+    //   } else {
+    //     this.getOrders();
+    //   }
+    // };
+    // this.polling = setInterval(() => {
+    //   setPolling();
+    // }, 3000);
   },
 };
 </script>

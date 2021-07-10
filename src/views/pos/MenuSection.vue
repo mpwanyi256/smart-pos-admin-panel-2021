@@ -153,10 +153,12 @@ export default {
     },
   },
   async created() {
-    this.loading = true;
-    await this.getMenuItems({ category_id: 'all', item_name: 'all' });
-    await this.getMenuCategories();
-    this.loading = false;
+    this.$nextTick(async () => {
+      this.loading = true;
+      await this.getMenuItems({ category_id: 'all', item_name: 'all' });
+      await this.getMenuCategories();
+      this.loading = false;
+    });
   },
 };
 </script>

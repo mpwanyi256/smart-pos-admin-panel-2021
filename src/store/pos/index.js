@@ -82,6 +82,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_menu_items', payload.category_id);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       filters.append('item_name', payload.item_name);
       const menuItems = await API.smart(PATH, filters);
       if (!menuItems.error) commit('setMenuItems', menuItems.data);
@@ -94,6 +95,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_departments', payload);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const departments = await API.smart(PATH, filters);
       if (!departments.error) {
         commit('setDepartments', [{ id: 0, name: 'ALL' }, ...departments.data]);
@@ -115,6 +117,7 @@ export default {
     async getMenuCategories({ commit }) {
       const filters = new FormData();
       filters.append('get_menu_categories', true);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const categories = await API.smart(PATH, filters);
       if (!categories.error) commit('setCategories', [{ id: 0, name: 'ALL', status: '0' }, ...categories.data]);
     },
@@ -208,6 +211,7 @@ export default {
       filters.append('from', payload.from);
       filters.append('to', payload.to);
       filters.append('client_id', payload.client_id);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
 
       const Orders = await API.smart(SALES, filters);
       if (!Orders.error) commit('setOrders', Orders.data.orders);

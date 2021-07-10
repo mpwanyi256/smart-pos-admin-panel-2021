@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 // import * as firebase from 'firebase'
 import API from '@/api';
@@ -36,8 +37,16 @@ export default {
       },
     ],
     license: null,
+    company: null,
+    packages: [],
   },
   mutations: {
+    setPackages(state, data) {
+      state.packages = data;
+    },
+    setCompany(state, info) {
+      state.company = info;
+    },
     setLicense(state, payload) {
       state.license = payload;
     },
@@ -69,6 +78,57 @@ export default {
     },
   },
   actions: {
+    async post({ commit }, payload) {
+      const frm = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((par) => {
+        frm.append(par, payload[par]);
+      });
+      return API.smart(PATH, frm);
+    },
+    async addCompanyFirebase({ commit }, companyInfo) {
+      const Companies = firebase.firestore().collection('Companies');
+      const compExists = await Companies.where('Email', '==', companyInfo.Email).get().catch(() => null);
+      if (compExists && !compExists.empty) {
+        return { error: true, message: 'Sorry, there is a company with the same email in your firebase client list' };
+      }
+      const newCompany = await Companies.add(companyInfo)
+        .then((doc) => ({ error: false, id: doc.id }))
+        .catch((e) => ({ error: true, id: e.message }));
+      return newCompany;
+    },
+    async getPackages({ commit }) {
+      const Packages = firebase.firestore().collection('Packages');
+      const Pkgs = await Packages.orderBy('name', 'asc').get().catch(() => []);
+      const posPackages = [];
+
+      if (!Pkgs.empty) {
+        Pkgs.forEach((doc) => {
+          posPackages.push({ ...doc.data(), id: doc.id });
+        });
+      }
+      commit('setPackages', posPackages);
+    },
+    async getFirebaseInfo({ commit }) {
+      const email = localStorage.getItem('smart_company_email');
+      const Companies = firebase.firestore().collection('Companies');
+      const companyInfo = await Companies
+        .where('Email', '==', email)
+        .get()
+        .catch((e) => {
+          console.log('Error', e);
+        });
+
+      const setInfo = (data) => {
+        commit('setCompany', data);
+      };
+
+      if (!companyInfo.empty) {
+        companyInfo.forEach((doc) => {
+          setInfo({ ...doc.data(), id: doc.id });
+        });
+      }
+    },
     async updateFbLicense({ commit }, licenseId) {
       const DB = firebase.firestore().collection('licenses');
       await DB
@@ -187,6 +247,7 @@ export default {
 
         if (userInfo.role === 5) {
           if (payload && payload.match('login')) router.push({ name: 'overview' });
+          else if (payload === 'new account') router.push({ name: 'company_settings' });
         } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
           router.push({ name: 'pos' });
         } else {
@@ -227,5 +288,7 @@ export default {
     routes: (state) => state.routes,
     license: (state) => state.license,
     reviewLink: (state) => state.reviewLink,
+    company: (state) => state.company,
+    packages: (state) => state.packages,
   },
 };

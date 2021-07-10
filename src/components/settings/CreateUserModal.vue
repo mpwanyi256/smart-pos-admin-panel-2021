@@ -3,10 +3,22 @@
     :title="`Create new user account`"
     :size="700" @close="$emit('close')">
     <div class="create_user">
-      <label>Full name</label>
+      <label>First name</label>
+      <BaseTextfield
+        v-model.trim="firstName"
+        placeholder="First name"
+        :inputType="'text'"
+      />
+      <label>Last name</label>
+      <BaseTextfield
+        v-model.trim="lastName"
+        placeholder="Last name"
+        :inputType="'text'"
+      />
+      <label>User name</label>
       <BaseTextfield
         v-model.trim="fullname"
-        placeholder="Enter full name"
+        placeholder="Enter user name"
         :inputType="'text'"
       />
       <label>User role</label>
@@ -44,6 +56,7 @@
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -55,6 +68,8 @@ export default {
   data() {
     return {
       roles: [],
+      firstName: '',
+      lastName: '',
       fullname: '',
       role: 1,
       password: '',
@@ -65,6 +80,7 @@ export default {
     ...mapGetters('auth', ['user']),
     isValidPassword() {
       return this.fullname.length > 3 && this.password.length > 3
+      && this.firstName.length > 3 && this.lastName.length > 3
       && (this.password === this.passwordConfirm);
     },
   },
@@ -79,13 +95,16 @@ export default {
       this.roles = Roles.data;
     },
 
-    createUserHandler() {
-      const newUser = this.post({
+    async createUserHandler() {
+      const newUser = await this.post({
         create_user_account: this.user.company_id,
+        first_name: this.firstName,
+        last_name: this.lastName,
         user_name: this.fullname,
         role: this.role,
         password: this.password,
         token: new Date().getMilliseconds(),
+        date_joined: moment().format('Y-m-d'),
       });
       if (!newUser.error) this.$emit('refetch');
     },

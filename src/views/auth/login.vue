@@ -6,12 +6,12 @@
             <v-avatar size="26">
               <img
                 src="../../assets/uganda.png"
-                alt="John"
+                alt="uganda"
               >
             </v-avatar>
           </span>
           <a href="http://prodevgroup.22web.org/?i=2" target="__blank">
-            Smart POS V-21.0.3
+            Smart POS V-3.0.1
           </a>
           | Copyrite {{ new Date().getFullYear() }}
         </p>

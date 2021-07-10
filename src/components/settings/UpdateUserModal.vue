@@ -3,7 +3,27 @@
     :title="`Update user account`"
     :size="700" @close="$emit('close')">
     <div class="create_user">
-      <label>Full name
+      <label>First name
+        <span class="grey--text lighten-2">
+          ({{ employee.first_name }})
+        </span></label>
+      <BaseTextfield
+        v-model="firstName"
+        :preset="firstName"
+        placeholder="Enter full name"
+        inputType="text"
+      />
+      <label>Last name
+        <span class="grey--text lighten-2">
+          ({{ employee.last_name }})
+        </span></label>
+      <BaseTextfield
+        v-model="lastName"
+        :preset="lastName"
+        placeholder="Enter full name"
+        inputType="text"
+      />
+      <label>User name
         <span class="grey--text lighten-2">
           ({{ employee.user_name }})
         </span></label>
@@ -24,7 +44,6 @@
       <div class="options">
         <v-spacer></v-spacer>
           <v-btn
-              :disabled="!hasChange"
               @click="createUserHandler"
               class="ml-1">
               Update user account
@@ -55,6 +74,8 @@ export default {
       roles: [],
       name: '',
       role: 1,
+      firstName: '',
+      lastName: '',
     };
   },
   computed: {
@@ -68,6 +89,8 @@ export default {
   async created() {
     this.name = this.employee.user_name;
     this.role = this.employee.role_id;
+    this.lastName = this.employee.last_name;
+    this.firstName = this.employee.first_name;
     await this.fetchDbRoles();
   },
   methods: {
@@ -78,10 +101,12 @@ export default {
       this.roles = Roles.data;
     },
 
-    createUserHandler() {
-      const newUser = this.post({
+    async createUserHandler() {
+      const newUser = await this.post({
         update_user_account: this.employee.id,
         user_name: this.name,
+        first_name: this.firstName,
+        last_name: this.lastName,
         role: this.role,
       });
       if (!newUser.error) this.$emit('refetch');

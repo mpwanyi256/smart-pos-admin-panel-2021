@@ -31,7 +31,7 @@ export default {
 
     .cover_area {
         color: $white;
-        width: 500px;
+        width: 600px;
         height: auto;
     }
 }

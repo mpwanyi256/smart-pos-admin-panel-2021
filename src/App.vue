@@ -14,28 +14,41 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('auth', ['user', 'getActiveLicense']),
+    ...mapGetters('auth', ['user', 'company']),
+  },
+  watch: {
+    user(val) {
+      if (val && val.company_id) {
+        this.getFirebaseInfo();
+        this.togglePolling();
+      }
+    },
   },
   async created() {
     if (this.user && this.user.company_info) {
       await this.getActiveLicense(this.user.company_info.company_email);
+      await this.getFirebaseInfo();
+      this.togglePolling();
     }
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getDayOpen(this.user.company_id);
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
   },
   beforeDestroy() {
     clearInterval(this.polling);
   },
   methods: {
-    ...mapActions('auth', ['getDayOpen']),
+    ...mapActions('auth', ['getDayOpen', 'getActiveLicense', 'getFirebaseInfo']),
+
+    togglePolling() {
+      const setPolling = () => {
+        if (!this.user.company_info) {
+          clearInterval(this.polling);
+        } else {
+          this.getDayOpen(this.user.company_id);
+        }
+      };
+      this.polling = setInterval(() => {
+        setPolling();
+      }, 3000);
+    },
   },
 };
 </script>

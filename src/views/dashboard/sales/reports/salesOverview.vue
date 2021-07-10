@@ -14,15 +14,13 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import '../../../../styles/constants.scss';
-
-    .sales_overview {
-        width: 100%;
-        min-height: 100%;
-        background-color: inherit;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+  .sales_overview {
+      width: 100%;
+      min-height: 100%;
+      background-color: inherit;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
 </style>
