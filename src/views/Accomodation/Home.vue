@@ -4,8 +4,8 @@
         <div class="accomodation_area">
             <div class="routes_area">
               <SalesNavBar
-                    :title="selectedProperty? selectedProperty.name : 'Accomodation Quick Links'"
-                    :links="links"
+                  :title="selectedProperty? selectedProperty.name : 'Accomodation Quick Links'"
+                  :links="links"
                 />
                 <router-view
                   v-if="properties.length"
@@ -20,9 +20,9 @@
             />
         </div>
         <CreateProperty
-            v-if="addProperty"
-            @close="addProperty = false"
-            @reload="fetchProperties"
+          v-if="addProperty"
+          @close="addProperty = false"
+          @reload="fetchProperties"
         />
     </div>
 </template>
@@ -81,28 +81,27 @@ export default {
 @import '../../styles/constants.scss';
 
 .accomodation {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    background-color: $bg_color;
-    font-size: 14px;
-    font-family: $font-style !important;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: $bg_color;
+  font-size: 14px;
+  font-family: $font-style !important;
 
-    // scrollbar-width: thin;
-    ::-webkit-scrollbar{
-        width: 5px;
-        height: 5px;
-    }
+  ::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+  }
 
-    ::-webkit-scrollbar-thumb {
-        background: $scrollbar-color;
-        border-radius: 1ex;
-        -webkit-border-radius: 1ex;
-    }
+  ::-webkit-scrollbar-thumb {
+    background: $scrollbar-color;
+    border-radius: 1ex;
+    -webkit-border-radius: 1ex;
+  }
 
-    ::-webkit-scrollbar-corner {
-        background: #000;
-    }
+  ::-webkit-scrollbar-corner {
+    background: #000;
+  }
 
     .accomodation_area {
         width: 100vw;

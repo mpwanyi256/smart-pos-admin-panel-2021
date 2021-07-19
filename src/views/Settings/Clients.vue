@@ -122,6 +122,7 @@ export default {
   overflow-y: auto;
   color: $black;
   font-size: 13px !important;
+  border-left: 0.3px solid $border-color;
 
   .header_div {
     height: 56px;
@@ -130,7 +131,7 @@ export default {
     grid-template-columns: 70% 30%;
     background-color: $white;
     color: $black;
-    border: 1px solid $border-color;
+    border-bottom: 0.3px solid $border-color;
 
     > div {
         display: inline-flex;

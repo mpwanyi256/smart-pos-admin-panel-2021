@@ -65,12 +65,11 @@ export default {
     },
 
     async getMenuCategories({ commit }) {
-      // commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_menu_categories', true);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const categories = await API.smart(PATH, filters);
       if (!categories.error) commit('setCategories', categories.data);
-      // commit('toggleLoading', false);
     },
 
     async updateMenuItemCategory({ commit }, payload) {

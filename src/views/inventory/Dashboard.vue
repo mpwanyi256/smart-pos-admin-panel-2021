@@ -86,7 +86,10 @@ export default {
 
     async fetchInventory() {
       this.loading = true;
-      this.updateItem({ get_inventory_status: this.dateSelected })
+      this.updateItem({
+        get_inventory_status: this.dateSelected,
+        company_id: localStorage.getItem('smart_company_id'),
+      })
         .then((inv) => {
           this.inventory = inv.data;
           this.loading = false;

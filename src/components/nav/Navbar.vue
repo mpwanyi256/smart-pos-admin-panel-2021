@@ -7,11 +7,6 @@
             <v-app-bar-nav-icon class="d-none d-sm-flex d-md-none"
               @click="drawer = true" />
             <p>
-              <!-- <v-btn fab x-small>
-                <v-icon class="time_display">
-                  mdi-message-draw
-                </v-icon>
-              </v-btn> -->
               Smart POS |
               <small class="user_name">
                 {{ userName }} -

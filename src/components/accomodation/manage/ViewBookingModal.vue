@@ -6,10 +6,10 @@
             <div class="actions">
                 <template v-if="booking.confirmed == 0">
                 <BaseTooltip
-                    @button="cancelBooking = true"
-                    message="Cancel booking"
-                    icon="thumb-down"
-                    color="red"
+                  @button="cancelBooking = true"
+                  message="Cancel booking"
+                  icon="thumb-down"
+                  color="red"
                 />
                 <BaseTooltip
                     @button="confirmBookingModal = true"

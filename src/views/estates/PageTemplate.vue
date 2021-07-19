@@ -1,0 +1,70 @@
+<template>
+    <div class="properties">
+        <div class="header_div">
+            <div>
+                <h1>{{ title }}</h1>
+            </div>
+            <div>
+                <slot name="header-actions" />
+            </div>
+        </div>
+        <div class="clients_list">
+            <slot name="body" />
+        </div>
+
+    </div>
+</template>
+<script>
+
+export default {
+  name: 'PageTemplate',
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+    };
+  },
+};
+</script>
+<style scoped lang="scss">
+@import '@/styles/constants.scss';
+
+    .properties {
+        height: calc(100vh - 52px);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        color: $black;
+        font-size: 13px !important;
+        border-left: 0.3px solid $border-color;
+
+        .header_div {
+            height: 56px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 70% 30%;
+            background-color: $white;
+            color: $black;
+            border-bottom: 0.3px solid $border-color;
+
+            > div {
+                display: inline-flex;
+                align-items: center;
+                gap: 15px;
+                padding-left: 15px;
+                width: 100%;
+            }
+
+            >div:last-child {
+                text-align: right;
+                width: 100%;
+            }
+        }
+    }
+
+</style>

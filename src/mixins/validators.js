@@ -6,5 +6,8 @@ export default {
     isEmail(str) {
       return validator.isEmail(str);
     },
+    isValidString(str) {
+      return !validator.isEmpty(str);
+    },
   },
 };

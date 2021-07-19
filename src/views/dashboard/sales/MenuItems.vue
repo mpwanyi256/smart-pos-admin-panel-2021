@@ -24,13 +24,46 @@
         </div>
         <LinearLoader v-if="loading" />
         <template v-else>
-            <MenuItemsDisplayHeader />
             <div class="menu_items_display_section">
-                <MenuItem v-for="(item, i) in menuItemsFiltered" :key="i"
+              <Table>
+                <template slot="header">
+                  <tr>
+                    <th>#</th>
+                    <th>Item Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Shown</th>
+                    <th>update</th>
+                  </tr>
+                </template>
+                <template slot="body">
+                  <tr v-for="item in menuItemsFiltered" :key="`menuItem${item.id}`">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>{{ item.price_display }}</td>
+                    <td>
+                      <v-btn small dark @click="updateMenuItemStatus(item)"
+                        class="toggle_hide_button"
+                        :color="item.status == 1 ? 'red darken-3' : 'green darken-3'">
+                        {{ item.status == 1 ? 'No' : 'Yes' }}
+                      </v-btn>
+                    </td>
+                    <td>
+                      <v-btn icon small class="update_button"
+                          @click="updateItem(item)"
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                      </v-btn>
+                    </td>
+                  </tr>
+                </template>
+              </Table>
+                <!-- <MenuItem v-for="(item, i) in menuItemsFiltered" :key="i"
                     :menu-item="item"
                     @changeStatus="updateMenuItemStatus"
                     @update="updateItem"
-                />
+                /> -->
             </div>
         </template>
         <UpdateMenuItem
@@ -53,27 +86,25 @@
     </div>
 </template>
 <script>
-import MenuItem from '@/components/menu/MenuItem.vue';
-import MenuItemsDisplayHeader from '@/components/menu/MenuItemsDisplayHeader.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
 import CreateNewMenuItem from '@/components/menu/CreateNewMenuItem.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import DownloadMenu from '@/components/menu/DownloadMenu.vue';
+import Table from '@/components/generics/new/Table.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MenuItems',
   components: {
-    MenuItem,
-    MenuItemsDisplayHeader,
     LinearLoader,
     UpdateMenuItem,
     ConfirmModal,
     CreateNewMenuItem,
     BaseTooltip,
     DownloadMenu,
+    Table,
   },
   data() {
     return {
@@ -183,7 +214,7 @@ export default {
 
         .menu_items_display_section {
             background-color: $white;
-            height: calc(100vh - 162px);
+            height: calc(100vh - 112px);
             overflow-y: auto;
             overflow-x: hidden;
             border: 0.5px solid $light-grey;

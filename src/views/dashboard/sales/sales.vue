@@ -33,30 +33,37 @@ export default {
     ...mapActions('sales', ['getOrders']),
   },
   mounted() {
-    // window.scroll(0, 0);
     window.scrollTo({
       left: 0,
       top: 0,
       behavior: 'smooth',
     });
-    // const setPolling = () => {
-    //   if (!this.user) {
-    //     clearInterval(this.polling);
-    //   } else {
-    //     this.getOrders();
-    //   }
-    // };
-    // this.polling = setInterval(() => {
-    //   setPolling();
-    // }, 3000);
   },
 };
 </script>
 <style scoped lang="scss">
+@import '@/styles/pos.scss';
+
     .sales {
       height: calc(100vh - 52px);
       width: 100%;
       display: grid;
+
+      ::-webkit-scrollbar{
+          width: 5px;
+          height: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: $scrollbar-color;
+            border-radius: 1ex;
+            -webkit-border-radius: 1ex;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: #000;
+        }
+
       @media only screen and (min-width: 1600px) {
         grid-template-columns: 20% 80%;
       }

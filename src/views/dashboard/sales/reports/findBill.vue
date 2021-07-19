@@ -11,10 +11,11 @@
         <div class="search_filter">
             <div class="bill_no">
                 <v-text-field
-                    v-model="billNumber"
-                    dense class="frm_input"
-                    outlined
-                    label="Bill no."
+                  v-model="billNumber"
+                  @keyup.enter="findBill"
+                  dense class="frm_input"
+                  outlined
+                  label="Bill no."
                 />
             </div>
             <div class="bill_no">
@@ -122,7 +123,9 @@ export default {
         to: this.dateTo,
         client_id: this.selectedClient,
         bill_no: this.billNumber,
+        company_id: localStorage.getItem('smart_company_id'),
       };
+      console.log('Find bill', filters);
       const Orders = await this.filterOrders(filters);
       this.orders = Orders.data.orders;
     },

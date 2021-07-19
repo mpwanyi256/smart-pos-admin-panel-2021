@@ -36,7 +36,7 @@ export default {
     },
 
     userName() {
-      return this.user && this.user.user_name ? this.user.user_name.split(' ')[0] : '';
+      return this.user && this.user.first_name ? `${this.user.last_name}` : 'User';
     },
 
     activeRoute() {

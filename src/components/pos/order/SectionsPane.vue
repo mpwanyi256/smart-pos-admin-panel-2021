@@ -19,7 +19,7 @@
             <div class="tables_display">
               <TableComponent
                 v-for="table in activeTables(section)"
-                :key="table.id"
+                :key="`postable${table.id}`"
                 :table="table"
                 @order="confirmOrderCreation(table)"
                 :ref="`table-${table.id}`"

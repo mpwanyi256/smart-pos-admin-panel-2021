@@ -154,8 +154,8 @@ export default {
 
   async created() {
     this.$nextTick(async () => {
-      await this.fetchOrders();
       await this.fetchTables();
+      await this.fetchOrders();
 
       setInterval(() => {
         const timeKati = new Date().getTime();

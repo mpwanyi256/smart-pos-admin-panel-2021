@@ -70,5 +70,14 @@ export default {
       },
       component: () => import('@/views/Settings/Clients.vue'),
     },
+    {
+      path: 'Outlets',
+      name: 'company_outlets',
+      meta: {
+        authrequired: true,
+        title: 'SmartPOS :: Outlets',
+      },
+      component: () => import('@/views/Settings/Outlets.vue'),
+    },
   ],
 };

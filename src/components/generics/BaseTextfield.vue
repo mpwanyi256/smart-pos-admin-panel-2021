@@ -4,6 +4,7 @@
     :disabled="disabled"
     v-model="input_text"
     class="search_field"
+    :class="flat ? 'flat' : ''"
     :placeholder="placeholder ? placeholder : 'Search'" />
   </div>
 </template>
@@ -16,7 +17,7 @@ export default {
       required: false,
     },
     preset: {
-      type: String,
+      type: [String, Number],
       required: false,
     },
     placeholder: {
@@ -24,6 +25,11 @@ export default {
       required: false,
     },
     disabled: {
+      type: Boolean,
+      required: false,
+      default: () => false,
+    },
+    flat: {
       type: Boolean,
       required: false,
       default: () => false,
@@ -36,7 +42,7 @@ export default {
   },
   watch: {
     input_text(val) {
-      this.$emit('input', val ? val.trim() : val);
+      this.$emit('input', val);
     },
     preset(val) {
       this.input_text = val;
@@ -65,5 +71,9 @@ export default {
     // box-shadow: $elevation-default;
     border: 0.5px solid rgba(148, 148, 148, 0.87);
     font-size: 14px;
+  }
+
+  .flat {
+    border-radius: 0px !important;
   }
 </style>

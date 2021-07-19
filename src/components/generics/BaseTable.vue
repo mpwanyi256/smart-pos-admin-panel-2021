@@ -47,7 +47,7 @@ export default {
           text: 'Table', value: 'table', sortable: false, align: 'start',
         },
         {
-          text: 'waiter', value: 'waiter', sortable: false, align: 'start',
+          text: 'Served by', value: 'waiter', sortable: false, align: 'start',
         },
         {
           text: 'Amount', value: 'bill_sum_display', sortable: false, align: 'start',

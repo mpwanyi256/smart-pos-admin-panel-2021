@@ -30,10 +30,13 @@ export default {
         icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9],
       },
       {
-        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],
+        icon: 'mdi-home-city', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8],
       },
       {
         icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8],
+      },
+      {
+        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],
       },
     ],
     license: null,
@@ -41,6 +44,9 @@ export default {
     packages: [],
   },
   mutations: {
+    setLoading(state, payload) {
+      state.loading = payload;
+    },
     setPackages(state, data) {
       state.packages = data;
     },
@@ -114,10 +120,7 @@ export default {
       const Companies = firebase.firestore().collection('Companies');
       const companyInfo = await Companies
         .where('Email', '==', email)
-        .get()
-        .catch((e) => {
-          console.log('Error', e);
-        });
+        .get();
 
       const setInfo = (data) => {
         commit('setCompany', data);
@@ -129,10 +132,11 @@ export default {
         });
       }
     },
-    async updateFbLicense({ commit }, licenseId) {
+    async updateFbLicense({ commit }, license) {
+      commit('setLoading', true);
       const DB = firebase.firestore().collection('licenses');
       await DB
-        .doc(licenseId).update({ status: 1 })
+        .doc(license.id).update({ status: 1, end_date: license.end_date })
         .then(() => {
           commit('setLicense', null);
           router.replace({ name: 'pos' });
@@ -140,16 +144,18 @@ export default {
         .catch(() => {
           console.error('Error updating doc');
         });
+      commit('setLoading', false);
     },
     async getActiveLicense({ commit }, companyEmail) {
+      commit('setLoading', true);
       const LICENSES = firebase.firestore().collection('licenses');
       const activeLicense = await LICENSES
         .where('company', '==', companyEmail)
         .where('status', '==', 0)
         .limit(1)
         .get()
-        .catch(() => {
-          console.log('Firebase error');
+        .catch((e) => {
+          console.log('Firebase error', e.message);
         });
 
       const setMutation = (data) => {
@@ -161,6 +167,7 @@ export default {
           setMutation({ ...doc.data(), id: doc.id });
         });
       }
+      commit('setLoading', false);
     },
     setLoading({ commit }, payload) {
       commit('toggleLoading', payload);
@@ -189,11 +196,12 @@ export default {
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
         localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
+        localStorage.setItem('smart_outlet_id', userInfo.outlet_id);
         commit('setUser', userInfo);
 
         const DAYSLEFT = userInfo.company_info.days_left;
         if (DAYSLEFT <= 0) {
-          dispatch('setError', 'Sorry, you license expired');
+          dispatch('setError', 'Sorry, your license expired');
           dispatch();
           router.replace({ name: 'login' });
           commit('toggleLoading', false);
@@ -235,11 +243,12 @@ export default {
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
         localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
+        localStorage.setItem('smart_outlet_id', userInfo.outlet_id);
         commit('setUser', userInfo);
 
         const DAYSLEFT = userInfo.company_info.days_left;
         if (DAYSLEFT <= 0) {
-          dispatch('setError', 'Sorry, you license expired');
+          dispatch('setError', 'Sorry, your license expired');
           router.replace({ name: 'login' });
           commit('toggleLoading', false);
           return;
@@ -277,6 +286,7 @@ export default {
       const frm = new FormData();
       frm.append('extend_license', payload.extend_license);
       frm.append('duration', payload.duration);
+      frm.append('company_id', payload.company_id);
       commit('toggleLoading', false);
       return API.smart(PATH, frm);
     },

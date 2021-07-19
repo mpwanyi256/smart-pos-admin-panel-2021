@@ -13,9 +13,9 @@
           @click="listen(action.name)"
           v-if="isAllowedAction(action.name)"
         >
-            <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p class="name">{{ action.name }}
-            </p>
+          <v-icon class="icon">{{ action.icon }}</v-icon>
+          <p class="name">{{ action.name }}
+          </p>
         </div>
       </template>
     </div>
@@ -42,6 +42,18 @@ export default {
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
     ...mapGetters('auth', ['user']),
+
+    userRole() {
+      return this.user.role;
+    },
+
+    userCanDiscount() {
+      return [1, 2, 5].includes(this.userRole);
+    },
+
+    allowAddWaiter() {
+      return true;
+    },
 
     company() {
       return this.user ? this.user.company_info : null;
@@ -70,18 +82,26 @@ export default {
         this.errorMessage = '';
       }, 5000);
     },
+
+    companyType() {
+      this.addWaiterAction();
+    },
   },
   created() {
     this.$nextTick(() => {
+      this.addWaiterAction();
+    });
+  },
+  methods: {
+    ...mapActions('pos', ['addOrderItem']),
+
+    addWaiterAction() {
       if (this.companyType === 1) {
         this.actions.unshift(
           { name: 'Waiter', icon: 'mdi-account' },
         );
       }
-    });
-  },
-  methods: {
-    ...mapActions('pos', ['addOrderItem']),
+    },
 
     isAllowedAction(action) {
       let allowed = false;
@@ -90,7 +110,7 @@ export default {
           allowed = this.userCanPrintBill;
           break;
         case 'Waiter':
-          allowed = this.allowAddWaiter;
+          allowed = true; // this.allowAddWaiter;
           break;
         case 'Settle':
           allowed = this.allowSettleBill;

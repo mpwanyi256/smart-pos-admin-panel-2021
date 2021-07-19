@@ -14,8 +14,10 @@ export default {
   },
   actions: {
     post({ commit }, payload) {
+      const comapnyId = localStorage.getItem('smart_company_id');
       commit('loading', true);
       const params = new FormData();
+      params.append('company_id', comapnyId);
       const updateKeys = Object.keys(payload);
       updateKeys.forEach((key) => {
         params.append(key, payload[`${key}`]);

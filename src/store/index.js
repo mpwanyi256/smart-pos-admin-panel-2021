@@ -13,6 +13,7 @@ import mail from './email';
 import print from './print';
 import manage from './manage';
 import kds from './kds';
+import estates from './estates';
 
 Vue.use(Vuex);
 
@@ -31,5 +32,6 @@ export default new Vuex.Store({
     print,
     manage,
     kds,
+    estates,
   },
 });

@@ -81,6 +81,10 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['license']),
+
+    companyId() {
+      return localStorage.getItem('smart_company_id');
+    },
   },
   watch: {
     errorMessage(val) {
@@ -110,11 +114,12 @@ export default {
       const license = {
         extend_license: this.license.key,
         duration: this.license.duration,
+        company_id: this.companyId,
       };
       this.performLicenseExtension(license)
         .then(async (res) => {
           if (res.extended || res.exists) {
-            await this.updateFbLicense(this.license.id);
+            await this.updateFbLicense({ id: this.license.id, end_date: res.end_date });
             // this.errorMessage = res.message;
             const loggedinUser = localStorage.getItem('smart_user_id');
             if (loggedinUser) await this.getUserById();

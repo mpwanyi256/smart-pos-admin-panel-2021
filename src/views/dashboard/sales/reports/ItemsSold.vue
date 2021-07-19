@@ -73,6 +73,9 @@ export default {
           text: 'MENU ITEM', value: 'item_name', sortable: true, align: 'start',
         },
         {
+          text: 'UNIT PRICE', value: 'item_price', sortable: false, align: 'start',
+        },
+        {
           text: 'QUANTITY', value: 'quantity_sold', sortable: false, align: 'start',
         },
         {
@@ -112,13 +115,15 @@ export default {
         menu_item: this.menuItemSelected,
         date_from: this.dateFrom,
         date_to: this.dateTo,
+        company_id: localStorage.getItem('smart_company_id'),
       };
       const ItemsSold = await this.fetchItemsSold(filters);
       if (!ItemsSold.error) {
         this.itemsSoldFetch = ItemsSold.data.map((Sale) => ({
-          item_name: Sale.item_name.toUpperCase(),
-          amount_sold: Sale.amount_sold,
           item_id: Sale.item_id,
+          item_name: Sale.item_name.toUpperCase(),
+          item_price: Sale.item_price,
+          amount_sold: Sale.amount_sold,
           quantity_sold: Sale.quantity_sold,
           cancelled: Sale.settlement[0].amount,
           cash: Sale.settlement[1].amount,

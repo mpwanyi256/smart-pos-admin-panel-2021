@@ -3,7 +3,7 @@
       :title="`Create new client`"
       :size="1020" @close="$emit('close')">
         <div class="create_client">
-            <CreateNewClient @add="$emit('reload')" />
+          <CreateNewClient @add="$emit('reload')" />
         </div>
     </Basemodal>
 </template>

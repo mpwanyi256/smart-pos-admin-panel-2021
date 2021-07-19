@@ -4,7 +4,9 @@
       :class="isPending ? 'pending' : ''"
     >
         <div class="item_name_display">
-          <p>{{ orderItem.name.toUpperCase() }}
+          <p>
+            <span><strong>({{ orderItem.quantity }})</strong></span>
+            {{ `${orderItem.name.toUpperCase()}` }}
             <br>
               <span class="item_amount">
                 {{ orderItem.amount }}
@@ -247,6 +249,11 @@ export default {
               color: $black;
               font-size: 16px;
               width: 100%;
+
+              span {
+                font-weight: bold;
+                color: $black;
+              }
               .item_amount {
                 color: $accent-color;
                 font-weight: bold;

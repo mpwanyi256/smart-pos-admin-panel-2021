@@ -25,7 +25,7 @@ export default {
     },
   },
   async created() {
-    if (this.user && this.user.company_info) {
+    if (this.user.company_info) {
       await this.getActiveLicense(this.user.company_info.company_email);
       await this.getFirebaseInfo();
       this.togglePolling();

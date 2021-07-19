@@ -75,6 +75,15 @@ export default {
     viewMode() {
       this.syncData();
     },
+    error: {
+      handler(val) {
+        // eslint-disable-next-line eqeqeq
+        if (val.message == 'Sorry, your license expired') {
+          this.openLicenseModal = true;
+        }
+      },
+      deep: true,
+    },
   },
 
   created() {
@@ -84,8 +93,9 @@ export default {
       this.viewMode = lastStep ? lastStep.step : 1;
       if (LoggedInUser) {
         this.getUserById(this.routeOn);
-        if (this.error.message === 'Sorry, you license expired') {
-          this.getLicense();
+        if (this.error.message === 'Sorry, your license expired') {
+          await this.getLicense();
+          this.openLicenseModal = true;
         }
       }
     });
@@ -125,17 +135,19 @@ export default {
           password: this.Password,
         };
         await this.performLogin(credentials);
-        if (this.error.message === 'Sorry, you license expired') {
+        if (this.error.message === 'Sorry, your license expired') {
           this.getLicense();
         }
       }
     },
 
     async getLicense() {
-      if (this.user) {
+      try {
         await this.getActiveLicense(this.user.company_info.company_email);
-        this.openLicenseModal = true;
+      } catch (e) {
+        console.log('Error fetching license', e);
       }
+      this.openLicenseModal = true;
     },
 
   },

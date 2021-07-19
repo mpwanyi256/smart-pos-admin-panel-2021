@@ -70,6 +70,7 @@ export default {
       filters.append('date', payload.date);
       filters.append('time', payload.time);
       filters.append('table_id', payload.table_id);
+      filters.append('outlet_id', payload.outlet_id);
       commit('toggleLoading', false);
       return API.smart(PATH, filters);
     },

@@ -34,6 +34,7 @@ export default {
       updateKeys.forEach((key) => {
         params.append(key, payload[`${key}`]);
       });
+      params.append('company_id', localStorage.getItem('smart_company_id'));
       commit('loading', false);
       return API.smart(PATH, params);
     },

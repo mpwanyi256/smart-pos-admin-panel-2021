@@ -88,9 +88,9 @@
                 <div>
                     <label>Check in</label>
                     <DatePickerBeta
-                        message="Check in"
-                        @picked="checkInDate = $event"
-                        :min="checkin"
+                      message="Check in"
+                      @picked="checkInDate = $event"
+                      :min="checkin"
                     />
                 </div>
                 <div>

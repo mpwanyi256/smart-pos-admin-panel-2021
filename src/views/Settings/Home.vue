@@ -29,6 +29,7 @@ export default {
         { name: 'Clients', icon: 'mdi-account-group', path: 'company_clients' },
         { name: 'Email list', icon: 'mdi-email', path: 'company_mail_list' },
         { name: 'Employees', icon: 'mdi-account-group-outline', path: 'company_employees' },
+        { name: 'Outlets', icon: 'mdi-home-city', path: 'company_outlets' },
         { name: 'Printer settings', icon: 'mdi-printer', path: 'company_departments' },
         { name: 'Sections and tables', icon: 'mdi-table-arrow-right', path: 'sections_and_tables' },
       ],

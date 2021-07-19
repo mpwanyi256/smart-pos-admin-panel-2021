@@ -1,7 +1,7 @@
 <template>
     <Basemodal
-      :title="`Create new client`"
-      :size="1020" @close="$emit('close')">
+      :title="`Update client info`"
+      :size="500" @close="$emit('close')">
         <div class="actions_list">
                 <div class="frm_entry">
                     <div>
@@ -59,13 +59,6 @@
                     </div>
                 </div>
                 <div class="frm_entry">
-                    <div
-                        class="error_message text-center"
-                        :class="noticeType == 'error' ? 'error' :
-                        noticeType == 'success' ? 'success' : ''"
-                    >
-                        {{ errorMessage }}
-                    </div>
                     <div>
                         <div>
                         <v-btn
@@ -76,6 +69,14 @@
                             Save
                         </v-btn>
                         </div>
+                    </div>
+                    <div
+                      v-if="errorMessage"
+                        class="error_message text-center"
+                        :class="noticeType == 'error' ? 'error' :
+                        noticeType == 'success' ? 'success' : ''"
+                    >
+                        {{ errorMessage }}
                     </div>
                 </div>
             </div>
@@ -165,7 +166,7 @@ export default {
             this.errorMessage = res.message;
             setTimeout(() => {
               this.$emit('reload');
-            }, 1000);
+            }, 100);
           }
         }).catch((e) => {
           console.error('Error', e);
@@ -185,9 +186,10 @@ export default {
         padding: 15px;
 
         .frm_entry {
-            display: grid;
-            grid-template-columns: 50% 50%;
-            gap: 5px;
+            display: flex;
+            flex-direction: column;
+            // grid-template-columns: 50% 50%;
+            gap: 10px;
             padding: 0;
             top: 0;
             bottom: 0;

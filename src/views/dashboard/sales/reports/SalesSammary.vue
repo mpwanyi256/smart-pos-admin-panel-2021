@@ -119,6 +119,10 @@ export default {
         font-family: $font-style;
         min-height: 100%;
         border-left: 0.5px solid $border-color;
+        height: calc(100vh -52px);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
 
         .header_nav {
             height: 56px;
@@ -126,7 +130,6 @@ export default {
             padding: 5px;
             border-bottom: 0.5px solid $border-color;
             display: inline-flex;
-            // justify-content: center;
         }
 
         .search_filter {
@@ -152,6 +155,13 @@ export default {
                     height: 30px;
                 }
             }
+        }
+
+        .orders_table {
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 208px);
+          overflow-y: auto;
         }
     }
 </style>

@@ -13,11 +13,18 @@
         @create-order="createOrder"
         @addItem="addItemToOrder"
       />
+      <ItemQuantity
+        v-if="showQuantityModal && selectedMenuItem"
+        :menuItem="selectedMenuItem"
+        @close="showQuantityModal = false"
+        @add="addItemToSelectedOrder"
+      />
     </div>
 </template>
 <script>
 import Categories from '@/components/pos/menu/Categories.vue';
 import MenuItems from '@/components/pos/menu/MenuItems.vue';
+import ItemQuantity from '@/components/pos/order/ItemOrderQuantity.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
 import {
   mapActions, mapGetters, mapState,
@@ -28,6 +35,7 @@ export default {
   components: {
     Categories,
     MenuItems,
+    ItemQuantity,
   },
   mixins: [
     TimezoneMixin,
@@ -37,6 +45,8 @@ export default {
       categorySearchKey: '',
       quantity: 1,
       loading: true,
+      selectedMenuItem: null,
+      showQuantityModal: false,
     };
   },
   computed: {
@@ -72,6 +82,7 @@ export default {
       const order = await this.createNewOrder({
         ...payload,
         company_id: this.user.company_id,
+        outlet_id: this.user.outlet_id,
         user_id: 0,
         date: this.dayOpen,
         time: this.time,
@@ -94,14 +105,13 @@ export default {
       } else console.info(order.message);
     },
 
-    async addItemToOrder(menuItem) {
-      if (!this.runningOrderId) return;
+    async addItemToSelectedOrder(quantity) {
       const filters = {
         order_id: this.runningOrderId,
-        menu_item_id: menuItem.id,
-        item_unit_price: menuItem.price,
-        menu_item_price: (menuItem.price * this.quantity),
-        quantity: this.quantity,
+        menu_item_id: this.selectedMenuItem.id,
+        item_unit_price: this.selectedMenuItem.price,
+        menu_item_price: (this.selectedMenuItem.price * quantity),
+        quantity,
         notes: '',
         status: 0,
         added_by: this.user.id,
@@ -111,8 +121,15 @@ export default {
       const addItem = await this.addOrderItem(filters);
       if (addItem.error) console.info(addItem.message);
       else {
-        this.$eventBus.$emit('reload-order');
+        this.showQuantityModal = false;
+        this.$eventBus.$emit('reload-order', this.runningOrderId);
       }
+    },
+
+    async addItemToOrder(menuItem) {
+      if (!this.runningOrderId) return;
+      this.selectedMenuItem = menuItem;
+      this.showQuantityModal = true;
     },
 
     async createOrder() {
@@ -120,6 +137,7 @@ export default {
       const filters = {
         company_id: this.user.company_id,
         user_id: this.user.id,
+        outlet_id: this.user.outlet_id,
         date: this.dayOpen,
         time: this.time,
         table_id: 'default',
@@ -133,6 +151,7 @@ export default {
           from: '',
           to: '',
           client_id: '',
+          company_id: this.user.company_id,
         });
 
         const OrderFetched = orders.data.orders;

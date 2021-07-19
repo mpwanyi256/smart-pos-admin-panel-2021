@@ -39,10 +39,12 @@ export default {
     },
     async getOrders({ commit }, dayOpen) {
       const DayOpen = dayOpen || localStorage.getItem('smart_company_day_open');
+      const companyId = localStorage.getItem('smart_company_id');
       if (DayOpen) {
         const data = new FormData();
         data.append('day_filter', DayOpen);
         data.append('all_orders', 1);
+        data.append('company_id', companyId);
         const sales = await API.smart(PATH, data);
         const orders = sales.data;
 
@@ -91,6 +93,7 @@ export default {
       commit('toggleLoading', true);
       const data = new FormData();
       data.append('get_pos_clients', payload);
+      data.append('company_id', localStorage.getItem('smart_company_id'));
       const CLIENTS = await API.smart(PATH, data);
       commit('toggleLoading', false);
       return CLIENTS;
@@ -103,6 +106,7 @@ export default {
       filters.append('from', payload.from);
       filters.append('to', payload.to);
       filters.append('client_id', payload.client_id);
+      filters.append('company_id', payload.company_id || localStorage.getItem('smart_company_id'));
 
       const Orders = await API.smart(PATH, filters);
       commit('toggleLoading', false);
@@ -143,11 +147,13 @@ export default {
 
     async fetchSalesSummary({ commit }, payload) {
       if (!payload) return null;
+      const companyId = localStorage.getItem('smart_company_id');
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('fetch_sales_summary', payload.from);
       filters.append('sales_from', payload.from);
       filters.append('sales_to', payload.to);
+      filters.append('company_id', companyId);
       const Sales = await API.smart(PATH, filters);
       commit('toggleLoading', false);
       return Sales;
