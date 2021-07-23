@@ -20,12 +20,12 @@
             </div>
             <div class="bill_no">
                 <v-select
-                    outlined
-                    label="Select Client"
-                    v-model="selectedClient" dense
-                    item-text="full_name"
-                    item-value="id"
-                    :items="clientList"
+                  outlined
+                  label="Select Client"
+                  v-model="selectedClient" dense
+                  item-text="full_name"
+                  item-value="id"
+                  :items="clientList"
                 />
             </div>
             <div class="bill_no">
@@ -122,10 +122,9 @@ export default {
         from: this.dateFrom,
         to: this.dateTo,
         client_id: this.selectedClient,
-        bill_no: this.billNumber,
+        bill_no: this.billNumber.length > 0 ? this.billNumber : 0,
         company_id: localStorage.getItem('smart_company_id'),
       };
-      console.log('Find bill', filters);
       const Orders = await this.filterOrders(filters);
       this.orders = Orders.data.orders;
     },

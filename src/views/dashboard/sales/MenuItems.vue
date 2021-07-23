@@ -16,7 +16,7 @@
                   item-value="id"
                   :items="departments"
                 />
-                <v-text-field :label="`Search ${selectedDepartmentName} items`"
+                <v-text-field label="Search"
                   v-model="itemSearch" dense outlined placeholder="Search" />
                 <BaseTooltip message="Upload items" icon="cloud-upload" />
                 <BaseTooltip message="Add new item" icon="plus" @button="createModal = true" />

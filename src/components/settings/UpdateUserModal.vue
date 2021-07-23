@@ -3,43 +3,41 @@
     :title="`Update user account`"
     :size="700" @close="$emit('close')">
     <div class="create_user">
-      <label>First name
-        <span class="grey--text lighten-2">
-          ({{ employee.first_name }})
-        </span></label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
+        label="First name"
         v-model="firstName"
-        :preset="firstName"
         placeholder="Enter full name"
         inputType="text"
       />
-      <label>Last name
-        <span class="grey--text lighten-2">
-          ({{ employee.last_name }})
-        </span></label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model="lastName"
-        :preset="lastName"
-        placeholder="Enter full name"
+        label="Last name"
         inputType="text"
       />
-      <label>User name
-        <span class="grey--text lighten-2">
-          ({{ employee.user_name }})
-        </span></label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model="name"
-        :preset="name"
-        placeholder="Enter full name"
+        label="User name"
         inputType="text"
       />
-      <label>User role</label>
+      <v-select outlined
+        dense
+        v-model="employeeOutletId"
+        :items="outlets"
+        item-value="id"
+        item-text="name"
+        label="Outlet / branch"
+        class="mt-3"
+      />
       <v-select outlined
         dense
         v-model="role"
         :items="roles"
         item-value="id"
         item-text="name"
+        label="User role"
       />
       <div class="options">
         <v-spacer></v-spacer>
@@ -54,7 +52,7 @@
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+// import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -67,7 +65,7 @@ export default {
   },
   components: {
     Basemodal,
-    BaseTextfield,
+    // BaseTextfield,
   },
   data() {
     return {
@@ -76,6 +74,8 @@ export default {
       role: 1,
       firstName: '',
       lastName: '',
+      employeeOutletId: 0,
+      outlets: [],
     };
   },
   computed: {
@@ -91,10 +91,17 @@ export default {
     this.role = this.employee.role_id;
     this.lastName = this.employee.last_name;
     this.firstName = this.employee.first_name;
+    this.employeeOutletId = this.employee.user_outlet_id;
+    await this.getOutlets();
     await this.fetchDbRoles();
   },
   methods: {
     ...mapActions('settings', ['post']),
+
+    async getOutlets() {
+      const OUTLETS = await this.post({ fetch_company_outlets: 'all' }).catch(() => null);
+      if (OUTLETS) this.outlets = OUTLETS.data;
+    },
 
     async fetchDbRoles() {
       const Roles = await this.post({ get_user_roles: 'all' });
@@ -108,6 +115,7 @@ export default {
         first_name: this.firstName,
         last_name: this.lastName,
         role: this.role,
+        outlet_id: this.employeeOutletId,
       });
       if (!newUser.error) this.$emit('refetch');
     },

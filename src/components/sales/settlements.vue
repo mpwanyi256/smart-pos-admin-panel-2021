@@ -36,19 +36,19 @@
         </div>
         <div class="running_orders">
           <RunningOrders class="panel-item" @vieworder="viewBill" />
-          <CreditorsList class="panel-item" @vieworder="viewBill" />
+          <!-- <CreditorsList class="panel-item" @vieworder="viewBill" /> -->
         </div>
         <BillModal
-            v-if="showBill"
-            :order="selectedOrder"
-            @close="showBill = false"
+          v-if="showBill"
+          :order="selectedOrder"
+          @close="showBill = false"
         />
       </template>
     </div>
 </template>
 <script>
 import BillModal from '@/components/sales/modals/Bill.vue';
-import CreditorsList from '@/components/sales/Creditors.vue';
+// import CreditorsList from '@/components/sales/Creditors.vue';
 import RunningOrders from '@/components/sales/RunningOrders.vue';
 import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
 import { mapActions, mapGetters } from 'vuex';
@@ -57,7 +57,7 @@ export default {
   name: 'Settlements',
   components: {
     BillModal,
-    CreditorsList,
+    // CreditorsList,
     RunningOrders,
     LoadingSpinner,
   },
@@ -137,8 +137,8 @@ export default {
 
     .running_orders {
       height: calc(100vh - 272px);
-      display: grid;
-      grid-template-columns: 50% 50%;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       overflow-y: auto;
       padding-right: 15px;

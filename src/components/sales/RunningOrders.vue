@@ -10,17 +10,22 @@
                         <th>Section</th>
                         <th>Served by</th>
                         <th>Bill Amount</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </template>
                 <template slot="body">
                     <tr
                         v-for="order in runningOrders"
                         :key="`dash-order-${order.order_id}`"
-                        @click="$emit('vieworder', order)"
                     >
                         <td>{{ order.table }}</td>
                         <td>{{ order.waiter ? order.waiter : '' }}</td>
                         <td>{{ order.bill_sum_display }}</td>
+                        <td>
+                            <v-btn fab small @click="$emit('vieworder', order)">
+                                <v-icon>mdi-information-outline</v-icon>
+                            </v-btn>
+                        </td>
                     </tr>
                 </template>
             </Table>

@@ -1,7 +1,5 @@
 <template>
-    <div class="sales_overview">
-        <Settlements />
-    </div>
+  <Settlements class="sales_overview" />
 </template>
 <script>
 import Settlements from '@/components/sales/settlements.vue';

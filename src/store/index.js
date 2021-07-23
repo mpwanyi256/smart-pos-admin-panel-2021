@@ -14,6 +14,7 @@ import print from './print';
 import manage from './manage';
 import kds from './kds';
 import estates from './estates';
+import backups from './backups';
 
 Vue.use(Vuex);
 
@@ -33,5 +34,6 @@ export default new Vuex.Store({
     manage,
     kds,
     estates,
+    backups,
   },
 });

@@ -63,6 +63,10 @@
           v-if="openLicenseModal"
           @close="openLicenseModal = false"
         />
+        <SyncDataModal
+          v-if="syncData"
+          @close="syncData = false"
+        />
     </div>
 </template>
 <script>
@@ -72,6 +76,7 @@ import ManagerActions from '@/components/pos/manage/ManagerActions.vue';
 import SalesReport from '@/components/Reports/SalesReport.vue';
 import SwitchDayModal from '@/components/pos/manage/SwitchDayModal.vue';
 import LicenseModal from '@/components/pos/manage/LicenseModal.vue';
+import SyncDataModal from '@/components/cloud/SyncDataModal.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
 
 export default {
@@ -83,6 +88,7 @@ export default {
     SalesReport,
     SwitchDayModal,
     LicenseModal,
+    SyncDataModal,
   },
 
   data() {
@@ -97,6 +103,7 @@ export default {
       loading: false,
       openLicenseModal: false,
       persistLicense: false,
+      syncData: false,
     };
   },
 
@@ -150,6 +157,12 @@ export default {
         this.openLicenseModal = true;
       }
     },
+    async dayOpen() {
+      await this.$eventBus.$emit('fetch-orders');
+    },
+    async user() {
+      await this.$eventBus.$emit('fetch-orders');
+    },
   },
 
   async created() {
@@ -199,6 +212,9 @@ export default {
           this.actions = false;
           this.openLicenseModal = true;
           break;
+        case 'cloud':
+          this.syncData = true;
+          break;
         default:
           console.log('Invalid action');
           this.actions = true;
@@ -225,7 +241,6 @@ export default {
           this.errorMessage = '';
           this.getUserById();
           this.loading = false;
-          window.location(this.serverIP).focus();
         }, 1000);
       });
     },

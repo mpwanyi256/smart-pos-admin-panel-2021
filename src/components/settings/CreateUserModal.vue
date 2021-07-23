@@ -3,43 +3,48 @@
     :title="`Create new user account`"
     :size="700" @close="$emit('close')">
     <div class="create_user">
-      <label>First name</label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model.trim="firstName"
-        placeholder="First name"
-        :inputType="'text'"
+        label="First name"
       />
-      <label>Last name</label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model.trim="lastName"
-        placeholder="Last name"
-        :inputType="'text'"
+        label="Last name"
       />
-      <label>User name</label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model.trim="fullname"
-        placeholder="Enter user name"
-        :inputType="'text'"
+        label="User name"
       />
-      <label>User role</label>
       <v-select outlined
         dense
+        v-model="employeeOutletId"
+        :items="outlets"
+        item-value="id"
+        item-text="name"
+        label="Outlet / branch"
+        class="mt-3"
+      />
+      <v-select outlined
+        dense label="User role"
         v-model="role"
         :items="roles"
         item-value="id"
         item-text="name"
       />
-      <label>Password</label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model.trim="password"
-        placeholder="password"
-        :inputType="'password'"
+        label="password"
+        type="password"
       />
-      <label>Confirm password</label>
-      <BaseTextfield
+      <v-text-field
+        outlined dense
         v-model.trim="passwordConfirm"
-        placeholder="confirm password"
-        :inputType="'password'"
+        label="confirm password"
+        type="password"
       />
       <div class="options">
         <v-spacer></v-spacer>
@@ -55,7 +60,6 @@
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
-import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -63,7 +67,6 @@ export default {
   name: 'CreateUserModal',
   components: {
     Basemodal,
-    BaseTextfield,
   },
   data() {
     return {
@@ -74,6 +77,8 @@ export default {
       role: 1,
       password: '',
       passwordConfirm: '',
+      outlets: [],
+      employeeOutletId: 0,
     };
   },
   computed: {
@@ -81,14 +86,21 @@ export default {
     isValidPassword() {
       return this.fullname.length > 3 && this.password.length > 3
       && this.firstName.length > 3 && this.lastName.length > 3
-      && (this.password === this.passwordConfirm);
+      && (this.password === this.passwordConfirm && this.employeeOutletId !== 0);
     },
   },
   async created() {
     await this.fetchDbRoles();
+    await this.getOutlets();
   },
   methods: {
     ...mapActions('settings', ['post']),
+
+    async getOutlets() {
+      const OUTLETS = await this.post({ fetch_company_outlets: 'all' }).catch(() => null);
+      if (OUTLETS) this.outlets = OUTLETS.data;
+      if (this.outlets) this.employeeOutletId = this.outlets[0].id;
+    },
 
     async fetchDbRoles() {
       const Roles = await this.post({ get_user_roles: 'all' });
@@ -102,6 +114,7 @@ export default {
         last_name: this.lastName,
         user_name: this.fullname,
         role: this.role,
+        outlet_id: this.employeeOutletId,
         password: this.password,
         token: new Date().getMilliseconds(),
         date_joined: moment().format('Y-m-d'),
