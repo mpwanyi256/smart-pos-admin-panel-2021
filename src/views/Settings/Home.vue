@@ -27,6 +27,7 @@ export default {
         { name: 'Access controls', icon: 'mdi-security', path: 'access_controls' },
         { name: 'Company settings', icon: 'mdi-domain', path: 'company_settings' },
         { name: 'Clients', icon: 'mdi-account-group', path: 'company_clients' },
+        { name: 'Departments', icon: 'mdi-shape', path: 'company_departments_list' },
         { name: 'Email list', icon: 'mdi-email', path: 'company_mail_list' },
         { name: 'Employees', icon: 'mdi-account-group-outline', path: 'company_employees' },
         { name: 'Outlets', icon: 'mdi-home-city', path: 'company_outlets' },

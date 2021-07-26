@@ -16,27 +16,27 @@ export default {
     reviewLink: 'https://g.page/prodev-group-kampala/review?nr',
     routes: [
       {
-        icon: 'mdi-cart', name: 'Pos', path: 'pos', allowedUsers: [1, 2, 3, 5, 6],
+        icon: 'mdi-cart', name: 'Pos', path: 'pos', allowedUsers: [1, 2, 3, 5, 6], packages: [1, 2, 3],
       },
       {
-        icon: 'mdi-sale', name: 'Sales', path: 'overview', allowedUsers: [1, 5, 6],
+        icon: 'mdi-sale', name: 'Sales', path: 'overview', allowedUsers: [1, 5, 6], packages: [1, 2, 3],
       },
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
       {
-        icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard', allowedUsers: [1, 5, 6, 8],
+        icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard', allowedUsers: [1, 5, 6, 8], packages: [2, 3],
       },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
       {
-        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9],
+        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9], packages: [3],
       },
       {
-        icon: 'mdi-home-city', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8],
+        icon: 'mdi-home-city', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [4],
       },
       {
-        icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8],
+        icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [1, 2, 3],
       },
       {
-        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5],
+        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5], packages: [1, 2, 3],
       },
     ],
     license: null,

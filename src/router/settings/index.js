@@ -79,5 +79,14 @@ export default {
       },
       component: () => import('@/views/Settings/Outlets.vue'),
     },
+    {
+      path: 'Departments',
+      name: 'company_departments_list',
+      meta: {
+        authrequired: true,
+        title: 'SmartPOS :: Departments',
+      },
+      component: () => import('@/views/Settings/CompanyDepartments.vue'),
+    },
   ],
 };

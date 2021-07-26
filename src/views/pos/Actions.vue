@@ -195,6 +195,7 @@ export default {
             border: 1px solid $bg_color;
             cursor: pointer;
             border-radius: 5px;
+            overflow: hidden;
 
             .icon {
               color: $gray-25;

@@ -25,7 +25,7 @@ export default {
     },
   },
   async created() {
-    if (this.user.company_info) {
+    if (this.user && this.user.company_info) {
       await this.getActiveLicense(this.user.company_info.company_email);
       await this.getFirebaseInfo();
       this.togglePolling();
@@ -39,7 +39,7 @@ export default {
 
     togglePolling() {
       const setPolling = () => {
-        if (!this.user.company_info) {
+        if (!this.user) {
           clearInterval(this.polling);
         } else {
           this.getDayOpen(this.user.company_id);
@@ -47,7 +47,7 @@ export default {
       };
       this.polling = setInterval(() => {
         setPolling();
-      }, 3000);
+      }, 5000);
     },
   },
 };

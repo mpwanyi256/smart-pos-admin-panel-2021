@@ -73,6 +73,7 @@ export default {
       businessTypes: [
         { id: 1, name: 'Bar & Restaurant' },
         { id: 2, name: 'Small/Medium size business' },
+        { id: 3, name: 'Real estate company' },
       ],
       name: '',
       address: '',
@@ -81,7 +82,7 @@ export default {
       businessType: '',
       password: '',
       idb_key: 'smart_business_info',
-      loading: true,
+      loading: false,
     };
   },
   computed: {
@@ -108,20 +109,25 @@ export default {
   created() {
     this.$nextTick(async () => {
       await this.getDataSync();
-      this.loading = false;
     });
   },
   methods: {
 
     async getDataSync() {
-      const data = await idb.get(this.idb_key).catch(() => null);
-      if (data) {
-        this.name = data.name;
-        this.address = data.address;
-        this.email = data.email;
-        this.contact = data.contact;
-        this.businessType = data.business_type;
-        this.password = data.password;
+      try {
+        const data = await idb.get(this.idb_key).catch(() => null);
+        if (data) {
+          this.name = data.name;
+          this.address = data.address;
+          this.email = data.email;
+          this.contact = data.contact;
+          this.businessType = data.business_type;
+          this.password = data.password;
+        }
+      } catch (e) {
+        console.log('idb error', e);
+      } finally {
+        this.loading = false;
       }
     },
 

@@ -76,6 +76,9 @@ const idb = {
   get(key) {
     return new Promise((resolve, reject) => {
       const trans = this.db.transaction([COLLECTION_NAME], 'readonly');
+      if (!trans) {
+        throw new Error('No such key found');
+      }
       const objectStore = trans.objectStore(COLLECTION_NAME);
 
       const index = objectStore.index('data_key');

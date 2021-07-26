@@ -125,7 +125,6 @@ export default {
           if (res.error) {
             this.noticeType = 'error';
             this.errorMessage = res.message;
-            console.log('Error creating client', res.error_message);
           } else {
             this.noticeType = 'success';
             this.errorMessage = res.message;
@@ -136,6 +135,7 @@ export default {
         }).catch((e) => {
           console.error('Error', e);
         });
+      this.$emit('reload');
     },
 
   },

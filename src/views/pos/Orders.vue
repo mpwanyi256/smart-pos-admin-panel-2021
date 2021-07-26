@@ -316,6 +316,7 @@ export default {
           font-size: 16px;
           font-weight: bold;
           cursor: pointer;
+          overflow: hidden;
         }
 
         .order_list {

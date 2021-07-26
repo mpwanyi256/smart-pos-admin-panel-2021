@@ -1,6 +1,6 @@
 <template>
     <PageTemplate class="page" title="Tenant contracts">
-        <template slot="header-actions">
+      <template slot="header-actions">
         <BaseTextfield v-model="search" placeholder="Search" />
         <BaseTooltip
             @button="showCreateContractModal = true"

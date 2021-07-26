@@ -107,6 +107,7 @@ export default {
         Location: this.companyInfo.address,
         Name: this.companyInfo.name,
         TimeZone: 'Africa/Kampala',
+        package: this.selectedPackage,
       };
 
       const fbAcc = await this.addCompanyFirebase(fbAccount);

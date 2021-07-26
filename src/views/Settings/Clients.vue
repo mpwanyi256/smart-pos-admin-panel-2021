@@ -47,15 +47,15 @@
             </Table>
         </div>
         <NewClient
-            v-if="createClient"
-            @close="createClient = false"
-            @reload="fetchClients"
+          v-if="createClient"
+          @close="createClient = false"
+          @reload="fetchClients"
         />
         <UpdateClientInfo
-            v-if="updateClientInfo && selectedClient"
-            :client="selectedClient"
-            @close="updateClientInfo = false"
-            @reload="fetchClients"
+          v-if="updateClientInfo && selectedClient"
+          :client="selectedClient"
+          @close="updateClientInfo = false"
+          @reload="fetchClients"
         />
     </div>
 </template>

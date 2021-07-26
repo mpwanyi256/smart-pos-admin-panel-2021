@@ -10,7 +10,7 @@
 </template>
 <script>
 import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Sales',
@@ -28,9 +28,6 @@ export default {
     routePath() {
       return this.$route.name;
     },
-  },
-  methods: {
-    ...mapActions('sales', ['getOrders']),
   },
   mounted() {
     window.scrollTo({

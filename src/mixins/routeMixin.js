@@ -19,16 +19,21 @@ export default {
     ...mapGetters('auth', ['routes']),
     ...mapGetters('auth', ['user']),
 
+    package() {
+      return this.user.package;
+    },
+
     userRole() {
       return this.user ? this.user.role : 3;
     },
 
     filteredRoutes() {
-      return this.routes.filter((Route) => Route.allowedUsers.includes(this.userRole));
+      return this.routes.filter((Route) => Route.allowedUsers.includes(this.userRole)
+        && Route.packages.includes(this.package));
     },
 
     companyInfo() {
-      return this.user.company_info;
+      return this.user ? this.user.company_info : null;
     },
 
     isProtectedManageAccount() {

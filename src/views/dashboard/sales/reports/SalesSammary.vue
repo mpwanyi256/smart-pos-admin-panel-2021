@@ -1,5 +1,11 @@
 <template>
     <div class="find_bill">
+      <template v-if="loading">
+        <div class="loading_page">
+          <h1>Loading</h1>
+        </div>
+      </template>
+      <template v-else>
         <div class="header_nav">
             <h3 class="mt-2">Fetch Sales summary</h3>
             <v-spacer></v-spacer>
@@ -26,6 +32,7 @@
           <LinearLoader v-if="loading" />
           <BaseTableComponent :headers="tableHeaders" :data="sales" />
         </div>
+      </template>
     </div>
 </template>
 <script>
@@ -76,7 +83,21 @@ export default {
   },
   computed: {
     ...mapGetters('sales', ['loading']),
+    ...mapGetters('auth', ['user']),
   },
+
+  watch: {
+    async user() {
+      await this.fetchSales();
+    },
+  },
+
+  created() {
+    this.$nextTick(async () => {
+      await this.fetchSales();
+    });
+  },
+
   methods: {
     ...mapActions('sales', ['fetchSalesSummary']),
 

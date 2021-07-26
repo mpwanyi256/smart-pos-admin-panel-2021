@@ -63,6 +63,7 @@ export default {
 
   computed: {
     ...mapGetters('auth', ['loading', 'error', 'user', 'license']),
+
     userId() {
       return localStorage.getItem('smart_user_id');
     },
