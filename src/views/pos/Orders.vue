@@ -93,14 +93,13 @@ export default {
 
   data() {
     return {
-      polling: null,
       sections: [],
       actions: false,
       viewSales: false,
       timeNow: '',
       switchDay: false,
       errorMessage: '',
-      loading: false,
+      loading: true,
       openLicenseModal: false,
       persistLicense: false,
       syncData: false,
@@ -161,21 +160,24 @@ export default {
       await this.$eventBus.$emit('fetch-orders');
     },
     async user() {
-      await this.$eventBus.$emit('fetch-orders');
+      if (this.user) {
+        await this.fetchOrders();
+        await this.fetchTables();
+      }
     },
   },
 
   async created() {
-    this.$nextTick(async () => {
-      await this.fetchTables();
-      await this.fetchOrders();
+    if (!this.user) return;
+    await this.fetchOrders();
+    await this.fetchTables();
+    this.loading = false;
 
-      setInterval(() => {
-        const timeKati = new Date().getTime();
-        const extract = new Date(timeKati);
-        this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
-      }, 1000);
-    });
+    setInterval(() => {
+      const timeKati = new Date().getTime();
+      const extract = new Date(timeKati);
+      this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
+    }, 1000);
   },
 
   eventBusCallbacks: {
@@ -263,10 +265,11 @@ export default {
     async fetchOrders() {
       await this.fetchTables();
       const orders = await this.filterOrders({
-        bill_no: '',
+        bill_no: 0,
         from: this.dayOpen,
         to: this.dayOpen,
-        client_id: '',
+        client_id: 0,
+        status: 1,
       });
       if (!orders.error) this.setRunning(orders.data.orders);
     },
@@ -323,6 +326,7 @@ export default {
             max-height: calc(100vh - 102px);
             overflow-x: hidden;
             overflow-y: auto;
+            width: 100%;
 
             .order_pane {
                 display: flex;

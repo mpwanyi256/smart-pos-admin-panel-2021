@@ -55,8 +55,14 @@ export default {
   },
   eventBusCallbacks: {
     'toggle-running': 'toggleRunning',
+    'get-waiter-info': 'reoadOrder',
   },
   methods: {
+    reoadOrder(orderId) {
+      // eslint-disable-next-line eqeqeq
+      if (this.tableOrderId == orderId) this.$emit('order', this.table);
+    },
+
     toggleRunning(orderId) {
       if (orderId === this.tableOrderId) this.$emit('order', this.table);
     },

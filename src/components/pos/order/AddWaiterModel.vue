@@ -66,8 +66,7 @@ export default {
         order_id: this.order.order_id,
       });
       if (!addWaiter.error) {
-        // this.$eventBus.$emit('reload-order');
-        this.$eventBus.$emit('reload-order', this.order.order_id);
+        await this.$eventBus.$emit('get-waiter-info', this.order.order_id);
         this.$emit('close');
       }
     },

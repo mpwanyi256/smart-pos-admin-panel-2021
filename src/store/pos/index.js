@@ -211,6 +211,7 @@ export default {
       filters.append('find_bill', payload.bill_no);
       filters.append('from', payload.from);
       filters.append('to', payload.to);
+      filters.append('status', payload.status || 0);
       filters.append('client_id', payload.client_id);
       filters.append('company_id', localStorage.getItem('smart_company_id'));
 

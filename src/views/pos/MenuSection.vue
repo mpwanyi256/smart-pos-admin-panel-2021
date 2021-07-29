@@ -54,6 +54,14 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapState('pos', ['selectedTableId']),
 
+    userRole() {
+      return this.user ? this.user.role : 0;
+    },
+
+    companyType() {
+      return this.user ? this.user.business_type : 0;
+    },
+
     filteredMenuItems() {
       return this.menuItems.filter((Item) => Item.status === 0);
     },
@@ -83,7 +91,7 @@ export default {
         ...payload,
         company_id: this.user.company_id,
         outlet_id: this.user.outlet_id,
-        user_id: 0,
+        user_id: this.userRole === 3 ? this.user.id : 0,
         date: this.dayOpen,
         time: this.time,
       });
@@ -129,6 +137,11 @@ export default {
     async addItemToOrder(menuItem) {
       if (!this.runningOrderId) return;
       this.selectedMenuItem = menuItem;
+
+      if (this.companyType === 1) {
+        this.addItemToSelectedOrder(1);
+        return;
+      }
       this.showQuantityModal = true;
     },
 

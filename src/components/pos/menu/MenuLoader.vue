@@ -1,9 +1,9 @@
 <template>
     <div class="skeleton-loader">
         <BaseLoading
-            v-for="i in count"
-            :key="i"
-            class="loading-item"
+          v-for="i in count"
+          :key="i"
+          class="loading-item"
         />
     </div>
 </template>
@@ -26,10 +26,10 @@ export default {
 </script>
 <style scoped lang="scss">
     .skeleton-loader {
-        padding: 8px;
-        width: 100%;
-        grid-template-rows: repeat(6, 108px);
-        display: grid;
-        row-gap: 8px;
+      padding: 8px;
+      width: 100%;
+      grid-template-rows: repeat(6, 108px);
+      display: grid;
+      row-gap: 8px;
     }
 </style>

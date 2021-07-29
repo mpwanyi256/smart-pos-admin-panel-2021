@@ -47,7 +47,7 @@ export default {
       };
       this.polling = setInterval(() => {
         setPolling();
-      }, 5000);
+      }, 3000);
     },
   },
 };

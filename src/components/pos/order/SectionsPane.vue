@@ -76,9 +76,6 @@ export default {
     };
   },
 
-  computed: {
-  },
-
   methods: {
     ...mapActions('pos', ['setRunningOrderId', 'setRunningOrder']),
 

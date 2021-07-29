@@ -26,11 +26,13 @@ export default {
   actions: {
     getReport({ commit }, payload) {
       commit('loading', true);
+      const companyId = localStorage.getItem('smart_company_id');
       const params = new FormData();
       const updateKeys = Object.keys(payload);
       updateKeys.forEach((key) => {
         params.append(key, payload[`${key}`]);
       });
+      params.append('company_id', companyId);
       commit('loading', false);
       return API.smart(PATH, params);
     },
