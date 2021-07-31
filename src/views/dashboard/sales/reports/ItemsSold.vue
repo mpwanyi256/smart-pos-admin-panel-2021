@@ -132,7 +132,7 @@ export default {
           eft: Sale.settlement[4].amount,
           mobile: Sale.settlement[5].amount,
           nc: Sale.settlement[6].amount,
-          split: Sale.settlement[8].amount,
+          // split: Sale.settlement[8].amount,
           visa: Sale.settlement[9].amount,
         }));
       }

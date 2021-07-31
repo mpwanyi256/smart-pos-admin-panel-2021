@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       links: [
-        { name: 'Dashboard', icon: 'mdi-home', path: 'inv_dashboard' },
+        { name: 'Items in stock', icon: 'mdi-home', path: 'inv_dashboard' },
         { name: 'Store Items', icon: 'mdi-store', path: 'inv_storeItems' },
         { name: 'Menu Receipes', icon: 'mdi-google-circles', path: 'inv_recipes' },
         { name: 'Suppliers', icon: 'mdi-account-multiple', path: 'inv_suppliers' },

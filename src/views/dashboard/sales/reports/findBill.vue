@@ -1,66 +1,76 @@
 <template>
-    <div class="find_bill">
-        <div class="header_nav">
-            <h3>Find orders</h3>
-            <v-spacer></v-spacer>
-            <v-btn text :to="{ name: 'overview' }">
-                <v-icon left>mdi-arrow-left</v-icon>
-                Home
-            </v-btn>
-        </div>
-        <div class="search_filter">
-            <div class="bill_no">
-                <v-text-field
-                  v-model="billNumber"
-                  @keyup.enter="findBill"
-                  dense class="frm_input"
-                  outlined
-                  label="Bill no."
-                />
-            </div>
-            <div class="bill_no">
-                <v-select
-                  outlined
-                  label="Select Client"
-                  v-model="selectedClient" dense
-                  item-text="full_name"
-                  item-value="id"
-                  :items="clientList"
-                />
-            </div>
-            <div class="bill_no">
-                <DatePickerBeta @picked="setDateFrom" :message="'From'" />
-            </div>
-            <div class="bill_no">
-                <DatePickerBeta @picked="setDateTo" :message="'To'" />
-            </div>
-            <div class="bill_no">
-                <v-btn small @click="findBill">Search</v-btn>
-            </div>
-        </div>
-        <div class="orders_table">
-            <LinearLoader v-if="loading" />
-            <v-btn
-              v-if="orders.length > 0"
-              small
-              @click="exportToExcel"
-              class="mt-2 ml-2 green--text darken-4">
-              <v-icon left color="green darken-4">mdi-file-excel</v-icon>
-              Export to csv
-            </v-btn>
-            <BaseTable @view="showOrderItems" @bill="showBill" :orders="orders" />
-            <OrderDetailsModal
-                v-if="showOrderDetails && selectedOrder"
-                :order="selectedOrder"
-                @close="showOrderDetails = false"
+  <div class="find_bill">
+      <div class="header_nav">
+          <h3>Find orders</h3>
+          <v-spacer></v-spacer>
+          <v-btn text :to="{ name: 'overview' }">
+              <v-icon left>mdi-arrow-left</v-icon>
+              Home
+          </v-btn>
+      </div>
+      <div class="search_filter">
+          <div class="bill_no">
+              <v-text-field
+                v-model="billNumber"
+                @keyup.enter="findBill"
+                dense class="frm_input"
+                outlined
+                label="Bill no."
+              />
+          </div>
+          <div class="bill_no">
+            <v-select
+              outlined
+              label="Select Client"
+              v-model="selectedClient" dense
+              item-text="full_name"
+              item-value="id"
+              :items="clientList"
             />
-            <BillModal
-                v-if="showBillModal && selectedOrder"
-                :order="selectedOrder"
-                @close="showBillModal = false"
+          </div>
+          <div class="bill_no">
+            <v-select
+              outlined
+              label="Settlement type"
+              v-model="settlementType" dense
+              item-text="name"
+              item-value="id"
+              :items="settlementOptions"
             />
-        </div>
-    </div>
+          </div>
+          <div class="bill_no">
+              <DatePickerBeta @picked="setDateFrom" :message="'From'" />
+          </div>
+          <div class="bill_no">
+              <DatePickerBeta @picked="setDateTo" :message="'To'" />
+          </div>
+          <div class="bill_no">
+              <v-btn small @click="findBill">Search</v-btn>
+          </div>
+      </div>
+      <div class="orders_table">
+          <LinearLoader v-if="loading" />
+          <v-btn
+            v-if="orders.length > 0"
+            small
+            @click="exportToExcel"
+            class="mt-2 ml-2 green--text darken-4">
+            <v-icon left color="green darken-4">mdi-file-excel</v-icon>
+            Export to csv
+          </v-btn>
+          <BaseTable @view="showOrderItems" @bill="showBill" :orders="orders" />
+          <OrderDetailsModal
+              v-if="showOrderDetails && selectedOrder"
+              :order="selectedOrder"
+              @close="showOrderDetails = false"
+          />
+          <BillModal
+              v-if="showBillModal && selectedOrder"
+              :order="selectedOrder"
+              @close="showBillModal = false"
+          />
+      </div>
+  </div>
 </template>
 <script>
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
@@ -69,7 +79,7 @@ import LinearLoader from '@/components/generics/Loading.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import ExcelExportMixin from '@/mixins/excelMixin';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'FindBill',
@@ -92,13 +102,21 @@ export default {
       selectedOrder: null,
       showOrderDetails: false,
       showBillModal: false,
+      settlementType: 0,
     };
   },
   computed: {
     ...mapGetters('sales', ['loading']),
+    ...mapState('pos', ['paymentSettlements']),
+
+    settlementOptions() {
+      return [{ id: 0, name: 'All' }, ...this.paymentSettlements];
+    },
   },
   methods: {
     ...mapActions('sales', ['getClients', 'filterOrders']),
+    ...mapActions('pos', ['fetchsetpaymentSettlements']),
+
     exportToExcel() {
       const dataCleaned = this.orders.map((Order) => (
         {
@@ -110,7 +128,7 @@ export default {
           discount: Order.discount,
           amount_paid: Order.final_amount,
           settlement: Order.settlement,
-          waiter: Order.waiter,
+          served_by: Order.waiter,
           client: Order.client_name || '',
           description: Order.discount_reason ? Order.discount_reason : Order.description,
         }));
@@ -124,6 +142,7 @@ export default {
         client_id: this.selectedClient,
         bill_no: this.billNumber.length > 0 ? this.billNumber : 0,
         company_id: localStorage.getItem('smart_company_id'),
+        settlement_type: this.settlementType,
       };
       const Orders = await this.filterOrders(filters);
       this.orders = Orders.data.orders;
@@ -150,6 +169,7 @@ export default {
   async created() {
     const Clients = await this.getClients('all');
     if (Clients.data) this.clientList = [{ id: 0, full_name: 'Select Client' }, ...Clients.data];
+    await this.fetchsetpaymentSettlements();
   },
 };
 </script>

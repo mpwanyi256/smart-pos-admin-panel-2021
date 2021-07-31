@@ -27,6 +27,17 @@ export default {
     },
   },
   actions: {
+    async filterSales({ commit }, payload) {
+      commit('toggleLoading', false);
+      const data = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((key) => {
+        data.append(key, payload[key]);
+      });
+
+      return API.smart(PATH, data);
+    },
+
     async addClientInfo({ commit }, payload) {
       commit('toggleLoading', false);
       const data = new FormData();
@@ -106,6 +117,7 @@ export default {
       filters.append('from', payload.from);
       filters.append('to', payload.to);
       filters.append('client_id', payload.client_id);
+      filters.append('settlement_type', payload.settlement_type);
       filters.append('company_id', payload.company_id || localStorage.getItem('smart_company_id'));
 
       const Orders = await API.smart(PATH, filters);

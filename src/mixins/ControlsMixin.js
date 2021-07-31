@@ -37,32 +37,32 @@ export default {
 
     managerCanShiftItem() {
       const setting = this.getSetting(this.allowManagerShiftCODE);
-      return this.userRole === 1 && setting.status;
+      return (this.userRole === 1 && setting.status) || this.isSuperUser;
     },
 
     cashierCanShiftItem() {
       const setting = this.getSetting(this.allowCashierShiftCODE);
-      return this.userRole === 2 && setting.status;
+      return (this.userRole === 2 && setting.status) || this.isSuperUser;
     },
 
     managerCanCancelItem() {
       const mc = this.getSetting(this.allowManagerCancelCODE);
-      return (this.userRole === 1 && mc.status);
+      return (this.userRole === 1 && mc.status) || this.isSuperUser;
     },
 
     cashierCanCancelItem() {
       const setting = this.getSetting(this.allowCashierCancelCODE);
-      return (this.userRole === 2 && setting.status);
+      return (this.userRole === 2 && setting.status) || this.isSuperUser;
     },
 
     waiterCanCancelItem() {
       const allWait = this.getSetting(this.allowWaiterCancelCODE);
-      return (this.userRole === 3 && allWait.status);
+      return (this.userRole === 3 && allWait.status) || this.isSuperUser;
     },
 
     waiterCanDeleteItem() {
       const allWait = this.getSetting('AWDIBS');
-      return (this.userRole === 3 && allWait.status);
+      return (this.userRole === 3 && allWait.status) || this.isSuperUser;
     },
 
     managerCanDeleteItem() {

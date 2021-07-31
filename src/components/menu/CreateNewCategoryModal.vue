@@ -4,6 +4,9 @@
           <v-form @submit.prevent="createCategory">
             <v-text-field small outlined label="Name" v-model.trim="categoryName" />
             <v-btn block type="submit">Create</v-btn>
+            <div class="error_alert">
+              {{ errorMessage }}
+            </div>
           </v-form>
         </div>
     </Basemodal>
@@ -20,6 +23,7 @@ export default {
   data() {
     return {
       categoryName: '',
+      errorMessage: '',
     };
   },
   computed: {
@@ -35,6 +39,7 @@ export default {
       };
       const createCat = await this.CreateMenuCategory(newCat);
       if (!createCat.error) this.$emit('refresh');
+      this.errorMessage = createCat.message;
     },
   },
 };
@@ -42,5 +47,14 @@ export default {
 <style lang="scss">
   .new_category_form {
     padding: 16px;
+  }
+
+  .error_alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.5;
   }
 </style>

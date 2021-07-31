@@ -110,7 +110,7 @@ export default {
           allowed = this.userCanPrintBill;
           break;
         case 'Waiter':
-          allowed = true; // this.allowAddWaiter;
+          allowed = this.userRole !== 3;
           break;
         case 'Settle':
           allowed = this.allowSettleBill;

@@ -70,6 +70,15 @@ export default {
           },
           component: () => import('@/views/dashboard/sales/MenuCategories.vue'),
         },
+        {
+          path: 'discounts_report',
+          name: 'discounts_report',
+          meta: {
+            authrequired: true,
+            title: 'Sales | Discounted bills',
+          },
+          component: () => import('@/components/sales/DiscountsReport.vue'),
+        },
       ],
     },
   ],

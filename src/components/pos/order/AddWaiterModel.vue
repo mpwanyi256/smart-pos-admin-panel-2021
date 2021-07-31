@@ -87,7 +87,7 @@ export default {
   .waiters_list {
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
-    max-height: 300px;
+    max-height: 340px;
     overflow-y: auto;
     overflow-x: hidden;
     gap: 5px;

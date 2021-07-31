@@ -92,7 +92,7 @@ export default {
             .btn_settle {
                 background-color: $blue !important;
                 color: $white;
-                height: 10px;
+                height: 56px !important;
                 width: 100%;
             }
         }

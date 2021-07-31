@@ -27,10 +27,10 @@ export default {
       },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
       {
-        icon: 'mdi-home', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9], packages: [3],
+        icon: 'mdi-bed', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9], packages: [3],
       },
       {
-        icon: 'mdi-home-city', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [4],
+        icon: 'mdi-bed', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [4],
       },
       {
         icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [1, 2, 3],
