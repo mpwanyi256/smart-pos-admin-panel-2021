@@ -71,7 +71,7 @@ export default {
 
       .sales_pane {
         height: 100%;
-        overflow-y: auto;
+        overflow-y: hidden;
       }
 
       .dashboard_pane {

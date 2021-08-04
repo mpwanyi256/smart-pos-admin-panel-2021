@@ -134,7 +134,6 @@ export default {
       switch (action) {
         case 'Confirm':
           if (this.hasWaiter) this.performKotPrint();
-          // else this.errorMessage = 'Please add a waiter';
           else this.$eventBus.$emit('add-waiter');
           break;
         case 'Bill':

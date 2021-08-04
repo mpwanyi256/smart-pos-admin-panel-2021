@@ -110,6 +110,10 @@ export default {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
 
+    companyId() {
+      return this.user ? this.user.company_id : 0;
+    },
+
     serverIP() {
       const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
       return IPAddress ? `http://${IPAddress}/smartAdmin/` : 'http://localhost:80/smartAdmin/';
@@ -225,12 +229,6 @@ export default {
       this.actions = false;
     },
 
-    async sendSalesReport() {
-      // TO DO -> Refactor to send via email
-      // const sales = await this.getReport({ get_daily_report: this.dayOpen }).catch(() => null);
-      // console.log('Sales report', sales.data);
-    },
-
     async closeDay(datePicked) {
       this.loading = true;
       this.getReport({
@@ -250,7 +248,7 @@ export default {
     async fetchTables() {
       const Sections = await this.updateOrder(
         {
-          get_setup_sections: this.user.company_id,
+          get_setup_sections: this.companyId,
           day_open: this.dayOpen,
         },
       );

@@ -81,7 +81,7 @@ export default {
     ...mapGetters('pos', ['runningOrderId']),
 
     companyType() {
-      return this.user.business_type ? this.user.company_info.business_type : 0;
+      return (this.user && this.user.business_type) ? this.user.company_info.business_type : 0;
     },
   },
   watch: {

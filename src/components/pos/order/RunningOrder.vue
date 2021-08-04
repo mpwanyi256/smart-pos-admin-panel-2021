@@ -173,22 +173,22 @@ export default {
       };
       const updated = await this.updateOrder(filter);
       if (!updated.error) this.$eventBus.$emit('reload-order');
-      console.log('Shift table', updated);
       this.shift = false;
     },
 
     showErrorAlert(msg) {
       this.errorMessage = msg;
+      this.$eventBus.$emit('show-snackbar', msg);
     },
 
     settleBill() {
       if (!this.isPending) this.$eventBus.$emit('open-settlement-modal');
-      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
+      else this.$eventBus.$emit('show-snackbar', 'Please confirm order.');
     },
 
     checkOrderStatus() {
       if (!this.isPending) this.$eventBus.$emit('view-bill');
-      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
+      else this.$eventBus.$emit('show-snackbar', 'Please confirm order.');
     },
 
     viewPendingItems(orderItem) {

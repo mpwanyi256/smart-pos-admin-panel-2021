@@ -11,14 +11,14 @@
             <h3 class="err_message">{{ message }}</h3>
             <div>
                 <v-btn
-                    :disabled="!selectedDate"
-                    block
-                    @click="$emit('switch', selectedDate)"
+                  :disabled="!selectedDate || sendingEmail"
+                  block
+                  @click="switchToNewDay"
                 >
-                    Open day
+                  Open day
                 </v-btn>
             </div>
-            <LinearLoader v-if="loading" class="mt-2" />
+            <LinearLoader v-if="loading || sendingEmail" class="mt-2" />
         </div>
     </Basemodal>
 </template>
@@ -26,9 +26,11 @@
 import Basemodal from '@/components/generics/Basemodal.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
+import EmailMixin from '@/mixins/EmailMixin';
 
 export default {
   name: 'SwitchDayModal',
+  mixins: [EmailMixin],
   props: {
     message: {
       type: String,
@@ -48,6 +50,11 @@ export default {
     return {
       selectedDate: '',
     };
+  },
+  methods: {
+    async switchToNewDay() {
+      await this.sendReportViaEmail('END OF DAY SALES REPORT');
+    },
   },
 };
 </script>

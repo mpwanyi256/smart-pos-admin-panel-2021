@@ -15,6 +15,7 @@ import manage from './manage';
 import kds from './kds';
 import estates from './estates';
 import backups from './backups';
+import pdf from './pdf';
 
 Vue.use(Vuex);
 
@@ -35,5 +36,6 @@ export default new Vuex.Store({
     kds,
     estates,
     backups,
+    pdf,
   },
 });

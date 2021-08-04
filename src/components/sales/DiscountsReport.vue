@@ -178,11 +178,5 @@ export default {
             }
 
         }
-
-        .orders_table {
-            // display: flex;
-            // flex-direction: column;
-            // gap: 10px;
-        }
     }
 </style>

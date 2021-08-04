@@ -4,8 +4,17 @@
         :size="1200" @close="$emit('close')"
         :fullscreen="true"
         >
-        <template slot="action">
+        <template slot="action" v-if="managerCanViewSales">
           <div ref="salesReport" class="report-actions">
+            <BaseTooltip
+              class="pdf"
+              @button="sendReportOnEmail"
+              :disabled="sendingEmail"
+              :loading="sendingEmail"
+              color="blue"
+              message="Send Email"
+              icon="email"
+            />
             <BaseTooltip
               class="pdf"
               @button="printReport"
@@ -19,9 +28,9 @@
             />
           </div>
         </template>
-          <div v-if="!loading" ref="salesReport" class="sales_report">
+          <div v-if="!loading && managerCanViewSales" ref="salesReport" class="sales_report">
             <!-- <LinearLoader v-if="loading" /> -->
-              <h3>Sales settlements</h3>
+              <h3>Sales</h3>
               <PaymentSettlements
                 :data="report.payments"
               />
@@ -43,7 +52,13 @@
               />
           </div>
           <div v-else class="loading_section">
-            <LoadingSpinner class="large" />
+            <LoadingSpinner v-if="loading" class="large" />
+            <template v-else>
+              <v-btn icon x-large>
+                <v-icon class="red--text">mdi-alert</v-icon>
+              </v-btn>
+              <h3>Sorry, you are not allowed to view this section</h3>
+            </template>
           </div>
     </Basemodal>
 </template>
@@ -55,11 +70,13 @@ import DepartmentSale from '@/components/Reports/generics/DepartmentSales.vue';
 import OrdersList from '@/components/Reports/OrdersList.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
-// import LinearLoader from '@/components/generics/Loading.vue';
+import ControlsMixin from '@/mixins/ControlsMixin';
+import EmailMixin from '@/mixins/EmailMixin';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SalesReport',
+  mixins: [ControlsMixin, EmailMixin],
   props: {
     date: {
       type: String,
@@ -103,11 +120,15 @@ export default {
     async selectedDate(val) {
       this.loading = true;
       if (val) await this.fetchReport();
-      this.$refs.salesReport.scroll(0, 0);
     },
   },
+
   methods: {
     ...mapActions('reports', ['getReport', 'getPdf']),
+
+    async sendReportOnEmail() {
+      await this.sendReportViaEmail('SALES REPORT');
+    },
 
     printPdf() {
       const route = {
@@ -138,6 +159,7 @@ export default {
       this.loading = true;
       this.getReport({
         get_daily_report: this.selectedDate,
+        company_id: this.companyInfo.company_id,
       }).then((res) => {
         if (!res.error) this.report = res.data;
         this.loading = false;

@@ -18,7 +18,7 @@
         <div class="menu">
           <div class="tray">
             <div
-            :class="isActiveRoute(link.name) ? 'active' : 'item'"
+              :class="isActiveRoute(link.name) ? 'active' : 'item'"
               v-for="(link, index) in filteredRoutes" :key="index"
               :to="{ name: link.path }"
               @click="gotTopage(link)">
@@ -71,10 +71,11 @@
 </template>
 <script>
 import RoutingMixin from '@/mixins/routeMixin';
+import ControlsMixin from '@/mixins/ControlsMixin';
 
 export default {
   name: 'NavBar',
-  mixins: [RoutingMixin],
+  mixins: [RoutingMixin, ControlsMixin],
 };
 </script>
 <style scoped lang="scss">

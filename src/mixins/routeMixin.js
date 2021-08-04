@@ -29,7 +29,8 @@ export default {
 
     filteredRoutes() {
       return this.routes.filter((Route) => Route.allowedUsers.includes(this.userRole)
-        && Route.packages.includes(this.package));
+        && Route.packages.includes(this.package) && (Route.name !== 'Sales'
+        || (Route.name === 'Sales' && this.managerCanViewSales)));
     },
 
     companyInfo() {

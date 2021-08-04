@@ -36,7 +36,7 @@ export default {
         icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [1, 2, 3],
       },
       {
-        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [1, 5], packages: [1, 2, 3],
+        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [5], packages: [1, 2, 3],
       },
     ],
     license: null,
@@ -200,6 +200,8 @@ export default {
         commit('setUser', userInfo);
 
         const DAYSLEFT = userInfo.company_info.days_left;
+        const PACKAGE = userInfo.package;
+
         if (DAYSLEFT <= 0) {
           dispatch('setError', 'Sorry, your license expired');
           dispatch();
@@ -208,12 +210,11 @@ export default {
           return;
         }
 
-        if (userInfo.role === 5) {
+        if ([1, 2, 3].includes(PACKAGE)) {
           router.push({ name: 'pos' });
-          dispatch('settings/fetch', { get_access_controls: 'all' });
-        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
-          router.push({ name: 'pos' });
-          dispatch('settings/fetch', { get_access_controls: 'all' });
+          dispatch('settings/fetch', { get_access_controls: 'all' }, { root: true });
+        } else if (PACKAGE === 4) {
+          router.push({ name: 'tenants' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
@@ -247,6 +248,8 @@ export default {
         commit('setUser', userInfo);
 
         const DAYSLEFT = userInfo.company_info.days_left;
+        const PACKAGE = userInfo.package;
+
         if (DAYSLEFT <= 0) {
           dispatch('setError', 'Sorry, your license expired');
           router.replace({ name: 'login' });
@@ -254,14 +257,19 @@ export default {
           return;
         }
 
-        if (userInfo.role === 5) {
-          if (payload && payload.match('login')) router.push({ name: 'overview' });
-          else if (payload === 'new account') router.push({ name: 'company_settings' });
-        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
-          router.push({ name: 'pos' });
-        } else {
-          dispatch('setError', 'Sorry, you have no access to this section');
-          dispatch('performLogout');
+        const CurrentPath = window.location.pathname;
+        if (CurrentPath === '/') {
+          if (payload === 'new account') {
+            router.push({ name: 'company_settings' });
+          } else if ([1, 2, 3].includes(PACKAGE)) {
+            router.push({ name: 'pos' });
+            dispatch('settings/fetch', { get_access_controls: 'all' }, { root: true });
+          } else if (PACKAGE === 4) {
+            router.push({ name: 'tenants' });
+          } else {
+            dispatch('setError', 'Sorry, you have no access to this section');
+            dispatch('performLogout');
+          }
         }
       }
       commit('toggleLoading', false);

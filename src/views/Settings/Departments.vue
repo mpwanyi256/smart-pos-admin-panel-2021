@@ -18,9 +18,9 @@
                     <td>{{ department.printer.connection_type }}</td>
                     <td>
                       <v-btn fab small
-                          @click="config(department)"
+                        @click="config(department)"
                       >
-                        <v-icon>mdi-printer</v-icon>
+                        <v-icon>mdi-cog</v-icon>
                       </v-btn>
                     </td>
                 </tr>
@@ -31,9 +31,9 @@
                     <td>{{ billConf.printer.connection_type }}</td>
                     <td>
                       <v-btn fab small
-                          @click="config(billConf)"
+                        @click="config(billConf)"
                       >
-                        <v-icon>mdi-printer</v-icon>
+                        <v-icon>mdi-cog</v-icon>
                       </v-btn>
                     </td>
                 </tr>
@@ -74,6 +74,7 @@ export default {
   },
   computed: {
     ...mapGetters('menu', ['departments']),
+    ...mapGetters('auth', ['user']),
 
     actualDepartments() {
       return this.departments.filter((Dep) => Dep.id !== 0);
@@ -90,6 +91,7 @@ export default {
     getBarPrinterConf() {
       this.post({
         get_department_printer_config: 0,
+        company_id: this.user.company_id,
       }).then((res) => {
         this.billConf.printer = res.data;
       });

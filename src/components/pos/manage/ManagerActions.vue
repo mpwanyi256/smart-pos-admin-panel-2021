@@ -4,13 +4,14 @@
       :size="700" @close="$emit('close')">
       <div class="manager_actions">
           <div class="actions_list">
-            <div class="action"
-                v-for="(action, i) in actions"
+            <template v-for="(action, i) in actions">
+              <div class="action"
                 :key="i"
                 @click="$emit('action', action.action)"
-            >
+              >
                 {{ action.name }}
-            </div>
+              </div>
+            </template>
           </div>
       </div>
     </Basemodal>
@@ -27,7 +28,7 @@ export default {
     return {
       actions: [
         { name: 'View Sales Report', action: 'sales' },
-        { name: 'Send email', action: 'email' },
+        // { name: 'Send email', action: 'email' },
         { name: 'Open new day', action: 'open' },
         { name: 'Extend License', action: 'license' },
         { name: 'Cloud sync', action: 'cloud' },

@@ -29,6 +29,7 @@ export default {
   display: inline-flex;
   flex-direction: column;
   font-family: $font-style !important;
+  overflow-y: hidden;
 
   ::-webkit-scrollbar{
     width: 5px;
@@ -50,6 +51,7 @@ export default {
     top: 0;
     bottom: 0;
     height: calc(100vh - 52px);
+    overflow: hidden;
   }
 }
 </style>

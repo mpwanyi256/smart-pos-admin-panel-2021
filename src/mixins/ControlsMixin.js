@@ -12,6 +12,7 @@ export default {
       allowWaiterCancelCODE: 'ALLWAITCANCEL',
       allowWaiterDeleteCODE: 'AWDIBS',
       allowManagerDeleteCODE: 'AMDIBS',
+      allowManagerViewSales: 'AAVSR',
     };
   },
 
@@ -33,6 +34,11 @@ export default {
 
     dayOpen() {
       return this.user ? this.user.company_info.day_open : null;
+    },
+
+    managerCanViewSales() {
+      const setting = this.getSetting(this.allowManagerViewSales);
+      return (this.userRole === 1 && setting.status) || this.isSuperUser;
     },
 
     managerCanShiftItem() {

@@ -1,6 +1,18 @@
 <template>
   <v-app>
     <router-view></router-view>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ snackMessage }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 <script>
@@ -11,6 +23,8 @@ export default {
   data() {
     return {
       polling: null,
+      snackMessage: '',
+      snackbar: false,
     };
   },
   computed: {
@@ -34,8 +48,18 @@ export default {
   beforeDestroy() {
     clearInterval(this.polling);
   },
+
+  eventBusCallbacks: {
+    'show-snackbar': 'showSnackBar',
+  },
+
   methods: {
     ...mapActions('auth', ['getDayOpen', 'getActiveLicense', 'getFirebaseInfo']),
+
+    showSnackBar(message) {
+      this.snackMessage = message;
+      this.snackbar = true;
+    },
 
     togglePolling() {
       const setPolling = () => {

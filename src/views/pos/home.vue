@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     addWaiter() {
-      if (this.runningOrderId) this.showWaiters = true;
+      if (this.runningOrder) this.showWaiters = true;
     },
 
     viewBill() {

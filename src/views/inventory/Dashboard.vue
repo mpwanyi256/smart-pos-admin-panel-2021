@@ -4,7 +4,7 @@
     <Table>
       <template slot="header">
         <th>
-          <div class="download">
+          <div class="download">x
             <BaseTooltip
               @button="downloadCSV"
               message="Download csv" icon="download"
