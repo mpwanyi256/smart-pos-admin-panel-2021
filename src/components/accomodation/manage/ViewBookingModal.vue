@@ -122,7 +122,7 @@
                         <v-btn
                             :loading="sendingEmail"
                             text
-                            @click="sendClientBookingConfirmation(
+                            @click="sendBookingEmail(
                             {
                                 ...booking, days_of_stay: daysOfStay,
                                 company_name: companyInfo.company_name,
@@ -308,6 +308,7 @@ export default {
   },
   methods: {
     ...mapActions('accomodation', ['post']),
+    ...mapActions('pdf', ['generateBookingPdf']),
 
     deleteConfirmedBookingById() {
       this.post({
@@ -357,19 +358,35 @@ export default {
       }).then(async () => {
         this.$eventBus.$emit('load-calendar');
         if (status === 1) {
-          await this.sendClientBookingConfirmation(
-            {
-              ...this.booking,
-              days_of_stay: this.daysOfStay,
-              company_name: this.companyInfo.company_name,
-              company_email: this.companyInfo.company_email,
-              company_location: this.companyInfo.company_location,
-            },
-          );
+          // TO DO first generate pdf then send it as an attachment
+          await this.generateBookingPdf({
+            booking_confirmation: this.booking.booking_id,
+          }).then(async () => {
+            await this.sendBookingEmail();
+          });
         }
         if (status === 9) this.$emit('close');
         this.cancelBooking = false;
         this.confirmBookingModal = false;
+      });
+    },
+
+    async sendBookingEmail() {
+      await this.generateBookingPdf({
+        booking_confirmation: this.booking.booking_id,
+      }).then(async () => {
+        await this.sendClientBookingConfirmation(
+          {
+            ...this.booking,
+            days_of_stay: this.daysOfStay,
+            company_name: this.companyInfo.company_name,
+            company_email: this.companyInfo.company_email,
+            company_location: this.companyInfo.company_location,
+            company_id: this.user.company_id,
+          },
+        );
+      }).catch((e) => {
+        console.log('error generating pdf', e);
       });
     },
 

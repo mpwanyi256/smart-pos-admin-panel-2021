@@ -2,7 +2,7 @@
   <v-app>
     <router-view></router-view>
     <v-snackbar
-      v-model="snackbar"
+      v-model="snackbar" top
     >
       {{ snackMessage }}
       <template v-slot:action="{ attrs }">

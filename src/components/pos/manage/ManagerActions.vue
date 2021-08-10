@@ -28,10 +28,10 @@ export default {
     return {
       actions: [
         { name: 'View Sales Report', action: 'sales' },
-        // { name: 'Send email', action: 'email' },
         { name: 'Open new day', action: 'open' },
         { name: 'Extend License', action: 'license' },
         { name: 'Cloud sync', action: 'cloud' },
+        { name: 'Credit payment', action: 'payment' },
       ],
     };
   },

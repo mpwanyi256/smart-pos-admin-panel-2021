@@ -45,6 +45,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import CreateLicenseKey from '@/components/manage/CreateLicenseKey.vue';
+import firebase from 'firebase/app';
 
 export default {
   name: 'POSClients',
@@ -59,11 +60,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('manage', ['clients', 'fetchClients']),
+    ...mapGetters('manage', ['clients']),
   },
   async created() {
     await this.fetchClients();
     await this.fetchClientLicenses();
+    firebase.firestore().collection('Companies')
+      .onSnapshot(async () => {
+        await this.fetchClients();
+      });
   },
   methods: {
     ...mapActions('manage', ['fetchClients', 'fetchClientLicenses']),

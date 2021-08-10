@@ -3,6 +3,7 @@
       :title="`${client.Name} licenses`"
       :size="1020" @close="$emit('close')">
         <div class="client_licenses">
+          <LinearLoader v-if="loading" />
             <div class="new_license_card">
                 <div class="license_key">
                     Key: {{ licenseKey }}
@@ -55,6 +56,7 @@
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
+import LinearLoader from '@/components/generics/Loading.vue';
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 
@@ -70,6 +72,7 @@ export default {
     Basemodal,
     BaseTextfield,
     Table,
+    LinearLoader,
   },
   data() {
     return {
@@ -78,7 +81,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters('manage', ['licenses', 'error']),
+    ...mapGetters('manage', ['licenses', 'error', 'loading']),
 
     clientLicenses() {
       return this.licenses.filter((Lic) => Lic.company === this.client.Email);
@@ -92,11 +95,11 @@ export default {
     this.generateKey();
   },
   methods: {
-    ...mapActions('manage', ['performAddLicense', 'deleteKey']),
+    ...mapActions('manage', ['performAddLicense', 'deleteKey', 'fetchClientLicenses']),
 
     async deleteLicense(license) {
-      console.log('Drop', license.id);
-      this.deleteKey(license.id);
+      await this.deleteKey(license.id);
+      await this.fetchClientLicenses();
     },
 
     async uploadKey() {

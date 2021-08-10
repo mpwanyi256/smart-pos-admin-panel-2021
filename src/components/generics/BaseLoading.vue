@@ -1,6 +1,6 @@
 <template>
     <div class="base-loading">
-        <slot />
+      <slot />
     </div>
 </template>
 
