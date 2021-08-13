@@ -6,7 +6,7 @@
             <v-tabs class="tab-head" v-model="tab" color="basil" grow>
             <v-tab class="tab-item"
                 v-for="(item, index) in options"
-                :key="item"
+                :key="`settlement-option${index}`"
                 :class="isActiveTab(index) ? 'active' : ''"
             >
                 {{ item.name }}

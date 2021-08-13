@@ -154,16 +154,21 @@ export default {
     ...mapActions('pos', ['updateOrder', 'filterOrders', 'setRunningOrder']),
 
     reloadOrderDisplay() {
-      this.filterOrders({
-        bill_no: this.order.order_id,
-        from: '',
-        to: '',
-        client_id: '',
-      }).then((orders) => {
-        const OrderFetched = orders.data.orders;
-        if (!OrderFetched.length) return;
-        this.setRunningOrder(OrderFetched[0]);
-      });
+      if (!this.order) return;
+      try {
+        this.filterOrders({
+          bill_no: this.order.order_id,
+          from: '',
+          to: '',
+          client_id: '',
+        }).then((orders) => {
+          const OrderFetched = orders.data.orders;
+          if (!OrderFetched.length) return;
+          this.setRunningOrder(OrderFetched[0]);
+        });
+      } catch (e) {
+        console.log('Error in reloadOrderDisplay', e);
+      }
     },
 
     async shiftOrder(tableId) {

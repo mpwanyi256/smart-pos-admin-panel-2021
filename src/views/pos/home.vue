@@ -20,7 +20,7 @@
       />
       <OrderSettlementModal
         v-if="openSettementModal"
-        @close="openSettementModal = false"
+        @close="closeSettlementModal"
       />
       <WaitersModal
         v-if="showWaiters"
@@ -40,9 +40,11 @@ import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
 import WaitersModal from '@/components/pos/order/AddWaiterModel.vue';
 import { mapGetters } from 'vuex';
+import CloudMixin from '@/mixins/CloudMixin';
 
 export default {
   name: 'SmartSalesHome',
+  mixins: [CloudMixin],
   components: {
     NavBar,
     Orders,
@@ -85,7 +87,12 @@ export default {
       this.showBill = true;
     },
 
-    settleBill() {
+    async closeSettlementModal() {
+      this.openSettementModal = false;
+      await this.syncData();
+    },
+
+    async settleBill() {
       this.openSettementModal = true;
     },
   },

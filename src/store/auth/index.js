@@ -122,13 +122,9 @@ export default {
         .where('Email', '==', email)
         .get();
 
-      const setInfo = (data) => {
-        commit('setCompany', data);
-      };
-
       if (!companyInfo.empty) {
         companyInfo.forEach((doc) => {
-          setInfo({ ...doc.data(), id: doc.id });
+          commit('setCompany', { ...doc.data(), id: doc.id });
         });
       }
     },
@@ -306,7 +302,7 @@ export default {
     routes: (state) => state.routes,
     license: (state) => state.license,
     reviewLink: (state) => state.reviewLink,
-    company: (state) => state.company,
+    fbCompany: (state) => state.company,
     packages: (state) => state.packages,
   },
 };
