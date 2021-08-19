@@ -103,11 +103,11 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import ShiftOrderItem from '@/components/pos/order/manage/ShiftOrderItem.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import { mapActions } from 'vuex';
 import ControlsMixin from '@/mixins/ControlsMixin';
 
 export default {

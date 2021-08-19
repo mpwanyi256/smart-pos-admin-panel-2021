@@ -36,10 +36,10 @@
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseTableComponent from '@/components/generics/BaseTableComponent.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'SalesOverview',

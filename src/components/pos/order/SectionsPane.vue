@@ -37,10 +37,10 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import TableComponent from '@/components/pos/order/TableComponent.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'SectionsPane',

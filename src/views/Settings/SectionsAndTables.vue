@@ -65,11 +65,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import SectionTablesModal from '@/components/settings/SectionTablesModal.vue';
 import SingleFieldUpdateModal from '@/components/generics/new/SingleFieldUpdateModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SectionsAndTables',

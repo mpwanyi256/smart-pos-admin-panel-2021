@@ -12,8 +12,8 @@
     </div>
 </template>
 <script>
-import Calendar from '@/components/accomodation/manage/Calendar.vue';
 import { mapActions } from 'vuex';
+import Calendar from '@/components/accomodation/manage/Calendar.vue';
 
 export default {
   name: 'Dashboard',

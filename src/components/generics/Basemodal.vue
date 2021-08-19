@@ -45,6 +45,11 @@ export default {
 <style scoped lang="scss">
 @import '@/styles/pos.scss';
 
+  ::v-deep .v-text-field__details {
+    display: none;
+    height: 0;
+  }
+
 .modal_content {
   ::-webkit-scrollbar{
     width: 5px;

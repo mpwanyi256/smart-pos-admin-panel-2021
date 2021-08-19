@@ -24,8 +24,8 @@
     </Table>
 </template>
 <script>
-import Table from '@/components/generics/new/Table.vue';
 import { mapActions } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
 
 export default {
   name: 'SupplierItemMappings',

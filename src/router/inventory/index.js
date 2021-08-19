@@ -52,5 +52,23 @@ export default {
       },
       component: () => import('@/views/inventory/PurchaseInvoices.vue'),
     },
+    {
+      path: 'inv_supplier_payments',
+      name: 'inv_supplier_payments',
+      meta: {
+        authrequired: true,
+        title: 'Inventory | Payments',
+      },
+      component: () => import('@/views/inventory/SupplierPayments.vue'),
+    },
+    {
+      path: 'inv_supplier_payments',
+      name: 'inv_supplier_statements',
+      meta: {
+        authrequired: true,
+        title: 'Inventory | Statements',
+      },
+      component: () => import('@/views/inventory/SupplierStatements.vue'),
+    },
   ],
 };

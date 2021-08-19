@@ -20,10 +20,10 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import AddStoreItemToMapping from '@/components/inventory/suppliers/AddStoreItemToMapping.vue';
 import SupplierItemMappings from '@/components/inventory/suppliers/SupplierItemMappings.vue';
 import Basemodal from '@/components/generics/Basemodal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SupplierItemMapping',

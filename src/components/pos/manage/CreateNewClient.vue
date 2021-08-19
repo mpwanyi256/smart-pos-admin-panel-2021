@@ -66,9 +66,9 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import validators from '@/mixins/validators';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateNewClient',

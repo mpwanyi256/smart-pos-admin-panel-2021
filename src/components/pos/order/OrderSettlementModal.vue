@@ -50,12 +50,12 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import DirectSettlement from '@/components/pos/order/DirectSettlement.vue';
 import SplitSettlement from '@/components/pos/order/SplitSettlement.vue';
 import OtherSettlementTypes from '@/components/pos/order/payments/OtherSettlementTypes.vue';
 import CompanySettlement from '@/components/pos/order/payments/CompanySettlement.vue';
-import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'OrderSettlementModal',

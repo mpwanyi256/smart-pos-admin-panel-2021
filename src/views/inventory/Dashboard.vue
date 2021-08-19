@@ -33,12 +33,12 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DownloadCSVMixin from '@/mixins/DownloadCSVMixin';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'InventoryDashboard',

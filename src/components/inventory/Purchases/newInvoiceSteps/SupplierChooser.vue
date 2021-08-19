@@ -38,9 +38,9 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SupplierChooser',

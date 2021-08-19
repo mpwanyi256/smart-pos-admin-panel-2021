@@ -47,11 +47,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BillModal from '@/components/sales/modals/Bill.vue';
 // import CreditorsList from '@/components/sales/Creditors.vue';
 import RunningOrders from '@/components/sales/RunningOrders.vue';
 import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Settlements',

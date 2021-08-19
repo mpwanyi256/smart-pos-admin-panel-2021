@@ -88,6 +88,7 @@
   </PageTemplate>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
@@ -96,7 +97,6 @@ import PasswordResetModal from '@/components/settings/PasswordResetModal.vue';
 import CreateUserModal from '@/components/settings/CreateUserModal.vue';
 import UpateUserModal from '@/components/settings/UpdateUserModal.vue';
 import Avatar from '@/components/generics/new/Avatar.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Employees',

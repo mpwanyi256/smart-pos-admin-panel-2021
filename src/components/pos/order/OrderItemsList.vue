@@ -15,9 +15,9 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import OrderItemPreview from '@/components/pos/order/OrderItemPreview.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'OrderItemsList',

@@ -27,11 +27,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import NavBar from '@/components/nav/Navbar.vue';
 import PropertiesList from '@/components/accomodation/properties/PropertiesList.vue';
 import CreateProperty from '@/components/accomodation/manage/CreateProperty.vue';
 import SalesNavBar from '@/components/nav/SalesNavBar.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Accomodation',

@@ -43,9 +43,9 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import firebase from 'firebase/app';
 import Table from '@/components/generics/new/Table.vue';
 import CreateLicenseKey from '@/components/manage/CreateLicenseKey.vue';
-import firebase from 'firebase/app';
 
 export default {
   name: 'POSClients',

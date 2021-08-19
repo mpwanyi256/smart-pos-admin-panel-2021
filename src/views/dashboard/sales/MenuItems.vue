@@ -86,6 +86,7 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateMenuItem from '@/components/menu/UpdateMenuItem.vue';
 import CreateNewMenuItem from '@/components/menu/CreateNewMenuItem.vue';
@@ -93,7 +94,6 @@ import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import DownloadMenu from '@/components/menu/DownloadMenu.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MenuItems',

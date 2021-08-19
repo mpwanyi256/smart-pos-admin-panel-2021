@@ -73,13 +73,13 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import BaseTable from '@/components/generics/BaseTable.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
 import BillModal from '@/components/sales/modals/Bill.vue';
 import ExcelExportMixin from '@/mixins/excelMixin';
-import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'FindBill',

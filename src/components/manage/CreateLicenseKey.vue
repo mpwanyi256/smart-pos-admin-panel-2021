@@ -53,12 +53,12 @@
     </Basemodal>
 </template>
 <script>
+import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import moment from 'moment';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateLicenseKey',

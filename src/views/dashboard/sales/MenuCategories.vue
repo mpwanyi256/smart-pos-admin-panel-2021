@@ -51,12 +51,12 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import MenuCategoryItem from '@/components/menu/MenuCategoryItem.vue';
 import CreateNewCategoryModal from '@/components/menu/CreateNewCategoryModal.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'MenuCategories',

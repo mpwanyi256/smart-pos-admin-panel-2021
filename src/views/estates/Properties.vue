@@ -56,11 +56,11 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import CreateProperty from '@/components/accomodation/manage/CreateProperty.vue';
 import UpdateProperty from '@/components/accomodation/manage/UpdateProperty.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Properties',

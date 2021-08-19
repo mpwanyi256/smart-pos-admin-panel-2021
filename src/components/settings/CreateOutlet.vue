@@ -28,9 +28,9 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'CreateOutlet',

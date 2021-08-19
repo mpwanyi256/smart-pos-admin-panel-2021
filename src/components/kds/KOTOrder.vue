@@ -52,10 +52,10 @@
     </v-card>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import KotItem from '@/components/kds/kotItem.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'KOTOrder',

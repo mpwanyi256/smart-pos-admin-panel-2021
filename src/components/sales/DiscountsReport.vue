@@ -59,12 +59,12 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import Table from '@/components/generics/new/Table.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import Bill from '@/components/sales/modals/Bill.vue';
 import ExcelExportMixin from '@/mixins/excelMixin';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'DiscountsReport',

@@ -23,6 +23,7 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTableComponent from '@/components/generics/BaseTableComponent.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
@@ -30,7 +31,6 @@ import BaseAlert from '@/components/generics/BaseAlert.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import updateExpenseHeadModal from '@/components/accounting/modals/updateExpenseHeadModal.vue';
 import ErrorHandler from '@/mixins/ErrorHandler';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'ExpenseHeadsModal',

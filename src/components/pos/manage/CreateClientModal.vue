@@ -41,11 +41,11 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import CreateNewClient from '@/components/pos/manage/CreateNewClient.vue';
 import Client from '@/components/pos/manage/Client.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateClientMOdal',

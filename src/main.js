@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Vue from 'vue';
-import fbConf from '@/fbConfig';
 import firebase from 'firebase/app';
+import fbConf from '@/fbConfig';
 import App from './App.vue';
 import './registerServiceWorker';
 import router from './router';

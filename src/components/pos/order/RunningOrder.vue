@@ -58,6 +58,7 @@
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
@@ -65,7 +66,6 @@ import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
 import PageAlert from '@/components/alerts/PageAlert.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ShiftTable from '@/components/pos/order/manage/ShiftTable.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'RunningOrder',

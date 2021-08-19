@@ -209,15 +209,15 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Table from '@/components/generics/new/Table.vue';
 import CreatePayment from '@/components/accomodation/manage/CreatePayment.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 import EmailMixin from '@/mixins/EmailMixin';
 import externalLinkMixin from '@/mixins/externalLinkMixin';
-import moment from 'moment';
 
 export default {
   name: 'ViewBookingModal',

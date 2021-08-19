@@ -78,9 +78,9 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import BaseAlert from '@/components/generics/new/BaseAlert.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CompanySettings',

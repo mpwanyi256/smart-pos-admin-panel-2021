@@ -21,10 +21,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import validators from '@/mixins/validators';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateLandlord',

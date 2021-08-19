@@ -56,11 +56,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 import NavBar from '@/components/nav/Navbar.vue';
 import KOTOrder from '@/components/kds/KOTOrder.vue';
 import LoadingKds from '@/components/kds/LoadingKds.vue';
-import { mapActions, mapGetters } from 'vuex';
-import moment from 'moment';
 
 export default {
   name: 'KDS',

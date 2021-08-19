@@ -43,12 +43,12 @@
     </PageTemplate>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
 import CreateOutlet from '@/components/settings/CreateOutlet.vue';
 import UpdateOutlet from '@/components/settings/UpdateOutlet.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Outlets',

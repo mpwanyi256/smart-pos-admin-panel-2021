@@ -13,10 +13,10 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import validators from '@/mixins/validators';
 import LinearLoader from '@/components/generics/Loading.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateSupplierModal',

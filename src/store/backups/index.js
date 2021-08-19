@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import API from '@/api';
 import firebase from 'firebase/app';
+import API from '@/api';
 
 const PATH = 'backups/';
 

@@ -17,8 +17,8 @@
     </div>
 </template>
 <script>
-import LinearLoader from '@/components/generics/Loading.vue';
 import { mapActions } from 'vuex';
+import LinearLoader from '@/components/generics/Loading.vue';
 
 export default {
   name: 'MenuCategoryItem',

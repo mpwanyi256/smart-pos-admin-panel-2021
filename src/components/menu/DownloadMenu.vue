@@ -12,10 +12,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseLoaderCirclular from '@/components/generics/BaseLoaderCirclular.vue';
 import DownloadCSVMixin from '@/mixins/DownloadCSVMixin';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'DownloadMenu',

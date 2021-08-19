@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import NavBar from '@/components/nav/Navbar.vue';
 import Orders from '@/views/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
@@ -39,7 +40,6 @@ import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
 import WaitersModal from '@/components/pos/order/AddWaiterModel.vue';
-import { mapGetters } from 'vuex';
 import CloudMixin from '@/mixins/CloudMixin';
 
 export default {

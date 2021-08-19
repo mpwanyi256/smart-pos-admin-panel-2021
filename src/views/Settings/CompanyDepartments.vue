@@ -53,12 +53,12 @@
     </PageTemplate>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import SingleFieldUpdateModal from '@/components/generics/new/SingleFieldUpdateModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CompanyDepartments',

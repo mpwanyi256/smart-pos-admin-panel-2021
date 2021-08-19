@@ -49,12 +49,12 @@
     </PageTemplate>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
 import CreateLandlord from '@/components/estates/CreateLandlord.vue';
 import UpdateLandlord from '@/components/estates/UpdateLandlord.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Landloads',

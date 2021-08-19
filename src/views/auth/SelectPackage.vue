@@ -43,9 +43,9 @@
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
 import idb from '@/mixins/idb';
-import moment from 'moment';
 
 export default {
   name: 'SelectPackage',

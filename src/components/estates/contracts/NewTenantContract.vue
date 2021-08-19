@@ -87,10 +87,10 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'NewTenantContract',

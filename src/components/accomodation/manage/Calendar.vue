@@ -143,12 +143,12 @@
 </template>
 <script>
 /* eslint-disable no-plusplus */
+import { mapActions } from 'vuex';
 import ViewBookingModal from '@/components/accomodation/manage/ViewBookingModal.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import CreateNewUnit from '@/components/accomodation/dashboard/CreateNewUnit.vue';
 import SelectRoom from '@/components/accomodation/manage/SelectRoom.vue';
 import BookRoomModal from '@/components/accomodation/manage/BookRoomModal.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Calendar',

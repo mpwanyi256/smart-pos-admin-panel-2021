@@ -9,8 +9,8 @@
     </div>
 </template>
 <script>
-import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
 import { mapGetters } from 'vuex';
+import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
 
 export default {
   name: 'Sales',

@@ -59,13 +59,13 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Table from '@/components/generics/new/Table.vue';
 import CreateNewInvoice from '@/components/inventory/Purchases/CreateNewInvoice.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import InvoiceItemsModal from '@/components/inventory/Purchases/InvoiceItemsModal.vue';
-import { mapActions } from 'vuex';
 // fetch_invoice_items
 
 export default {

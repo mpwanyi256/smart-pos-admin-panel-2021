@@ -22,13 +22,13 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import SalesOverview from '@/components/accounting/dashboard/SalesOverview.vue';
 import AccountingOptions from '@/components/accounting/dashboard/AccountingOptions.vue';
 import Cashbook from '@/components/accounting/generics/Cashbook.vue';
 import ExpenseHeadsModal from '@/components/accounting/modals/ExpenseHeadsModal.vue';
 import CreateExpenseHeadModal from '@/components/accounting/modals/CreateExpenseHeadModal.vue';
 import LedgersModal from '@/components/accounting/modals/LedgersModal.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'AccountsDashboard',

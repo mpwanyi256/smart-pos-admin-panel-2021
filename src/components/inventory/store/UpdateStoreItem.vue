@@ -75,11 +75,11 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'UpdateStoreItem',
@@ -140,8 +140,8 @@ export default {
 
     deleteItem() {
       // eslint-disable-next-line no-restricted-globals
-      const confirmDelete = confirm('Are you sure you want to delete item?');
-      if (!confirmDelete) return;
+      // const confirmDelete = confirm('Are you sure you want to delete item?');
+      // if (!confirmDelete) return;
       this.loading = true;
       const updated = this.updateItem({ delete_store_item: this.item.id });
       this.loading = false;

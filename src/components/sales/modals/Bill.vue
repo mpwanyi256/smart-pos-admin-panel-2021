@@ -122,8 +122,8 @@
     </Basemodal>
 </template>
 <script>
-import Basemodal from '@/components/generics/Basemodal.vue';
 import { mapActions, mapGetters } from 'vuex';
+import Basemodal from '@/components/generics/Basemodal.vue';
 import PrintMixin from '@/mixins/PrintingMixin';
 import PageAlert from '@/components/alerts/PageAlert.vue';
 

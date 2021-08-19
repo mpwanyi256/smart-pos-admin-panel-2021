@@ -59,9 +59,9 @@
   </Basemodal>
 </template>
 <script>
-import Basemodal from '@/components/generics/Basemodal.vue';
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
+import Basemodal from '@/components/generics/Basemodal.vue';
 
 export default {
   name: 'CreateUserModal',

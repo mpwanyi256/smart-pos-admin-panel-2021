@@ -31,9 +31,9 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'InvoiceItemsModal',

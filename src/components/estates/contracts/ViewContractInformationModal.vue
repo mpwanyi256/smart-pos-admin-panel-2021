@@ -70,10 +70,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import Avatar from '@/components/generics/new/Avatar.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'ViewContractInformationModal',

@@ -27,6 +27,7 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseTableComponent from '@/components/generics/BaseTableComponent.vue';
@@ -34,7 +35,6 @@ import CreateLedgerModal from '@/components/accounting/modals/CreateLedgerModal.
 import UpdateLedgerModal from '@/components/accounting/modals/UpdateLedgerModal.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import ErrorHandler from '@/mixins/ErrorHandler';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'LedgersModal',

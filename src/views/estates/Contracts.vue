@@ -74,6 +74,7 @@
     </PageTemplate>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
@@ -81,7 +82,6 @@ import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import AddNewRentalPayment from '@/components/estates/contracts/AddNewRentalPayment.vue';
 import CreateNewContractModal from '@/components/estates/CreateNewContractModal.vue';
 import ViewContractInformationModal from '@/components/estates/contracts/ViewContractInformationModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Contracts',

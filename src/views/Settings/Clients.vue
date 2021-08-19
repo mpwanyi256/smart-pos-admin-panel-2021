@@ -60,12 +60,12 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
 import Avatar from '@/components/generics/new/Avatar.vue';
 import NewClient from '@/components/pos/manage/NewClient.vue';
 import UpdateClientInfo from '@/components/pos/manage/UpdateClientInfo.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Clients',

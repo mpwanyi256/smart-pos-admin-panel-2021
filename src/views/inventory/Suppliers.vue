@@ -62,6 +62,7 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
@@ -69,7 +70,6 @@ import LinearLoader from '@/components/generics/Loading.vue';
 import UpdateSupplierInfo from '@/components/inventory/suppliers/UpdateSupplierInfo.vue';
 import CreateSupplierModal from '@/components/inventory/suppliers/CreateSupplierModal.vue';
 import SupplierItemMapping from '@/components/inventory/suppliers/SupplierItemMapping.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'Suppliers',

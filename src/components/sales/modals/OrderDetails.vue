@@ -34,9 +34,9 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import OrderItems from '@/components/generics/OrderItems.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'OrderDetailsModal',

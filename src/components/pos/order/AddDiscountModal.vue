@@ -46,8 +46,8 @@
     </Basemodal>
 </template>
 <script>
-import Basemodal from '@/components/generics/Basemodal.vue';
 import { mapGetters, mapActions } from 'vuex';
+import Basemodal from '@/components/generics/Basemodal.vue';
 
 export default {
   name: 'AddDiscountModal',

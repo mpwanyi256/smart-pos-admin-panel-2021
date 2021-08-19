@@ -14,9 +14,9 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import NavBar from '@/components/nav/Navbar.vue';
 import SalesNavBar from '@/components/nav/SalesNavBar.vue';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Inventoryhome',
@@ -32,6 +32,8 @@ export default {
         { name: 'Menu Receipes', icon: 'mdi-google-circles', path: 'inv_recipes' },
         { name: 'Suppliers', icon: 'mdi-account-multiple', path: 'inv_suppliers' },
         { name: 'Purchase Invoices', icon: 'mdi-animation', path: 'inv_purchases' },
+        { name: 'Supplier Payments', icon: 'mdi-contactless-payment-circle', path: 'inv_supplier_payments' },
+        { name: 'Supplier Statements', icon: 'mdi-book-open', path: 'inv_supplier_statements' },
       ],
     };
   },
@@ -55,6 +57,7 @@ export default {
 
   ::-webkit-scrollbar{
     width: 5px;
+    height: 5px;
   }
 
   ::-webkit-scrollbar-thumb {

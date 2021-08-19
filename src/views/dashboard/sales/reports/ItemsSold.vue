@@ -77,10 +77,10 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions, mapGetters } from 'vuex';
 import ExcelExportMixin from '@/mixins/excelMixin';
 
 export default {

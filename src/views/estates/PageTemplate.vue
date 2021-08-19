@@ -46,8 +46,9 @@ export default {
         .header_div {
             height: 56px;
             width: 100%;
-            display: grid;
-            grid-template-columns: 70% 30%;
+            // display: grid;
+            // grid-template-columns: 40% 60%;
+            display: inline-flex;
             background-color: $white;
             color: $black;
             border-bottom: 0.3px solid $border-color;
@@ -58,13 +59,18 @@ export default {
                 gap: 15px;
                 padding-left: 15px;
                 width: 100%;
+                text-align: right;
             }
 
             >div:last-child {
                 text-align: right;
-                width: 100%;
             }
         }
+    }
+
+    ::v-deep .v-text-field__details {
+        display: none;
+        height: 0;
     }
 
 </style>

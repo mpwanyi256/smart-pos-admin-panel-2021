@@ -54,12 +54,12 @@
     </PageTemplate>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import PageTemplate from '@/views/estates/PageTemplate.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import Table from '@/components/generics/new/Table.vue';
 import CreateUnit from '@/components/estates/CreateUnit.vue';
 import UpdateUnitModal from '@/components/estates/UpdateUnitModal.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'EstateUnits',

@@ -3,7 +3,7 @@
     <input :type="inputType ? inputType : 'text'"
     :disabled="disabled"
     v-model="input_text"
-    class="search_field"
+    class="search_field number_input"
     :class="flat ? 'flat' : ''"
     :placeholder="placeholder ? placeholder : 'Search'" />
   </div>
@@ -55,8 +55,17 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/styles/constants.scss';
+
+  .number_input {
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none !important;
+  }
 
   .search_field, .search_field:focus {
     height: 40px;
@@ -68,7 +77,6 @@ export default {
     direction: ltr;
     padding-left: 5px;
     padding-right: 5px;
-    // box-shadow: $elevation-default;
     border: 0.5px solid rgba(148, 148, 148, 0.87);
     font-size: 14px;
   }

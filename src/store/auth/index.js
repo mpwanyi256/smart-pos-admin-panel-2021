@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 // import * as firebase from 'firebase'
-import API from '@/api';
 import firebase from 'firebase/app';
+import API from '@/api';
 import router from '../../router';
 
 const PATH = 'auth/';

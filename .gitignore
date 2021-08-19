@@ -22,3 +22,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 # fbConfig.js
+
+#Electron-builder output
+/dist_electron

@@ -37,9 +37,9 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'AccessControls',

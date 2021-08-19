@@ -48,9 +48,9 @@
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Table from '@/components/generics/new/Table.vue';
 import PrinterConfig from '@/components/settings/PrinterConfig.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Departments',

@@ -8,10 +8,10 @@
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import StatsHeader from '@/components/accomodation/stats/StatsHeader.vue';
 import ActiveBookings from '@/components/accomodation/stats/ActiveBookings.vue';
 import BookingOptionsOverview from '@/components/accomodation/stats/BookingOptionsOverview.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'Stats',

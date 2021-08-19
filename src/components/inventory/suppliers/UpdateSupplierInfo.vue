@@ -12,10 +12,10 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import validators from '@/mixins/validators';
 import LinearLoader from '@/components/generics/Loading.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'UpdateSupplierInfo',

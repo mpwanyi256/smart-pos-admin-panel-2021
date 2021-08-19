@@ -34,11 +34,11 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import StoreItemsList from '@/components/inventory/store/StoreItemsList.vue';
 import UpdateStoreItem from '@/components/inventory/store/UpdateStoreItem.vue';
 import CreateStoreItemModal from '@/components/inventory/store/CreateStoreItemModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'InventoryStoreItems',

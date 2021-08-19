@@ -20,10 +20,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'updateExpenseHeadModal',

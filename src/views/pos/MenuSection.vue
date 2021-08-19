@@ -22,13 +22,11 @@
     </div>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Categories from '@/components/pos/menu/Categories.vue';
 import MenuItems from '@/components/pos/menu/MenuItems.vue';
 import ItemQuantity from '@/components/pos/order/ItemOrderQuantity.vue';
 import TimezoneMixin from '@/mixins/TimezoneMixin';
-import {
-  mapActions, mapGetters, mapState,
-} from 'vuex';
 
 export default {
   name: 'MenuSection',

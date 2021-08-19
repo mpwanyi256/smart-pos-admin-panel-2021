@@ -28,10 +28,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'CreateNewMenuItem',

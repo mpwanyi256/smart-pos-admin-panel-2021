@@ -28,8 +28,8 @@
     </div>
 </template>
 <script>
-import Table from '@/components/generics/new/Table.vue';
 import { mapGetters } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
 
 export default {
   name: 'CreditorsList',

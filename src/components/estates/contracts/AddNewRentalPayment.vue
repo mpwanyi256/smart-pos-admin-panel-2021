@@ -60,10 +60,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
-import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'AddNewRentalPayment',

@@ -63,6 +63,7 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import PaymentSettlements from '@/components/Reports/generics/PaymentSettlements.vue';
@@ -72,7 +73,6 @@ import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
 import ControlsMixin from '@/mixins/ControlsMixin';
 import EmailMixin from '@/mixins/EmailMixin';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'SalesReport',

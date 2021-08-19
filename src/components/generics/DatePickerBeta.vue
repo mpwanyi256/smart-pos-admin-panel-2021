@@ -21,6 +21,7 @@
             v-model="date" no-title
             @change="menu1 = false"
             :min="min"
+            :max="max"
           ></v-date-picker>
         </v-menu>
     </div>
@@ -41,6 +42,15 @@ export default {
       required: false,
     },
     min: {
+      type: String,
+      required: false,
+      // eslint-disable-next-line consistent-return
+      validate: (val) => {
+        if (val) return new Date(val);
+        return '';
+      },
+    },
+    max: {
       type: String,
       required: false,
       // eslint-disable-next-line consistent-return

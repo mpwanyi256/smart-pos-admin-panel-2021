@@ -144,11 +144,11 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
+import moment from 'moment';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
-import { mapActions, mapGetters } from 'vuex';
-import moment from 'moment';
 
 /* eslint-disable prefer-destructuring */
 export default {

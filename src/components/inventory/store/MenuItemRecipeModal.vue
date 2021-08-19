@@ -49,12 +49,12 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import Table from '@/components/generics/new/Table.vue';
 import RecipeItemKnockOff from '@/components/inventory/store/RecipeItemKnockOff.vue';
 import AddRecipeItemRow from '@/components/inventory/store/AddRecipeItemRow.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'MenuItemRecipeModal',

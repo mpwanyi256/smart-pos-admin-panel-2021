@@ -46,11 +46,11 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import MenuItem from '@/components/pos/menu/MenuItem.vue';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import CreateClientMOdal from '@/components/pos/manage/CreateClientModal.vue';
 import LoadingKds from '@/components/kds/LoadingKds.vue';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'MenuItems',

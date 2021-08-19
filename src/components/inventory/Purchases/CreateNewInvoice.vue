@@ -57,12 +57,12 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import SupplierChooser from '@/components/inventory/Purchases/newInvoiceSteps/SupplierChooser.vue';
 import InvoiceItemSelector from '@/components/inventory/Purchases/newInvoiceSteps/InvoiceItemSelector.vue';
 import BaseAlert from '@/components/generics/new/BaseAlert.vue';
 import Table from '@/components/generics/new/Table.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'CreateNewInvoice',
