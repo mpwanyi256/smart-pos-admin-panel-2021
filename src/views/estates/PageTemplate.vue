@@ -2,6 +2,7 @@
     <div class="properties">
         <div class="header_div">
             <div>
+                <slot name="title-actions" />
                 <h1>{{ title }}</h1>
             </div>
             <div>

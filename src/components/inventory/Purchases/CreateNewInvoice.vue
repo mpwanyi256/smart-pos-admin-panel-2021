@@ -118,8 +118,8 @@ export default {
     async addInvoiceItem(data) {
       const addItem = await this.updateItem(data);
       this.errorMessage = addItem.message;
-      this.Alerttype = addItem.error ? 'error' : 'success';
-      this.fetchInvoiceItems();
+      if (addItem.error) this.Alerttype = addItem.error ? 'error' : 'success';
+      await this.fetchInvoiceItems();
       if (!addItem.error) this.$refs.SupplierChooser.disableInvoiceAlter();
     },
 

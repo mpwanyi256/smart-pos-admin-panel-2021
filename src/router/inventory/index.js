@@ -62,7 +62,7 @@ export default {
       component: () => import('@/views/inventory/SupplierPayments.vue'),
     },
     {
-      path: 'inv_supplier_payments',
+      path: 'inv_supplier_statements',
       name: 'inv_supplier_statements',
       meta: {
         authrequired: true,
