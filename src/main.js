@@ -41,7 +41,7 @@ new Vue({
   created() {
     const LoggedInUser = localStorage.getItem('smart_user_id');
     if (LoggedInUser) store.dispatch('auth/getUserById');
-    else store.replace({ name: 'login' });
+    else router.replace({ name: 'login' });
   },
   render: (h) => h(App),
 }).$mount('#app');
