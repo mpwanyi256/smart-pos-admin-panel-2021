@@ -1,47 +1,73 @@
 <template>
     <div class="creditors">
         <div class="header">
-            {{ `${runningOrders.length} Running orders` }}
+            <h3>{{ ordersCount }}</h3>
+            <div>
+                <v-text-field dark outlined dense v-model="search" label="Search for a bill" />
+            </div>
         </div>
         <div class="creditors-list">
-            <div class="creditor-item">
-                <div class="name">
-                    Table
-                </div>
-                <div class="name">
-                    Waiter
-                </div>
-                <div class="amount">
-                    Total
-                </div>
-            </div>
-            <div class="creditor-item"
-                v-for="order in runningOrders"
-                :key="order.order_id"
-                @click="$emit('vieworder', order)"
-            >
-                <div class="name">
-                    {{ order.table }}
-                </div>
-                <div class="name">
-                    {{ order.waiter ? order.waiter : '' }}
-                </div>
-                <div class="amount">
-                    {{ order.bill_sum_display }}
-                </div>
-            </div>
+            <Table>
+                <template slot="header">
+                    <tr>
+                        <th>Bill #</th>
+                        <th>Time</th>
+                        <th>Section</th>
+                        <th>Served by</th>
+                        <th>Amount</th>
+                        <th>Discount</th>
+                        <th>Bill</th>
+                        <th>Client</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </template>
+                <template slot="body">
+                    <tr
+                        v-for="order in filteredOrders"
+                        :key="`dash-order-${order.order_id}`"
+                    >
+                        <td>{{ order.bill_no }}</td>
+                        <td>{{ order.time }}</td>
+                        <td>{{ order.table }}</td>
+                        <td>{{ order.waiter ? order.waiter : '' }}</td>
+                        <td>{{ order.bill_sum_display }}</td>
+                        <td>{{ order.discount }}</td>
+                        <td>{{ order.final_amount }}</td>
+                        <td>{{ order.client_name }}</td>
+                        <td>
+                            <v-btn fab small @click="$emit('vieworder', order)">
+                                <v-icon>mdi-information-outline</v-icon>
+                            </v-btn>
+                        </td>
+                    </tr>
+                </template>
+            </Table>
         </div>
     </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
 
 export default {
   name: 'RunningOrders',
+  components: {
+    Table,
+  },
+  data() {
+    return {
+      search: '',
+    };
+  },
   computed: {
     ...mapGetters('sales', ['orders']),
-    runningOrders() {
-      return this.orders.filter((order) => order.status === 0);
+
+    ordersCount() {
+      return this.orders ? `${this.orders.length} ordes` : 'No orders';
+    },
+
+    filteredOrders() {
+      return this.orders.filter((order) => order.bill_no.match(this.search));
     },
   },
 };
@@ -50,7 +76,7 @@ export default {
 @import '../../styles/constants.scss';
 
     .creditors {
-        height: 200px;
+        height: 100%;
         background-color: $white;
         font-family: $font-style;
         font-size: 14px;
@@ -63,11 +89,14 @@ export default {
 
         .header {
             font-weight: 500;
-            padding: 10px;
+            padding: 10px 16px;
             background-color: $dark-grey;
             color: $white;
             text-align: left;
             font-weight: bold;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            justify-content: center;
         }
 
         .creditors-list {

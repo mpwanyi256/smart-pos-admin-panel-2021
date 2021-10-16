@@ -1,10 +1,32 @@
 <template>
     <div class="orders">
-        <div class="day_open" v-show="dayOpen">
-            {{ dayOpen }}
+        <div
+          class="day_open"
+          v-show="dayOpen"
+        >
+          <v-btn text
+            v-if="timeNow"
+            @click="actions = true"
+            class="time_display"
+            :class="daysLeft < 10 ? 'days_warning' : ''"
+          >
+          <v-icon
+            :class="daysLeft < 10 ? 'days_warning' : ''"
+            class="time_display" left>
+            mdi-calendar
+          </v-icon>
+          {{ `${daysLeft} Days ${timeNow}` }}
+          </v-btn>
         </div>
         <div class="order_list">
-            <div class="order_pane">
+            <SectionsPane
+              v-if="companyType == 1"
+              :sections="activeSections"
+              :user="user"
+              :dayOpen="dayOpen"
+            />
+            <div v-else
+              class="order_pane">
                 <div
                   v-for="order in pendingOrders"
                   :key="order.order_id"
@@ -20,23 +42,102 @@
                 </div>
             </div>
         </div>
+        <ManagerActions
+          v-if="actions"
+          @close="actions = false"
+          @action="actionHandler"
+        />
+        <SalesReport
+          v-if="viewSales"
+          @close="viewSales = false"
+          :date="dayOpen"
+        />
+        <SwitchDayModal
+          v-if="switchDay"
+          @close="switchDay = false"
+          @switch="closeDay"
+          :message="errorMessage"
+          :loading="loading"
+        />
+        <LicenseModal
+          v-if="openLicenseModal"
+          @close="openLicenseModal = false"
+        />
+        <SyncDataModal
+          v-if="syncData"
+          @close="syncData = false"
+        />
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import SectionsPane from '@/components/pos/order/SectionsPane.vue';
+import ManagerActions from '@/components/pos/manage/ManagerActions.vue';
+import SalesReport from '@/components/Reports/SalesReport.vue';
+import SwitchDayModal from '@/components/pos/manage/SwitchDayModal.vue';
+import LicenseModal from '@/components/pos/manage/LicenseModal.vue';
+import SyncDataModal from '@/components/cloud/SyncDataModal.vue';
+import TimezoneMixin from '@/mixins/TimezoneMixin';
 
 export default {
   name: 'Orders',
+  mixins: [TimezoneMixin],
+  components: {
+    SectionsPane,
+    ManagerActions,
+    SalesReport,
+    SwitchDayModal,
+    LicenseModal,
+    SyncDataModal,
+  },
 
   data() {
     return {
-      polling: null,
+      sections: [],
+      actions: false,
+      viewSales: false,
+      timeNow: '',
+      switchDay: false,
+      errorMessage: '',
+      loading: true,
+      openLicenseModal: false,
+      persistLicense: false,
+      syncData: false,
     };
   },
 
   computed: {
     ...mapGetters('auth', ['user']),
     ...mapGetters('pos', ['runningOrderId', 'orders']),
+
+    companyId() {
+      return this.user ? this.user.company_id : 0;
+    },
+
+    serverIP() {
+      const IPAddress = localStorage.getItem('smartpos_ipaddress_set');
+      return IPAddress ? `http://${IPAddress}/smartAdmin/` : 'http://localhost:80/smartAdmin/';
+    },
+
+    daysLeft() {
+      return (this.user && this.user.company_info) ? this.user.company_info.days_left : '';
+    },
+
+    userName() {
+      return (this.user && this.user.company_info) ? this.user.user_name : '';
+    },
+
+    userRole() {
+      return (this.user && this.user.company_info) ? this.user.role : 0;
+    },
+
+    activeSections() {
+      return this.sections.filter((Section) => Section.hidden === false);
+    },
+
+    companyType() {
+      return (this.user && this.user.company_info) ? this.user.company_info.business_type : 0;
+    },
 
     pendingOrders() {
       return this.orders.filter((Order) => Order.status === 0);
@@ -51,18 +152,36 @@ export default {
     },
   },
 
-  async mounted() {
+  watch: {
+    daysLeft(val) {
+      if (val && val <= 0) {
+        // notify client
+        this.persistLicense = true;
+        this.openLicenseModal = true;
+      }
+    },
+    async dayOpen() {
+      await this.$eventBus.$emit('fetch-orders');
+    },
+    async user() {
+      if (this.user) {
+        await this.fetchOrders();
+        await this.fetchTables();
+      }
+    },
+  },
+
+  async created() {
+    if (!this.user) return;
     await this.fetchOrders();
-    // const setPolling = async () => {
-    //   if (!this.user) {
-    //     clearInterval(this.polling);
-    //   } else {
-    //     this.fetchOrders();
-    //   }
-    // };
-    // this.polling = setInterval(() => {
-    //   setPolling();
-    // }, 3000);
+    await this.fetchTables();
+    this.loading = false;
+
+    setInterval(() => {
+      const timeKati = new Date().getTime();
+      const extract = new Date(timeKati);
+      this.timeNow = `${extract.getHours()}:${this.padZero(extract.getMinutes())}:${this.padZero(extract.getSeconds())}`;
+    }, 1000);
   },
 
   eventBusCallbacks: {
@@ -71,21 +190,84 @@ export default {
   },
 
   methods: {
-    ...mapActions('pos', ['filterOrders']),
-    ...mapActions('pos', ['setRunningOrder', 'setRunningOrderId']),
+    ...mapActions('pos', ['filterOrders', 'setRunningOrder', 'setRunningOrderId', 'updateOrder']),
+    ...mapActions('auth', ['getUserById']),
+    ...mapActions('reports', ['getReport']),
+    ...mapActions('email', ['sendEmail']),
+
+    closeLicenseModal() {
+      this.openLicenseModal = false;
+    },
+
+    padZero(Val) {
+      return Val > 9 ? Val : `0${Val}`;
+    },
+
+    actionHandler(action) {
+      switch (action) {
+        case 'sales':
+          if ([1, 5].includes(this.userRole)) this.viewSales = true;
+          break;
+        case 'open':
+          this.switchDay = true;
+          break;
+        case 'email':
+          this.sendSalesReport();
+          break;
+        case 'license':
+          this.actions = false;
+          this.openLicenseModal = true;
+          break;
+        case 'cloud':
+          this.syncData = true;
+          break;
+        default:
+          console.log('Invalid action');
+          this.actions = true;
+          return;
+      }
+      this.actions = false;
+    },
+
+    async closeDay(datePicked) {
+      this.loading = true;
+      this.getReport({
+        close_day: this.dayOpen,
+        open_day: datePicked,
+      }).then((response) => {
+        this.errorMessage = response.message;
+        setTimeout(() => {
+          this.switchDay = false;
+          this.errorMessage = '';
+          this.getUserById();
+          this.loading = false;
+        }, 1000);
+      });
+    },
+
+    async fetchTables() {
+      const Sections = await this.updateOrder(
+        {
+          get_setup_sections: this.companyId,
+          day_open: this.dayOpen,
+        },
+      );
+      if (!Sections.error) this.sections = Sections.data;
+    },
 
     async reload() {
       await this.fetchOrders();
       this.$eventBus.$emit('fetch-items');
-      this.$refs[`order-${this.runningOrderId}`][0].click();
     },
 
     async fetchOrders() {
+      await this.fetchTables();
       const orders = await this.filterOrders({
-        bill_no: '',
+        bill_no: 0,
         from: this.dayOpen,
         to: this.dayOpen,
-        client_id: '',
+        client_id: 0,
+        status: 1,
       });
       if (!orders.error) this.setRunning(orders.data.orders);
     },
@@ -113,20 +295,36 @@ export default {
         display: flex;
         flex-direction: column;
 
+        .time_display {
+          color: $accent-color;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .days_warning {
+          color: $red !important;
+        }
+
         .day_open {
-            height: 50px;
-            background-color: $white;
-            color: $black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
+          height: 50px;
+          background-color: $white;
+          color: $accent-color;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          overflow: hidden;
         }
 
         .order_list {
             max-height: calc(100vh - 102px);
             overflow-x: hidden;
             overflow-y: auto;
+            width: 100%;
 
             .order_pane {
                 display: flex;

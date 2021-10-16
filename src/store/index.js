@@ -6,6 +6,16 @@ import accounts from './accounts';
 import menu from './menu';
 import inventory from './inventory';
 import pos from './pos';
+import reports from './reports';
+import settings from './settings';
+import accomodation from './accomodation';
+import mail from './email';
+import print from './print';
+import manage from './manage';
+import kds from './kds';
+import estates from './estates';
+import backups from './backups';
+import pdf from './pdf';
 
 Vue.use(Vuex);
 
@@ -17,5 +27,15 @@ export default new Vuex.Store({
     menu,
     inventory,
     pos,
+    reports,
+    settings,
+    accomodation,
+    mail,
+    print,
+    manage,
+    kds,
+    estates,
+    backups,
+    pdf,
   },
 });

@@ -1,44 +1,140 @@
 <template>
     <div class="actions_pane">
-        <div class="action_item"
-          v-for="(action, i) in actions" :key="i"
+      <v-alert
+        v-if="errorMessage"
+        outlined dense
+        type="info"
+        class="white--text">
+        {{ errorMessage }}
+      </v-alert>
+      <template
+          v-for="(action, i) in actions">
+        <div :key="`action-${i}`" class="action_item"
           @click="listen(action.name)"
+          v-if="isAllowedAction(action.name)"
         >
-            <v-icon class="icon">{{ action.icon }}</v-icon>
-            <p>{{ action.name }}</p>
+          <v-icon class="icon">{{ action.icon }}</v-icon>
+          <p class="name">{{ action.name }}
+          </p>
         </div>
+      </template>
     </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import ControlsMixin from '@/mixins/ControlsMixin';
+import PrintMixin from '@/mixins/PrintingMixin';
 
 export default {
   name: 'Actions',
+  mixins: [ControlsMixin, PrintMixin],
   data() {
     return {
       actions: [
-        { name: 'Confirm', icon: 'mdi-thumb-up' },
-        { name: 'Bill', icon: 'mdi-note' },
-        { name: 'Settle', icon: 'mdi-credit-card' },
-        { name: 'Discount', icon: 'mdi-sale' },
+        { name: 'Confirm', icon: 'mdi-thumb-up', allow: true },
+        { name: 'Bill', icon: 'mdi-note', allow: this.waiterCanPrintBill },
+        { name: 'Settle', icon: 'mdi-credit-card', allow: true },
+        { name: 'Discount', icon: 'mdi-sale', allow: true },
       ],
+      errorMessage: '',
     };
   },
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+    ...mapGetters('auth', ['user']),
+
+    userRole() {
+      return this.user.role;
+    },
+
+    userCanDiscount() {
+      return [1, 2, 5].includes(this.userRole);
+    },
+
+    allowAddWaiter() {
+      return true;
+    },
+
+    company() {
+      return this.user ? this.user.company_info : null;
+    },
+
+    order() {
+      return this.runningOrder;
+    },
+
+    hasWaiter() {
+      return this.order ? !!this.order.waiter : false;
+    },
+
+    companyType() {
+      return this.user.company_info ? this.user.company_info.business_type : 0;
+    },
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
     },
   },
+  watch: {
+    errorMessage(val) {
+      if (!val) return;
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
+    },
+
+    companyType() {
+      this.addWaiterAction();
+    },
+  },
+  created() {
+    this.$nextTick(() => {
+      this.addWaiterAction();
+    });
+  },
   methods: {
     ...mapActions('pos', ['addOrderItem']),
 
+    addWaiterAction() {
+      if (this.companyType === 1) {
+        this.actions.unshift(
+          { name: 'Waiter', icon: 'mdi-account' },
+        );
+      }
+    },
+
+    isAllowedAction(action) {
+      let allowed = false;
+      switch (action) {
+        case 'Bill':
+          allowed = this.userCanPrintBill;
+          break;
+        case 'Waiter':
+          allowed = this.userRole !== 3;
+          break;
+        case 'Settle':
+          allowed = this.allowSettleBill;
+          break;
+        case 'Discount':
+          allowed = this.userCanDiscount;
+          break;
+        default:
+          allowed = true;
+          break;
+      }
+      return allowed;
+    },
+
     listen(action) {
+      if (!this.order) {
+        this.errorMessage = 'Select order';
+        return;
+      }
       this.$eventBus.$emit('fetch-orders');
       switch (action) {
         case 'Confirm':
-          this.confirmOrder();
+          if (this.hasWaiter) this.performKotPrint();
+          else this.$eventBus.$emit('add-waiter');
           break;
         case 'Bill':
           this.$eventBus.$emit('print-bill');
@@ -49,8 +145,11 @@ export default {
         case 'Settle':
           this.$eventBus.$emit('settle-bill');
           break;
+        case 'Waiter':
+          this.$eventBus.$emit('add-waiter');
+          break;
         default:
-          console.log('Invalid action', this.orderId);
+          console.log('Invalid action');
           break;
       }
     },
@@ -67,7 +166,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-@import '@/styles/pos.scss';
+@import '@/styles/constants.scss';
 
     .actions_pane {
         height: calc(100% - 52px);
@@ -81,13 +180,12 @@ export default {
         padding-left: 5px;
 
         > div {
-            height: 80px;
+            height: 60px;
             width: 100%;
             background-color: $white;
             display: flex;
             gap: 10px;
-            flex-direction: column;
-            justify-content: center;
+            padding-left: 5px;
             align-items: center;
             color: $black;
             font-weight: bold;
@@ -96,10 +194,14 @@ export default {
             border: 1px solid $bg_color;
             cursor: pointer;
             border-radius: 5px;
-            box-shadow: $elevation-default;
+            overflow: hidden;
 
             .icon {
-              color: $black;
+              color: $gray-25;
+            }
+
+            .name {
+              margin: 0px;
             }
         }
 

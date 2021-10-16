@@ -12,7 +12,7 @@ export default {
       name: 'inv_dashboard',
       meta: {
         authrequired: true,
-        title: 'Inventory',
+        title: 'Inventory | Dashboard',
       },
       component: () => import('@/views/inventory/Dashboard.vue'),
     },
@@ -21,7 +21,7 @@ export default {
       name: 'inv_storeItems',
       meta: {
         authrequired: true,
-        title: 'Inventory',
+        title: 'Inventory | Store Items',
       },
       component: () => import('@/views/inventory/StoreItems.vue'),
     },
@@ -30,7 +30,7 @@ export default {
       name: 'inv_recipes',
       meta: {
         authrequired: true,
-        title: 'Inventory',
+        title: 'Inventory | Receipes',
       },
       component: () => import('@/views/inventory/Recipes.vue'),
     },
@@ -39,7 +39,7 @@ export default {
       name: 'inv_suppliers',
       meta: {
         authrequired: true,
-        title: 'Suppliers',
+        title: 'Inventory | Suppliers',
       },
       component: () => import('@/views/inventory/Suppliers.vue'),
     },
@@ -48,9 +48,27 @@ export default {
       name: 'inv_purchases',
       meta: {
         authrequired: true,
-        title: 'Purchases',
+        title: 'Inventory | Purchases',
       },
       component: () => import('@/views/inventory/PurchaseInvoices.vue'),
+    },
+    {
+      path: 'inv_supplier_payments',
+      name: 'inv_supplier_payments',
+      meta: {
+        authrequired: true,
+        title: 'Inventory | Payments',
+      },
+      component: () => import('@/views/inventory/SupplierPayments.vue'),
+    },
+    {
+      path: 'inv_supplier_statements',
+      name: 'inv_supplier_statements',
+      meta: {
+        authrequired: true,
+        title: 'Inventory | Statements',
+      },
+      component: () => import('@/views/inventory/SupplierStatements.vue'),
     },
   ],
 };

@@ -9,7 +9,9 @@
             message="Create Item" icon="plus"
           />
         </div>
-        <div><v-text-field dense outlined label="Search" v-model="search" /> </div>
+          <div>
+          <v-text-field dense outlined label="Search" v-model="search" />
+          </div>
       </div>
     </div>
     <div class="items_list">
@@ -32,11 +34,11 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import StoreItemsList from '@/components/inventory/store/StoreItemsList.vue';
 import UpdateStoreItem from '@/components/inventory/store/UpdateStoreItem.vue';
 import CreateStoreItemModal from '@/components/inventory/store/CreateStoreItemModal.vue';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'InventoryStoreItems',
@@ -56,6 +58,11 @@ export default {
   },
   computed: {
     ...mapGetters('auth', ['user']),
+  },
+  watch: {
+    display() {
+      this.reloadItems();
+    },
   },
   methods: {
     ...mapActions('inventory', ['getStoreItems']),

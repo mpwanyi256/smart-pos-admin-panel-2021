@@ -1,18 +1,30 @@
 <template>
-    <Basemodal @close="$emit('close')"
-        :title=" title ? title : 'Are you sure you want to delete item?'" :size="500">
-        <div class="confirm_options">
-            <div class="confirm_no text-center" @click="$emit('close')">
-                <p>NO</p>
+    <Basemodal @close="$emit('close')" :size="500">
+        <div class="alert_section">
+            <h3>
+                {{ title ? title : 'Are you sure you want to delete item?' }}
+            </h3>
+            <div class="reason_section" v-if="requireReason">
+                <BaseTextfield placeholder="Reason" v-model.trim="reason" />
             </div>
-            <div class="confirm_yes text-center" @click="$emit('yes')">
-                <p>YES</p>
+            <div class="confirm_options">
+                <v-btn class="confirm_yes"
+                    block :disabled="disabled"
+                    @click="$emit('yes', reason)">
+                    YES
+                </v-btn>
+                <v-btn class="confirm_no"
+                    block
+                    @click="$emit('close')">
+                    NO
+                </v-btn>
             </div>
         </div>
     </Basemodal>
 </template>
 <script>
 import Basemodal from '@/components/generics/Basemodal.vue';
+import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 
 export default {
   name: 'ConfirmModal',
@@ -21,47 +33,62 @@ export default {
       type: String,
       required: false,
     },
+    requireReason: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   components: {
     Basemodal,
+    BaseTextfield,
+  },
+  data() {
+    return {
+      reason: '',
+    };
+  },
+  computed: {
+    disabled() {
+      return this.requireReason && !this.reason.length;
+    },
   },
 };
 </script>
 <style scoped lang="scss">
 @import '@/styles/constants.scss';
+    .alert_section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
 
-    .confirm_options {
-        display: inline-flex;
-        flex-direction: row;
-        gap: 5px;
-        width: 100%;
-        padding: 5px;
-        justify-items: center;
-        height: inherit;
-        overflow: hidden;
+        .reason_section {
+            height: 50px;
+            display: flex;
+            flex-direction: column;
+            margin: 15px;
+        }
 
-        > div {
-            height: 56px;
+        .confirm_options {
+            display: grid;
+            grid-template-columns: 50% 50%;
             width: 100%;
-            justify-content: center;
-            font-family: $font-style;
-            font-size: 18px;
             justify-items: center;
-            border-radius: 5px;
-            cursor: pointer;
-            color: $white;
+            height: inherit;
+            overflow: hidden;
+            gap: 5px;
+            padding: 15px;
 
-            p {
-                margin-top: 18px;
+            .confirm_yes {
+                background-color: $green !important;
+                color: $white;
             }
-        }
 
-        .confirm_yes {
-            background-color: $green;
-        }
-
-        .confirm_no {
-            background-color: $red;
+            .confirm_no {
+                background-color: $red !important;
+                color: $white;
+            }
         }
     }
 </style>

@@ -23,11 +23,11 @@
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import ErrorHandler from '@/mixins/ErrorHandler';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'UpdateLedgerModal',

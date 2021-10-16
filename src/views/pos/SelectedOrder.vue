@@ -7,8 +7,8 @@
     </div>
 </template>
 <script>
-import RunningOrder from '@/components/pos/order/RunningOrder.vue';
 import { mapGetters } from 'vuex';
+import RunningOrder from '@/components/pos/order/RunningOrder.vue';
 
 export default {
   name: 'SelectedOrder',

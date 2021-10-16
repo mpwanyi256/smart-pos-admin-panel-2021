@@ -5,9 +5,9 @@
         :items-per-page="6"
         class="elevation-0"
     >
-        <template v-slot:item.action="{ item }">
+        <!-- <template v-slot:item.action="{ item }">
             <v-btn small @click="$emit('view', item)">View</v-btn>
-        </template>
+        </template> -->
         <template v-if="showDefault" v-slot:item.bill="{ item }">
             <v-btn class="ml-1" small @click="$emit('bill', item)">Bill</v-btn>
         </template>
@@ -47,7 +47,7 @@ export default {
           text: 'Table', value: 'table', sortable: false, align: 'start',
         },
         {
-          text: 'waiter', value: 'waiter', sortable: false, align: 'start',
+          text: 'Served by', value: 'waiter', sortable: false, align: 'start',
         },
         {
           text: 'Amount', value: 'bill_sum_display', sortable: false, align: 'start',

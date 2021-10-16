@@ -1,6 +1,11 @@
 <template>
     <div class="sales-div">
-      <template>
+      <template v-if="loading">
+        <div class="loading_data">
+          <LoadingSpinner class="large" />
+        </div>
+      </template>
+      <template v-else>
         <div class="section-title ma-2">
             <h3>Settlements</h3>
         </div>
@@ -24,65 +29,37 @@
                     <h1>{{ payment.amount }}</h1>
                     <span>{{ payment.name }}</span>
                     <i class="red--text darken-3" v-if="payment.name == 'OPEN DISH'">
-                      <small>Is included in BAR & Kitchen</small>
+                      <small>Is included in other departments</small>
                     </i>
                 </div>
             </div>
         </div>
-
-        <div class="all-orders">
-            <Orders @view="viewOrderDetails" @bill="viewBill" />
-            <OrderDetailsModal
-              ref="orderdetails"
-              v-if="showOrderDetails && selectedOrder"
-              :order="selectedOrder"
-              @cancel="cancelOrderItem"
-              @close="showOrderDetails = false"
-            />
-            <CancelOrderItemModal
-              v-if="showCancelItemModal && itemToCancel"
-              :orderItem="itemToCancel"
-              @cancelItem="cancelItemOnOrder"
-              @close="showCancelItemModal = false"
-            />
-            <BillModal
-                v-if="showBill"
-                :order="selectedOrder"
-                @close="showBill = false"
-            />
-        </div>
         <div class="running_orders">
           <RunningOrders class="panel-item" @vieworder="viewBill" />
-          <CreditorsList class="panel-item" @vieworder="viewBill" />
+          <!-- <CreditorsList class="panel-item" @vieworder="viewBill" /> -->
         </div>
         <BillModal
-            v-if="showBill"
-            :order="selectedOrder"
-            @close="showBill = false"
+          v-if="showBill"
+          :order="selectedOrder"
+          @close="showBill = false"
         />
       </template>
     </div>
 </template>
 <script>
-import Orders from '@/components/sales/allOrders.vue';
-import OrderDetailsModal from '@/components/sales/modals/OrderDetails.vue';
-import BillModal from '@/components/sales/modals/Bill.vue';
-import CancelOrderItemModal from '@/components/sales/modals/cancelItem.vue';
-import CreditorsList from '@/components/sales/Creditors.vue';
-import RunningOrders from '@/components/sales/RunningOrders.vue';
-// import BaseLoading from '@/components/generics/BaseLoading.vue';
 import { mapActions, mapGetters } from 'vuex';
+import BillModal from '@/components/sales/modals/Bill.vue';
+// import CreditorsList from '@/components/sales/Creditors.vue';
+import RunningOrders from '@/components/sales/RunningOrders.vue';
+import LoadingSpinner from '@/components/generics/LoadingSpinner.vue';
 
 export default {
   name: 'Settlements',
   components: {
-    Orders,
-    OrderDetailsModal,
     BillModal,
-    CancelOrderItemModal,
-    CreditorsList,
+    // CreditorsList,
     RunningOrders,
-    // SalesGraph,
+    LoadingSpinner,
   },
   data() {
     return {
@@ -107,8 +84,15 @@ export default {
       return this.sale.departments_settlement ? this.sale.departments_settlement : [];
     },
   },
+  created() {
+    this.$nextTick(async () => {
+      this.loading = true;
+      await this.getOrders();
+      this.loading = false;
+    });
+  },
   methods: {
-    ...mapActions('sales', ['CancelOrderItem']),
+    ...mapActions('sales', ['CancelOrderItem', 'getOrders']),
 
     async cancelItemOnOrder(data) {
       await this.CancelOrderItem(data);
@@ -136,35 +120,43 @@ export default {
 @import '../../styles/constants.scss';
 
 .sales-div {
-    display: grid;
+    display: flex;
     flex-direction: column;
     gap: 5px;
-    width: inherit;
-    height: inherit;
-    // overflow-y: auto;
+    width: 100%;
+    height: calc(100vh - 52px);;
+    overflow-y: auto;
+
+    .loading_data {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     .running_orders {
-      max-height: 200px;
-      display: grid;
-      grid-template-columns: 50% 50%;
+      height: calc(100vh - 272px);
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      padding: 10px 0 10px 0;
+      overflow-y: auto;
+      padding-right: 15px;
     }
 
     .sales-overview {
-        max-width: 100%;
-        height: auto;
-        display: inline-flex;
+        width: 100%;
+        display: flex;
         flex-direction: row;
         gap: 1px;
-        overflow-y: auto;
+        overflow-y: hidden;
         margin: 5px;
 
         .settled-orders, .running-orders {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            height: 100%;
+            min-height: 56px;
             width: 100%;
             color: black;
             border-right: 0.5px solid #e2e2e2;
@@ -227,13 +219,12 @@ export default {
     }
 
     .all-orders {
-        width: inherit;
+        width: 100%;
         background-color: white;
         min-height: 200px;
-        max-height: 100%;
         overflow-y: auto;
         margin: 5px;
-        overflow: hidden;
+        overflow-y: auto;
     }
 
     .pending {

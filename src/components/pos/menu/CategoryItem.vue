@@ -18,12 +18,14 @@ export default {
 @import '@/styles/pos.scss';
 
 .category_item {
-  height: 50px;
+  height: 55px;
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid $bg_color;
+  border-bottom: 0.5px solid $bg_color;
+  border-right: 0.5px solid $bg_color;
   overflow: hidden;
   cursor: pointer;
   color: $black-text;

@@ -3,7 +3,7 @@ export default {
   name: 'pos',
   meta: {
     authrequired: true,
-    title: 'Smart POS - Home',
+    title: 'Smart POS',
     admin_access: false,
   },
   component: () => import('@/views/pos/home.vue'),

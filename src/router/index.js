@@ -8,6 +8,11 @@ import setup from './setup';
 import inventory from './inventory';
 import Accounting from './accounting';
 import POS from './pos';
+import Accomodation from './accomodation';
+import Settings from './settings';
+import Manage from './manage';
+import KDS from './kds';
+import Estates from './estates';
 
 Vue.use(VueRouter);
 Vue.use(Meta, {
@@ -22,6 +27,12 @@ const routes = [
   setup,
   inventory,
   POS,
+  Accomodation,
+  Settings,
+  Manage,
+  KDS,
+  Estates,
+  { path: '*', component: () => import('@/views/auth/login.vue') },
 ];
 
 const router = new VueRouter({
@@ -45,13 +56,16 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const LoggedInUser = localStorage.getItem('smart_user_id');
+  if (to.authrequired && !LoggedInUser) {
+    router.push({ name: 'login' });
+  }
   if (to.matched.length) {
     document.title = to.meta.title;
     next();
   } else {
-    next();
-    // eslint-disable-next-line no-restricted-globals
-    // location.href = to.fullPath;
+    document.title = 'Page not found';
+    router.push({ name: 'login' });
   }
 });
 

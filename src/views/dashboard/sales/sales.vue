@@ -1,7 +1,7 @@
 <template>
     <div class="sales">
         <div>
-            <SalesPanel class="dashboard_pane" v-if="user" :user="user" />
+          <SalesPanel class="dashboard_pane" v-if="user" :user="user" />
         </div>
         <div class="sales_pane">
           <router-view></router-view>
@@ -9,8 +9,8 @@
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import SalesPanel from '@/views/dashboard/sales/SalesPanel.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Sales',
@@ -29,29 +29,38 @@ export default {
       return this.$route.name;
     },
   },
-  methods: {
-    ...mapActions('sales', ['getOrders']),
-  },
   mounted() {
-    window.scroll(0, 0);
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getOrders();
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
+    window.scrollTo({
+      left: 0,
+      top: 0,
+      behavior: 'smooth',
+    });
   },
 };
 </script>
 <style scoped lang="scss">
+@import '@/styles/pos.scss';
+
     .sales {
       height: calc(100vh - 52px);
       width: 100%;
       display: grid;
+
+      ::-webkit-scrollbar{
+          width: 5px;
+          height: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: $scrollbar-color;
+            border-radius: 1ex;
+            -webkit-border-radius: 1ex;
+        }
+
+        ::-webkit-scrollbar-corner {
+            background: #000;
+        }
+
       @media only screen and (min-width: 1600px) {
         grid-template-columns: 20% 80%;
       }
@@ -62,7 +71,7 @@ export default {
 
       .sales_pane {
         height: 100%;
-        overflow-y: auto;
+        overflow-y: hidden;
       }
 
       .dashboard_pane {

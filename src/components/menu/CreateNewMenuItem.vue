@@ -3,6 +3,7 @@
       <div class="update_area">
         <v-form ref="addItemForm" @submit.prevent="createNewMenuItem">
           <v-text-field dense outlined label="Item name" v-model="name" />
+          <v-text-field dense outlined label="Item price" v-model="price" />
           <v-select
             dense outlined
             label="Category"
@@ -13,13 +14,12 @@
           />
           <v-select
             dense outlined
-            label="Section"
+            label="Department"
             :items="filteredDepartments"
             item-text="name"
             item-value="id"
             v-model="display"
           />
-          <v-text-field dense outlined label="Item price" v-model="price" />
           <v-btn block type="submit" dense>Add item</v-btn>
         </v-form>
       </div>
@@ -28,10 +28,10 @@
     </Basemodal>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'CreateNewMenuItem',
@@ -96,13 +96,13 @@ export default {
         this.alert = 'error';
         this.errorMessage = create.message;
         this.error = true;
+        this.loading = false;
         return;
       }
       this.$refs.addItemForm.reset();
       this.alert = 'success';
       this.errorMessage = create.message;
       this.error = true;
-      console.log('new itemm', create);
       this.loading = false;
     },
   },

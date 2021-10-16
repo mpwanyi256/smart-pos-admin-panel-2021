@@ -1,80 +1,44 @@
 <template>
-  <Basemodal :title="menuItem.name" :size="900" @close="$emit('close')">
-    <template slot="action">
-      <v-btn v-if="hasRecipe" small class="mr-3 add_receipe_button"
-        @click="addRecipe = !addRecipe">
-        <v-icon left>
-          {{ !addRecipe ? 'mdi-plus' : 'mdi-eye' }}
-        </v-icon>
-        {{ !addRecipe ? 'Add item to recipe' : 'Show all items' }}
-      </v-btn>
-    </template>
+  <Basemodal :title="menuItem.name +' receipe'" :size="1000" @close="$emit('close')">
     <div class="recipe_view">
-      <Table v-if="hasRecipe && !loading">
-        <template slot="header">
-          <tr>
-            <th>
-              <div class="store_item_name">
-                Store Item name
-              </div>
-            </th>
-            <th>Avg price</th>
-            <th>pack size</th>
-            <th>Measure</th>
-            <th>Knock off</th>
-            <th>Delete</th>
-          </tr>
-        </template>
-        <template slot="body">
-          <tr v-if="addRecipe">
-            <td colspan="6">
-              <AddRecipeItemRow
-                @close="addRecipe = false"
-                @refresh="fetchRecipe"
-                :menuItem="menuItem" />
-            </td>
-          </tr>
-          <template v-else>
-          <tr v-for="storeItem in recipe" :key="storeItem.id">
-            <td>{{ storeItem.name }}</td>
-            <td>{{ storeItem.average_price_display == '0' ?
-              'No purchases made' : storeItem.average_price_display }}
-            </td>
-            <td>{{ storeItem.pack_size }}</td>
-            <td>{{ storeItem.measure }}</td>
-            <td>
-              <RecipeItemKnockOff
-                @refresh="fetchRecipe"
-                :recipeItem="storeItem"
-              />
-            </td>
-            <td>
-              <v-btn @click="deleteRecipe(storeItem.id)" small icon class="red--text darken--3">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </td>
-          </tr>
+      <div class="receipe_section">
+        <Table>
+          <template slot="header">
+            <tr>
+              <th>
+                Purchase Item
+              </th>
+              <th>Measure</th>
+              <th>Knock off</th>
+              <th>Delete</th>
+            </tr>
           </template>
-        </template>
-      </Table>
-      <div v-else class="empty_state">
-        <template v-if="addRecipe">
-          <AddRecipeItemRow
-            @close="addRecipe = false"
-            @refresh="fetchRecipe"
-            v-if="addRecipe"
-            :menuItem="menuItem" />
-        </template>
-        <template v-else>
-          <h1> No recipe set</h1>
-          <v-btn small class="add_receipe_button"
-            @click="addRecipe = !addRecipe">
-            <v-icon>
-              {{ !addRecipe ? 'mdi-plus' : 'mdi-close' }}
-            </v-icon>
-            {{ !addRecipe ? 'Add items to recipe' : 'Show all items' }}
-          </v-btn>
-        </template>
+          <template slot="body">
+            <tr v-for="storeItem in recipe" :key="storeItem.id">
+              <td>{{ storeItem.name }}</td>
+              <td>{{ storeItem.measure }}</td>
+              <td>
+                <RecipeItemKnockOff
+                  @refresh="fetchRecipe"
+                  :recipeItem="storeItem"
+                />
+              </td>
+              <td>
+                <v-btn @click="deleteRecipe(storeItem.id)" small icon class="red--text darken--3">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+        </Table>
+      </div>
+      <div class="add_item_section">
+        <AddRecipeItemRow
+          @close="addRecipe = false"
+          @refresh="fetchRecipe"
+          :menuItem="menuItem"
+          :recipe="recipe"
+          />
       </div>
     </div>
     <ConfirmModal
@@ -85,20 +49,18 @@
   </Basemodal>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
-// import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 import Table from '@/components/generics/new/Table.vue';
 import RecipeItemKnockOff from '@/components/inventory/store/RecipeItemKnockOff.vue';
 import AddRecipeItemRow from '@/components/inventory/store/AddRecipeItemRow.vue';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'MenuItemRecipeModal',
   components: {
     Basemodal,
     Table,
-    // BaseTooltip,
     RecipeItemKnockOff,
     AddRecipeItemRow,
     ConfirmModal,
@@ -156,7 +118,14 @@ export default {
 
   .recipe_view {
     height: 450px;
-    overflow: auto;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 50% 50%;
+
+    >div {
+      max-height: 450px;
+      overflow: auto;
+    }
 
     .empty_state {
       width: 100%;

@@ -3,10 +3,14 @@
         <div class="header_nav">
             <h3 class="mt-2">Items sold</h3>
             <v-spacer></v-spacer>
-            <v-btn text :to="{ name: 'overview' }">
-                <v-icon left>mdi-arrow-left</v-icon>
-                Home
-            </v-btn>
+            <v-btn
+              v-if="itemsSoldFetch.length > 0"
+              small
+              @click="exportToExcel"
+              class="mt-2 ml-2 mb-2 green--text darken-4">
+              <v-icon left color="green darken-4">mdi-file-excel</v-icon>
+              {{ `Export ${itemsSoldFetch.length} items to csv` }}
+          </v-btn>
         </div>
         <div class="search_filter">
             <div class="bill_no">
@@ -41,21 +45,50 @@
         </div>
         <div class="orders_table">
           <LinearLoader v-if="loading" />
-          <BaseTableComponent :headers="tableHeaders" :data="itemsSoldFetch" />
+          <Table>
+            <template slot="header">
+              <tr>
+                <th>Item name</th>
+                <th>Unit Price</th>
+                <th>Quantity sold</th>
+                <th>Amount</th>
+                <th>CASH</th>
+                <th>VISA</th>
+                <th>Mo. Money</th>
+                <th>NC</th>
+                <th>CANCELLED</th>
+              </tr>
+            </template>
+            <template slot="body">
+              <tr v-for="item in itemsSoldFetch" :key="`item-sold-${item.item_id}`">
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.item_price }}</td>
+                <td>{{ item.quantity_sold }}</td>
+                <td>{{ item.amount_sold }}</td>
+                <td>{{ item.cash }}</td>
+                <td>{{ item.visa }}</td>
+                <td>{{ item.mobile }}</td>
+                <td>{{ item.nc }}</td>
+                <td>{{ item.cancelled }}</td>
+              </tr>
+            </template>
+          </Table>
         </div>
     </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import BaseTableComponent from '@/components/generics/BaseTableComponent.vue';
-import { mapActions, mapGetters } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
+import ExcelExportMixin from '@/mixins/excelMixin';
 
 export default {
+  mixins: [ExcelExportMixin],
   components: {
     DatePickerBeta,
     LinearLoader,
-    BaseTableComponent,
+    Table,
   },
   data() {
     return {
@@ -68,32 +101,6 @@ export default {
       dateFrom: '',
       dateTo: '',
       itemsSoldFetch: [],
-      tableHeaders: [
-        {
-          text: 'MENU ITEM', value: 'item_name', sortable: true, align: 'start',
-        },
-        {
-          text: 'QUANTITY', value: 'quantity_sold', sortable: false, align: 'start',
-        },
-        {
-          text: 'AMOUNT', value: 'amount_sold', sortable: false, align: 'start',
-        },
-        {
-          text: 'CASH', value: 'cash', sortable: false, align: 'start',
-        },
-        {
-          text: 'VISA', value: 'visa', sortable: false, align: 'start',
-        },
-        {
-          text: 'Mo. Money', value: 'mobile', sortable: false, align: 'start',
-        },
-        {
-          text: 'NC', value: 'nc', sortable: false, align: 'start',
-        },
-        {
-          text: 'CANCELLED', value: 'cancelled', sortable: false, align: 'start',
-        },
-      ],
     };
   },
   computed: {
@@ -102,8 +109,25 @@ export default {
       return this.menuItems.filter((Item) => Item.display === this.departmentSelected);
     },
   },
+  watch: {
+    async departmentSelected(val) {
+      if (val !== 0) await this.fetchSales();
+    },
+  },
   methods: {
     ...mapActions('sales', ['getMenuItems', 'getDepartments', 'fetchItemsSold']),
+
+    exportToExcel() {
+      // const dataCleaned = this.discounts.map((Order) => (
+      //   {
+      //     bill: Order.bill_no,
+      //     date: Order.date,
+      //     amount: Order.amount_display,
+      //     discounted_by: Order.discounted_by,
+      //     reason: Order.reason,
+      //   }));
+      this.exportDataToExcel(this.itemsSoldFetch, 'items_sold_smart_pos');
+    },
 
     async fetchSales() {
       if (this.loading) return;
@@ -112,14 +136,16 @@ export default {
         menu_item: this.menuItemSelected,
         date_from: this.dateFrom,
         date_to: this.dateTo,
+        company_id: localStorage.getItem('smart_company_id'),
       };
       const ItemsSold = await this.fetchItemsSold(filters);
       if (!ItemsSold.error) {
         this.itemsSoldFetch = ItemsSold.data.map((Sale) => ({
-          item_name: Sale.item_name.toUpperCase(),
-          amount_sold: Sale.amount_sold,
           item_id: Sale.item_id,
+          item_name: Sale.item_name.toUpperCase(),
+          item_price: Sale.item_price,
           quantity_sold: Sale.quantity_sold,
+          amount_sold: Sale.amount_sold,
           cancelled: Sale.settlement[0].amount,
           cash: Sale.settlement[1].amount,
           cheque: Sale.settlement[2].amount,
@@ -127,7 +153,7 @@ export default {
           eft: Sale.settlement[4].amount,
           mobile: Sale.settlement[5].amount,
           nc: Sale.settlement[6].amount,
-          split: Sale.settlement[8].amount,
+          // split: Sale.settlement[8].amount,
           visa: Sale.settlement[9].amount,
         }));
       }
@@ -157,9 +183,9 @@ export default {
       this.dateTo = dateSelected;
     },
   },
-  mounted() {
-    this.fetchMenuDepartments();
-    this.fetchMenuItems();
+  async mounted() {
+    await this.fetchMenuDepartments();
+    await this.fetchMenuItems();
   },
 };
 </script>
@@ -178,7 +204,6 @@ export default {
             padding: 5px;
             border-bottom: 0.5px solid $border-color;
             display: inline-flex;
-            // justify-content: center;
         }
 
         .search_filter {
@@ -203,6 +228,11 @@ export default {
                     height: 30px;
                 }
             }
+        }
+
+        .orders_table {
+          height: calc(100vh - 156px);
+          overflow: auto;
         }
     }
 </style>

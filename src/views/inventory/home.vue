@@ -14,9 +14,9 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import NavBar from '@/components/nav/Navbar.vue';
 import SalesNavBar from '@/components/nav/SalesNavBar.vue';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'Inventoryhome',
@@ -27,11 +27,13 @@ export default {
   data() {
     return {
       links: [
-        { name: 'Dashboard', icon: 'mdi-home', path: 'inv_dashboard' },
-        { name: 'Store items', icon: 'mdi-store', path: 'inv_storeItems' },
+        { name: 'Inventory', icon: 'mdi-home', path: 'inv_dashboard' },
+        { name: 'Purchase Items', icon: 'mdi-cart', path: 'inv_storeItems' },
         { name: 'Menu Receipes', icon: 'mdi-google-circles', path: 'inv_recipes' },
         { name: 'Suppliers', icon: 'mdi-account-multiple', path: 'inv_suppliers' },
         { name: 'Purchase Invoices', icon: 'mdi-animation', path: 'inv_purchases' },
+        { name: 'Supplier Payments', icon: 'mdi-contactless-payment-circle', path: 'inv_supplier_payments' },
+        { name: 'Supplier Statements', icon: 'mdi-book-open', path: 'inv_supplier_statements' },
       ],
     };
   },
@@ -54,15 +56,14 @@ export default {
   font-family: $font-style !important;
 
   ::-webkit-scrollbar{
-    width: 8px;
+    width: 5px;
+    height: 5px;
   }
 
   ::-webkit-scrollbar-thumb {
       background: #696969;
       border-radius: 1ex;
       -webkit-border-radius: 1ex;
-      -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
   }
 
   ::-webkit-scrollbar-corner {
@@ -75,6 +76,11 @@ export default {
     bottom: 0;
     height: calc(100vh - 52px);
     display: grid;
+
+    @media only screen and (max-width: 1200px) {
+      grid-template-columns: 20% 80%;
+    }
+
     @media only screen and (min-width: 1600px) {
       grid-template-columns: 20% 80%;
     }

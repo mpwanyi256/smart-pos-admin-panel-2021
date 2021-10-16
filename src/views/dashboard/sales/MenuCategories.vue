@@ -15,11 +15,32 @@
     <LinearLoader v-if="loading" />
     <div class="categories_listing">
       <div class="menu_items_display_section">
-        <MenuCategoryItem v-for="(item, i) in filteredCategories" :key="i"
-            :category-item="item"
-            @changeStatus="updateCategoryStatus"
-            @update="updateItem"
-        />
+        <Table>
+          <template slot="header">
+            <tr>
+              <th>#</th>
+              <th>Category name</th>
+              <th class="text-right">On Menu</th>
+            </tr>
+          </template>
+          <template slot="body">
+            <tr v-for="(category, i) in filteredCategories" :key="`category${category.id}`">
+              <td>{{ i+1 }}</td>
+              <td>
+                <MenuCategoryItem
+                  :category-item="category"
+                />
+              </td>
+              <td>
+                <v-btn small dark @click="updateCategoryStatus(category)"
+                  class="toggle_hide_button float-right"
+                  :color="category.status == 1 ? 'red darken-3' : 'green darken-3'">
+                  {{ category.status == 1 ? 'No' : 'Yes' }}
+                </v-btn>
+              </td>
+            </tr>
+          </template>
+        </Table>
       </div>
     </div>
     <CreateNewCategoryModal
@@ -30,11 +51,12 @@
   </div>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import MenuCategoryItem from '@/components/menu/MenuCategoryItem.vue';
 import CreateNewCategoryModal from '@/components/menu/CreateNewCategoryModal.vue';
-import { mapActions, mapGetters } from 'vuex';
+import Table from '@/components/generics/new/Table.vue';
 
 export default {
   name: 'MenuCategories',
@@ -43,6 +65,7 @@ export default {
     LinearLoader,
     MenuCategoryItem,
     CreateNewCategoryModal,
+    Table,
   },
   data() {
     return {

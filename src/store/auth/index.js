@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 // import * as firebase from 'firebase'
+import firebase from 'firebase/app';
 import API from '@/api';
 import router from '../../router';
 
@@ -11,16 +13,49 @@ export default {
     user: {},
     loading: false,
     error: { status: false, message: '' },
+    reviewLink: 'https://g.page/prodev-group-kampala/review?nr',
     routes: [
-      { icon: 'mdi-cart', name: 'Pos', path: 'pos' },
-      { icon: 'mdi-sale', name: 'Sales', path: 'overview' },
+      {
+        icon: 'mdi-cart', name: 'Pos', path: 'pos', allowedUsers: [1, 2, 3, 5, 6], packages: [1, 2, 3],
+      },
+      {
+        icon: 'mdi-sale', name: 'Sales', path: 'overview', allowedUsers: [1, 5, 6], packages: [1, 2, 3],
+      },
       // { icon: 'mdi-webhook', name: 'Cashbook Accounting', path: 'accountingDashboard' },
-      { icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard' },
+      {
+        icon: 'mdi-shopping', name: 'Inventory', path: 'inv_dashboard', allowedUsers: [1, 5, 6, 8], packages: [2, 3],
+      },
       // { icon: 'mdi-graph', name: 'Reports', path: 'reports' },
-      { icon: 'mdi-cog', name: 'Settings', path: 'settings' },
+      {
+        icon: 'mdi-bed', name: 'Accomodation', path: 'accomodation_statistics', allowedUsers: [1, 5, 6, 9], packages: [3],
+      },
+      {
+        icon: 'mdi-bed', name: 'RealEstates', path: 'tenants', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [4],
+      },
+      {
+        icon: 'mdi-monitor', name: 'kds', path: 'kds', allowedUsers: [1, 2, 3, 4, 5, 6, 7, 8], packages: [1, 2, 3],
+      },
+      {
+        icon: 'mdi-cog', name: 'Settings', path: 'access_controls', allowedUsers: [5], packages: [1, 2, 3],
+      },
     ],
+    license: null,
+    company: null,
+    packages: [],
   },
   mutations: {
+    setLoading(state, payload) {
+      state.loading = payload;
+    },
+    setPackages(state, data) {
+      state.packages = data;
+    },
+    setCompany(state, info) {
+      state.company = info;
+    },
+    setLicense(state, payload) {
+      state.license = payload;
+    },
     setCompanyDay(state, dayOpen) {
       state.user.company_info.day_open = dayOpen.day;
       localStorage.setItem('smart_company_day_open', dayOpen.day);
@@ -49,6 +84,87 @@ export default {
     },
   },
   actions: {
+    async post({ commit }, payload) {
+      const frm = new FormData();
+      const params = Object.keys(payload);
+      params.forEach((par) => {
+        frm.append(par, payload[par]);
+      });
+      return API.smart(PATH, frm);
+    },
+    async addCompanyFirebase({ commit }, companyInfo) {
+      const Companies = firebase.firestore().collection('Companies');
+      const compExists = await Companies.where('Email', '==', companyInfo.Email).get().catch(() => null);
+      if (compExists && !compExists.empty) {
+        return { error: true, message: 'Sorry, there is a company with the same email in your firebase client list' };
+      }
+      const newCompany = await Companies.add(companyInfo)
+        .then((doc) => ({ error: false, id: doc.id }))
+        .catch((e) => ({ error: true, id: e.message }));
+      return newCompany;
+    },
+    async getPackages({ commit }) {
+      const Packages = firebase.firestore().collection('Packages');
+      const Pkgs = await Packages.orderBy('name', 'asc').get().catch(() => []);
+      const posPackages = [];
+
+      if (!Pkgs.empty) {
+        Pkgs.forEach((doc) => {
+          posPackages.push({ ...doc.data(), id: doc.id });
+        });
+      }
+      commit('setPackages', posPackages);
+    },
+    async getFirebaseInfo({ commit }) {
+      const email = localStorage.getItem('smart_company_email');
+      const Companies = firebase.firestore().collection('Companies');
+      const companyInfo = await Companies
+        .where('Email', '==', email)
+        .get();
+
+      if (!companyInfo.empty) {
+        companyInfo.forEach((doc) => {
+          commit('setCompany', { ...doc.data(), id: doc.id });
+        });
+      }
+    },
+    async updateFbLicense({ commit }, license) {
+      commit('setLoading', true);
+      const DB = firebase.firestore().collection('licenses');
+      await DB
+        .doc(license.id).update({ status: 1, end_date: license.end_date })
+        .then(() => {
+          commit('setLicense', null);
+          router.replace({ name: 'pos' });
+        })
+        .catch(() => {
+          console.error('Error updating doc');
+        });
+      commit('setLoading', false);
+    },
+    async getActiveLicense({ commit }, companyEmail) {
+      commit('setLoading', true);
+      const LICENSES = firebase.firestore().collection('licenses');
+      const activeLicense = await LICENSES
+        .where('company', '==', companyEmail)
+        .where('status', '==', 0)
+        .limit(1)
+        .get()
+        .catch((e) => {
+          console.log('Firebase error', e.message);
+        });
+
+      const setMutation = (data) => {
+        commit('setLicense', data);
+      };
+
+      if (!activeLicense.empty) {
+        activeLicense.forEach((doc) => {
+          setMutation({ ...doc.data(), id: doc.id });
+        });
+      }
+      commit('setLoading', false);
+    },
     setLoading({ commit }, payload) {
       commit('toggleLoading', payload);
     },
@@ -75,12 +191,26 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
+        localStorage.setItem('smart_outlet_id', userInfo.outlet_id);
         commit('setUser', userInfo);
 
-        if (userInfo.role === 5) {
-          router.push({ name: 'overview' });
-        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
+        const DAYSLEFT = userInfo.company_info.days_left;
+        const PACKAGE = userInfo.package;
+
+        if (DAYSLEFT <= 0) {
+          dispatch('setError', 'Sorry, your license expired');
+          dispatch();
+          router.replace({ name: 'login' });
+          commit('toggleLoading', false);
+          return;
+        }
+
+        if ([1, 2, 3].includes(PACKAGE)) {
           router.push({ name: 'pos' });
+          dispatch('settings/fetch', { get_access_controls: 'all' }, { root: true });
+        } else if (PACKAGE === 4) {
+          router.push({ name: 'tenants' });
         } else {
           dispatch('setError', 'Sorry, you have no access to this section');
           dispatch('performLogout');
@@ -109,15 +239,33 @@ export default {
         localStorage.setItem('smart_user_role', userInfo.role);
         localStorage.setItem('smart_company_id', userInfo.company_info.company_id);
         localStorage.setItem('smart_company_day_open', userInfo.company_info.day_open);
+        localStorage.setItem('smart_company_email', userInfo.company_info.company_email);
+        localStorage.setItem('smart_outlet_id', userInfo.outlet_id);
         commit('setUser', userInfo);
 
-        if (userInfo.role === 5) {
-          if (payload && payload.match('login')) router.push({ name: 'overview' });
-        } else if (userInfo.role === 1 || userInfo.role === 2 || userInfo.role === 3) {
-          router.push({ name: 'pos' });
-        } else {
-          dispatch('setError', 'Sorry, you have no access to this section');
-          dispatch('performLogout');
+        const DAYSLEFT = userInfo.company_info.days_left;
+        const PACKAGE = userInfo.package;
+
+        if (DAYSLEFT <= 0) {
+          dispatch('setError', 'Sorry, your license expired');
+          router.replace({ name: 'login' });
+          commit('toggleLoading', false);
+          return;
+        }
+
+        const CurrentPath = window.location.pathname;
+        if (CurrentPath === '/') {
+          if (payload === 'new account') {
+            router.push({ name: 'company_settings' });
+          } else if ([1, 2, 3].includes(PACKAGE)) {
+            router.push({ name: 'pos' });
+            dispatch('settings/fetch', { get_access_controls: 'all' }, { root: true });
+          } else if (PACKAGE === 4) {
+            router.push({ name: 'tenants' });
+          } else {
+            dispatch('setError', 'Sorry, you have no access to this section');
+            dispatch('performLogout');
+          }
         }
       }
       commit('toggleLoading', false);
@@ -137,11 +285,24 @@ export default {
       const companyDay = await API.smart(PATH, params);
       commit('setCompanyDay', { day: companyDay.data, display: companyDay.day_display });
     },
+    async performLicenseExtension({ commit }, payload) {
+      commit('toggleLoading', true);
+      const frm = new FormData();
+      frm.append('extend_license', payload.extend_license);
+      frm.append('duration', payload.duration);
+      frm.append('company_id', payload.company_id);
+      commit('toggleLoading', false);
+      return API.smart(PATH, frm);
+    },
   },
   getters: {
     error: (state) => state.error,
     loading: (state) => state.loading,
     user: (state) => state.user,
     routes: (state) => state.routes,
+    license: (state) => state.license,
+    reviewLink: (state) => state.reviewLink,
+    fbCompany: (state) => state.company,
+    packages: (state) => state.packages,
   },
 };

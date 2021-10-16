@@ -2,7 +2,9 @@
     <div class="runnning_order">
       <PageAlert v-if="errorMessage" :message="errorMessage" @close="errorMessage= ''" />
         <div class="order_header" v-if="order">
-            <h2>Order {{ order.bill_no }}</h2>
+            <h2>
+              <span v-if="companyType == 1">{{ order.table }}</span>
+              #{{ order.bill_no }}</h2>
             <div class="date_and_time">
                 <p>
                     {{ order.date }}
@@ -10,6 +12,22 @@
                         <v-icon small class="clock_icon">mdi-clock</v-icon>
                     </span>
                     {{ order.time }}
+                    <span v-if="order.waiter">
+                      <v-icon small class="clock_icon">mdi-account</v-icon>
+                      {{ order.waiter ? order.waiter.split(' ')[0] : '' }}
+                    </span>
+                    <span v-if="clientName">
+                      {{ clientName }}
+                    </span>
+                    <span v-if="companyType == 1">
+                      <BaseTooltip
+                        :small="true"
+                        @button="shift = true"
+                        color="black"
+                        message="Shift table"
+                        icon="arrow-expand"
+                      />
+                    </span>
                 </p>
             </div>
         </div>
@@ -17,10 +35,10 @@
         <div class="items_list">
             <div class="items">
                 <OrderItem
-                    v-for="item in orderItems"
-                    :key="item.id"
-                    :item="item"
-                    @viewItems="viewPendingItems"
+                  v-for="item in orderItems"
+                  :key="item.id"
+                  :item="item"
+                  @viewItems="viewPendingItems"
                 />
             </div>
         </div>
@@ -32,22 +50,29 @@
               :item="orderItemSelected"
             />
         </div>
+        <ShiftTable
+          v-if="shift"
+          @close="shift = false"
+          @shift="shiftOrder"
+        />
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import OrderItem from '@/components/pos/order/OrderItem.vue';
 import OrderListHeader from '@/components/pos/order/OrderListHeader.vue';
 import OrderTotalCacular from '@/components/pos/order/OrderTotalCacular.vue';
 import OrderItemsList from '@/components/pos/order/OrderItemsList.vue';
 import PageAlert from '@/components/alerts/PageAlert.vue';
-import { mapGetters, mapActions } from 'vuex';
+import BaseTooltip from '@/components/generics/BaseTooltip.vue';
+import ShiftTable from '@/components/pos/order/manage/ShiftTable.vue';
 
 export default {
   name: 'RunningOrder',
   props: {
     order: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   components: {
@@ -56,6 +81,8 @@ export default {
     OrderTotalCacular,
     OrderItemsList,
     PageAlert,
+    BaseTooltip,
+    ShiftTable,
   },
   data() {
     return {
@@ -63,10 +90,25 @@ export default {
       showItems: false,
       orderItemSelected: null,
       errorMessage: '',
+      shift: false,
     };
   },
   computed: {
     ...mapGetters('pos', ['runningOrder', 'runningOrderId', 'orders']),
+    ...mapGetters('auth', ['user']),
+
+    itemsCount() {
+      return this.orderItems.length;
+    },
+
+    clientName() {
+      const name = this.order.client_info.firstname;
+      return name || '';
+    },
+
+    companyType() {
+      return this.user ? this.user.company_info.business_type : 0;
+    },
 
     orderId() {
       return this.runningOrder ? this.runningOrder.order_id : null;
@@ -78,9 +120,14 @@ export default {
   },
 
   watch: {
-    orderId(val) {
-      this.$eventBus.$emit('reload-order', val);
-      this.fetchOrderItems();
+    async orderId(val) {
+      await this.$eventBus.$emit('reload-order', val);
+      await this.fetchOrderItems();
+    },
+    itemsCount() {
+      this.$nextTick(async () => {
+        await this.reloadOrderDisplay();
+      });
     },
 
     errorMessage(val) {
@@ -104,19 +151,49 @@ export default {
 
   methods: {
     ...mapActions('sales', ['getOrderItems']),
+    ...mapActions('pos', ['updateOrder', 'filterOrders', 'setRunningOrder']),
+
+    reloadOrderDisplay() {
+      if (!this.order) return;
+      try {
+        this.filterOrders({
+          bill_no: this.order.order_id,
+          from: '',
+          to: '',
+          client_id: '',
+        }).then((orders) => {
+          const OrderFetched = orders.data.orders;
+          if (!OrderFetched.length) return;
+          this.setRunningOrder(OrderFetched[0]);
+        });
+      } catch (e) {
+        console.log('Error in reloadOrderDisplay', e);
+      }
+    },
+
+    async shiftOrder(tableId) {
+      const filter = {
+        shift_order_to_table: tableId,
+        order_id: this.order.order_id,
+      };
+      const updated = await this.updateOrder(filter);
+      if (!updated.error) this.$eventBus.$emit('reload-order');
+      this.shift = false;
+    },
 
     showErrorAlert(msg) {
       this.errorMessage = msg;
+      this.$eventBus.$emit('show-snackbar', msg);
     },
 
     settleBill() {
       if (!this.isPending) this.$eventBus.$emit('open-settlement-modal');
-      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
+      else this.$eventBus.$emit('show-snackbar', 'Please confirm order.');
     },
 
     checkOrderStatus() {
       if (!this.isPending) this.$eventBus.$emit('view-bill');
-      else this.$eventBus.$emit('trigger-error', 'Please confirm order.');
+      else this.$eventBus.$emit('show-snackbar', 'Please confirm order.');
     },
 
     viewPendingItems(orderItem) {
@@ -144,7 +221,7 @@ export default {
         color: $black;
 
         .order_header {
-            height: 56px;
+            height: 96px;
             background-color: $header;
             display: flex;
             flex-direction: column;
@@ -173,7 +250,7 @@ export default {
             height: 400px;
             display: flex;
             flex-direction: column;
-            background-color: $header;
+            background-color: #d8dfe2; // $header;
         }
     }
 </style>

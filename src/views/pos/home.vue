@@ -6,7 +6,6 @@
             <MenuSection />
             <SelectedOrder />
             <Actions
-              @bill="showOrderBill"
               @discount="showDiscount = true"
             />
         </div>
@@ -21,11 +20,17 @@
       />
       <OrderSettlementModal
         v-if="openSettementModal"
-        @close="openSettementModal = false"
+        @close="closeSettlementModal"
+      />
+      <WaitersModal
+        v-if="showWaiters"
+        :order="runningOrder"
+        @close="showWaiters = false"
       />
     </div>
 </template>
 <script>
+import { mapGetters } from 'vuex';
 import NavBar from '@/components/nav/Navbar.vue';
 import Orders from '@/views/pos/Orders.vue';
 import MenuSection from '@/views/pos/MenuSection.vue';
@@ -34,10 +39,12 @@ import BillModal from '@/components/sales/modals/Bill.vue';
 import SelectedOrder from '@/views/pos/SelectedOrder.vue';
 import AddDiscountModal from '@/components/pos/order/AddDiscountModal.vue';
 import OrderSettlementModal from '@/components/pos/order/OrderSettlementModal.vue';
-import { mapActions, mapGetters } from 'vuex';
+import WaitersModal from '@/components/pos/order/AddWaiterModel.vue';
+import CloudMixin from '@/mixins/CloudMixin';
 
 export default {
   name: 'SmartSalesHome',
+  mixins: [CloudMixin],
   components: {
     NavBar,
     Orders,
@@ -47,10 +54,7 @@ export default {
     BillModal,
     AddDiscountModal,
     OrderSettlementModal,
-  },
-  computed: {
-    ...mapGetters('auth', ['user']),
-    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+    WaitersModal,
   },
   data() {
     return {
@@ -58,32 +62,37 @@ export default {
       showBill: false,
       showDiscount: false,
       openSettementModal: false,
+      showWaiters: false,
     };
   },
-  created() {
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getDayOpen(this.user.company_id);
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
+  computed: {
+    ...mapGetters('auth', ['user']),
+    ...mapGetters('pos', ['runningOrder', 'runningOrderId']),
+
+    daysLeft() {
+      return this.user ? this.user.company_info.days_left : '';
+    },
   },
   eventBusCallbacks: {
     'view-bill': 'viewBill',
     'open-settlement-modal': 'settleBill',
+    'add-waiter': 'addWaiter',
   },
   methods: {
-    ...mapActions('auth', ['getDayOpen']),
+    addWaiter() {
+      if (this.runningOrder) this.showWaiters = true;
+    },
 
     viewBill() {
       this.showBill = true;
     },
 
-    settleBill() {
+    async closeSettlementModal() {
+      this.openSettementModal = false;
+      await this.syncData();
+    },
+
+    async settleBill() {
       this.openSettementModal = true;
     },
   },
@@ -99,17 +108,16 @@ export default {
         background-color: $bg_color;
         font-size: 14px;
         font-family: $font-style;
-        scrollbar-width: thin;
+
         ::-webkit-scrollbar{
-          width: 8px;
+          width: 5px;
+          height: 5px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: $scrollbar-color;
             border-radius: 1ex;
             -webkit-border-radius: 1ex;
-            -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
         }
 
         ::-webkit-scrollbar-corner {

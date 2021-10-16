@@ -1,12 +1,12 @@
 <template>
     <Basemodal
         :title="`Settle order`"
-        :size="600" @close="$emit('close')">
+        :size="800" @close="$emit('close')">
         <div class="settle">
             <v-tabs class="tab-head" v-model="tab" color="basil" grow>
             <v-tab class="tab-item"
                 v-for="(item, index) in options"
-                :key="item"
+                :key="`settlement-option${index}`"
                 :class="isActiveTab(index) ? 'active' : ''"
             >
                 {{ item.name }}
@@ -14,37 +14,122 @@
             </v-tabs>
             <v-tabs-items v-model="tab">
                 <v-tab-item>
-                    <DirectSettlement :order="runningOrder" />
+                    <DirectSettlement
+                      :paymentSettlements="directSettlementOptions"
+                      :user="user"
+                      @pay="savePayment"
+                      :order="runningOrder"
+                    />
+                </v-tab-item>
+                <v-tab-item>
+                    <SplitSettlement
+                      :paymentSettlements="directSettlementOptions"
+                      :user="user"
+                      :order="runningOrder"
+                      @pay="savePayment"
+                    />
+                </v-tab-item>
+                <v-tab-item>
+                  <CompanySettlement
+                    :clients="clients"
+                    :user="user"
+                    :order="runningOrder"
+                    @pay="savePayment"
+                  />
+                </v-tab-item>
+                <v-tab-item>
+                  <OtherSettlementTypes
+                      :paymentSettlements="otherSettlementOptions"
+                      :user="user"
+                      :order="runningOrder"
+                      @pay="savePayment"
+                  />
                 </v-tab-item>
             </v-tabs-items>
         </div>
     </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import DirectSettlement from '@/components/pos/order/DirectSettlement.vue';
-import { mapGetters } from 'vuex';
+import SplitSettlement from '@/components/pos/order/SplitSettlement.vue';
+import OtherSettlementTypes from '@/components/pos/order/payments/OtherSettlementTypes.vue';
+import CompanySettlement from '@/components/pos/order/payments/CompanySettlement.vue';
 
 export default {
   name: 'OrderSettlementModal',
   components: {
     Basemodal,
     DirectSettlement,
+    SplitSettlement,
+    OtherSettlementTypes,
+    CompanySettlement,
   },
   data() {
     return {
       options: [
         { name: 'Direct' },
         { name: 'Split' },
+        { name: 'Company' },
         { name: 'Other' },
       ],
       tab: 0,
+      allowedOptions: [
+        1, 2, 10,
+      ],
+      otherSettlements: [
+        3, 6, 9, 11, 12,
+      ],
+      clients: [],
+      errorMessage: '',
     };
   },
   computed: {
     ...mapGetters('pos', ['runningOrder']),
+    ...mapState('pos', ['paymentSettlements']),
+    ...mapGetters('auth', ['user']),
+
+    directSettlementOptions() {
+      return this.paymentSettlements.filter((Option) => this.isAllowed(Option.id));
+    },
+
+    otherSettlementOptions() {
+      return this.paymentSettlements.filter((Option) => this.isOtherPaymentType(Option.id));
+    },
+  },
+  async created() {
+    await this.fetchsetpaymentSettlements();
+    await this.fetchClients();
   },
   methods: {
+    ...mapActions('sales', ['getClients']),
+    ...mapActions('pos', ['fetchsetpaymentSettlements', 'updateOrder', 'setRunningOrderId', 'setRunningOrder']),
+
+    async fetchClients() {
+      const posClients = await this.getClients('all');
+      if (!posClients.error) this.clients = posClients.data;
+    },
+
+    async savePayment(settlement) {
+      const settleOrder = await this.updateOrder(settlement);
+      if (!settleOrder.error) {
+        this.setRunningOrderId(null);
+        this.setRunningOrder(null);
+        this.$emit('close');
+      } else {
+        this.errorMessage = settleOrder.error_message;
+      }
+    },
+
+    isOtherPaymentType(SettlementId) {
+      return this.otherSettlements.findIndex((Option) => Option === SettlementId) >= 0;
+    },
+
+    isAllowed(SettlementId) {
+      return this.allowedOptions.findIndex((Option) => Option === SettlementId) >= 0;
+    },
+
     isActiveTab(tabIndex) {
       return tabIndex === this.tab;
     },
@@ -55,7 +140,7 @@ export default {
 @import '@/styles/constants.scss';
 
     .settle {
-        height: 350px;
+        height: 400px;
         background-color: $white;
 
         .tab-head {

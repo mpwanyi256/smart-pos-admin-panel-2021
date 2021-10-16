@@ -1,6 +1,18 @@
 <template>
-    <div class="order_item">
-        <p>{{ orderItem.name }}</p>
+    <div
+      class="order_item"
+      :class="isPending ? 'pending' : ''"
+    >
+        <div class="item_name_display">
+          <p>
+            <span><strong>({{ orderItem.quantity }})</strong></span>
+            {{ `${orderItem.name.toUpperCase()}` }}
+            <br>
+              <span class="item_amount">
+                {{ orderItem.amount }}
+              </span>
+          </p>
+        </div>
         <div class="update_options">
             <div class="input_field">
                 <template v-if="addNote && isPending">
@@ -9,30 +21,98 @@
                     <v-btn small @click="saveNote">Save</v-btn>
                 </template>
                 <template v-else>
-                    <p @click="addNote = !addNote" class="notes">{{ orderItem.notes }}</p>
+                    <small
+                      v-if="orderItem.notes"
+                      @click="addNote = !addNote"
+                      class="notes"
+                      :class="isPending ? 'pending' : ''"
+                    >
+                      <span>
+                        Notes:
+                      </span>
+                      {{ orderItem.notes }}
+                    </small>
                 </template>
+                <!-- <div class="add_ons">
+                  <v-chip class="addon"
+                    :class="isPending ? 'white' : ''"
+                    :close="isPending"
+                    @click:close="dropAddon"
+                  >
+                    Addon item name
+                  </v-chip>
+                </div> -->
             </div>
             <div class="options">
-                <BaseTooltip @button="deleteItem" message="Delete item" icon="delete" />
-                <BaseTooltip message="Discount item" icon="sale" />
-                <BaseTooltip v-if="isPending" @button="addNote = !addNote"
-                message="Add notes" icon="note" />
+              <template v-if="isPending">
+                <BaseTooltip
+                  v-if="
+                    companyType == 2
+                    || managerCanDeleteItem
+                    || waiterCanDeleteItem
+                    || cashierCanDeleteItem
+                  "
+                  @button="$emit('delete', orderItem.id)"
+                  message="Delete item"
+                  icon="delete"
+                />
+                <BaseTooltip
+                  @button="addNote = !addNote"
+                  message="Add notes"
+                  icon="note"
+                />
+                <!-- TO DO :: implement addons -->
+                <!-- <BaseTooltip
+                  @button="cancelOrderItem = true"
+                  message="Select addon"
+                  icon="plus"
+                /> -->
+              </template>
+              <template v-else>
+                <BaseTooltip
+                  v-if="companyType == 2 || managerCanCancelItem
+                  || cashierCanCancelItem || waiterCanCancelItem"
+                  @button="cancelOrderItem = true"
+                  color="blue"
+                  message="Cancel item"
+                  icon="delete"
+                />
+                <BaseTooltip
+                  v-if="companyType == 1 && (managerCanShiftItem || cashierCanShiftItem)"
+                  @button="shiftItem = true"
+                  color="blue"
+                  message="Shift item"
+                  icon="arrow-expand"
+                />
+                <!-- TO DO :: Check if user is alllowed to perform this action -->
+              </template>
             </div>
             <ConfirmModal
-              v-if="confirmAction"
-              @close="confirmAction = false"
-              @yes="$emit('delete', orderItem.id)"
+              v-if="cancelOrderItem"
+              :requireReason="true"
+              title="Please enter cancellation reason"
+              @close="cancelOrderItem = false"
+              @yes="cancelOrder"
+            />
+            <ShiftOrderItem
+              v-if="shiftItem"
+              @close="shiftItem = false"
+              @shift="shiftOrderItemHandler"
             />
         </div>
     </div>
 </template>
 <script>
+import { mapActions } from 'vuex';
 import BaseTooltip from '@/components/generics/BaseTooltip.vue';
 import ConfirmModal from '@/components/generics/ConfirmModal.vue';
-import { mapActions } from 'vuex';
+import ShiftOrderItem from '@/components/pos/order/manage/ShiftOrderItem.vue';
+import TimezoneMixin from '@/mixins/TimezoneMixin';
+import ControlsMixin from '@/mixins/ControlsMixin';
 
 export default {
   name: 'OrderItemPreview',
+  mixins: [TimezoneMixin, ControlsMixin],
   props: {
     orderItem: {
       type: Object,
@@ -42,12 +122,15 @@ export default {
   components: {
     BaseTooltip,
     ConfirmModal,
+    ShiftOrderItem,
   },
   data() {
     return {
       addNote: false,
       itemNotes: '',
       confirmAction: false,
+      cancelOrderItem: false,
+      shiftItem: false,
     };
   },
   computed: {
@@ -55,11 +138,59 @@ export default {
       return this.orderItem.status === '0';
     },
   },
+  created() {
+    this.itemNotes = this.orderItem.notes;
+  },
   methods: {
-    ...mapActions('pos', ['updateRunningOrder']),
+    ...mapActions('pos', ['updateRunningOrder', 'updateOrder']),
 
-    async deleteItem() {
-      this.confirmAction = true;
+    dropAddon() {
+      console.log('Drop add on');
+    },
+
+    async shiftOrderItemHandler(table) {
+      const tableOrder = {
+        create_new_order: this.user.company_id,
+        user_id: this.user.id,
+        date: this.dayOpen,
+        time: this.time,
+        table_id: table.id,
+      };
+      const shiftInfo = {
+        table_order_id: table.order.id,
+        shift_order_item_id: this.orderItem.id,
+        notes: `Item shifted from ${table.name.toUpperCase()} by ${this.user.user_name}`,
+      };
+
+      const tableHadOrder = table.order.id;
+      if (tableHadOrder) {
+        await this.shiftItemToTable(shiftInfo);
+      } else {
+        const createNewOrder = await this.updateOrder(tableOrder);
+        if (!createNewOrder.error) {
+          const newShiftInfo = {
+            table_order_id: createNewOrder.order_id,
+            shift_order_item_id: this.orderItem.id,
+            notes: `Item shifted from ${table.name.toUpperCase()} by ${this.user.user_name}`,
+          };
+          await this.shiftItemToTable(newShiftInfo);
+        }
+      }
+      this.shiftItem = false;
+    },
+
+    async shiftItemToTable(filters) {
+      const shiftItem = await this.updateOrder(filters);
+      if (!shiftItem.error) this.$eventBus.$emit('reload-order');
+    },
+
+    cancelOrder(reason) {
+      const cancel = {
+        ...this.orderItem,
+        reason,
+      };
+      this.$emit('cancel', cancel);
+      this.cancelOrderItem = false;
     },
 
     saveNote() {
@@ -71,26 +202,64 @@ export default {
       this.addNote = false;
     },
   },
-
-  created() {
-    this.itemNotes = this.orderItem.notes;
-  },
 };
 </script>
 <style scoped lang="scss">
 @import '@/styles/constants.scss';
 
+    .pending {
+      background-color: $header !important;
+    }
+
+    .add_ons {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .addon {
+        width: auto;
+      }
+    }
+
     .order_item {
-        min-height: 100px;
+        min-height: 130px;
         background-color: $white;
         border: 1px solid $border-color;
         border-radius: 5px;
         box-shadow: $elevation-low;
         padding: 10px;
+        display: flex;
+        flex-direction: column;
 
-        p {
-            color: $black;
-            font-size: 16px;
+        ::-webkit-scrollbar{
+          width: 5px;
+          height: 5px;
+        }
+
+        .item_name_display {
+          display: flex;
+          width: 100%;
+          justify-content: left;
+          color: $black;
+
+          p {
+              color: $black;
+              font-size: 16px;
+              width: 100%;
+
+              span {
+                font-weight: bold;
+                color: $black;
+              }
+              .item_amount {
+                color: $accent-color;
+                font-weight: bold;
+                text-align: right;
+              }
+          }
         }
 
         .update_options {
@@ -104,7 +273,12 @@ export default {
                 align-items: center;
 
                 .notes {
-                    color: $red-hover;
+                    color: $black;
+                    background-color: $border-color;
+                    padding: 0px 5px 0px 5px;
+                    border-radius: 5px;
+                    text-transform: uppercase;
+                    cursor: pointer;
                 }
 
                 .search_field {

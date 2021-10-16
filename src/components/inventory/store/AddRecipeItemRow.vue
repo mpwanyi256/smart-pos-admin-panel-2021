@@ -1,54 +1,55 @@
 <template>
   <div class="new_recipe_item_entry">
-    <div>
-      <div class="select_store_item">
-        <div class="store_item_select">
-          <h3>Select store item</h3>
-          <BaseTextfield
-            v-model="store_items_filter"
-            class="input_field"
-            placeholder="Find a store item"
-          />
-          <div class="menu_items_filter">
-            <div class="store_column">
-              <div
-                v-for="i in filteredItems"
-                :key="i.id"
-                @click="selected_store_item = i"
-                :class="isSelected(i.id) ? 'is_selected' : ''">
-                {{ i.name }}
-              </div>
-            </div>
+    <div class="select_store_item">
+      <div class="store_item_select">
+        <div class="menu_items_filter">
+          <div class="store_column">
+            <p v-if="message" class="red--text text-center ma-2">{{ message }}</p>
+            <Table>
+              <template slot="header">
+                <tr>
+                  <th colspan="2">
+                    <BaseTextfield
+                      v-model="store_items_filter"
+                      class="input_field"
+                      placeholder="Search ..."
+                    />
+                  </th>
+                </tr>
+              </template>
+              <template slot="body">
+                <tr
+                  v-for="i in filteredItems"
+                  :key="i.id">
+                  <td>{{ i.name }}</td>
+                  <td>
+                    <v-btn
+                      :disabled="exists(i)" small text @click="addKnockOff(i)">
+                      <v-icon left>mdi-plus</v-icon>Add
+                    </v-btn>
+                  </td>
+                </tr>
+              </template>
+            </Table>
           </div>
         </div>
       </div>
     </div>
     <div>
-      <div v-if="selected_store_item" class="knock_off_entry">
-        <h3>{{ selected_store_item.name }}</h3>
-        <div class="frm_entry">
-          <div>
-            <div>Enter Knock off in {{ selected_store_item.unit_measure.toLowerCase() }}</div>
-            <div>
-              <BaseTextfield v-model="knockOffQuantity"
-              :placeholder="`Enter ${selected_store_item.unit_measure}`" />
-              <v-btn
-                :disabled="!knockOffQuantity"
-                block small class="mt-4 btn_add_knockoff"
-                @click="addRecipeItem">
-                Add item
-              </v-btn>
-              <p>{{ message }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
+    <KnockOffAmountEntryModal
+      v-if="selected_store_item && openKnockoffModal"
+      :selected_store_item="selected_store_item"
+      @close="openKnockoffModal = false"
+      @add="addRecipeItem"
+    />
   </div>
 </template>
 <script>
-import BaseTextfield from '@/components/generics/BaseTextfield.vue';
 import { mapGetters, mapActions } from 'vuex';
+import BaseTextfield from '@/components/generics/BaseTextfield.vue';
+import Table from '@/components/generics/new/Table.vue';
+import KnockOffAmountEntryModal from '@/components/inventory/store/KnockOffAmountEntryModal.vue';
 
 export default {
   name: 'AddRecipeItemRow',
@@ -57,9 +58,15 @@ export default {
       type: Object,
       required: true,
     },
+    recipe: {
+      type: Array,
+      required: true,
+    },
   },
   components: {
     BaseTextfield,
+    Table,
+    KnockOffAmountEntryModal,
   },
   data() {
     return {
@@ -67,6 +74,7 @@ export default {
       selected_store_item: null,
       knockOffQuantity: '',
       message: '',
+      openKnockoffModal: false,
     };
   },
   computed: {
@@ -79,15 +87,26 @@ export default {
   },
   methods: {
     ...mapActions('inventory', ['getStoreItems', 'updateItem']),
+
+    exists(item) {
+      return this.recipe.findIndex((Item) => Item.store_item_id === item.id) >= 0;
+    },
+
     isSelected(id) {
       return this.selected_store_item ? this.selected_store_item.id === id : false;
     },
 
-    async addRecipeItem() {
+    addKnockOff(i) {
+      this.selected_store_item = i;
+      this.openKnockoffModal = true;
+    },
+
+    async addRecipeItem(quantity) {
+      this.openKnockoffModal = false;
       const recipe = {
         store_item_id: this.selected_store_item.id,
         menu_item: this.menuItem.id,
-        knock_off: this.knockOffQuantity,
+        knock_off: quantity,
         added_by: this.user.id,
         add_recipe_item: this.selected_store_item.id,
         company_id: this.user.company_id,
@@ -97,6 +116,7 @@ export default {
       this.message = recipeAdd.message;
       setTimeout(() => {
         this.message = '';
+        this.selected_store_item = null;
       }, 2000);
     },
   },
@@ -109,60 +129,47 @@ export default {
 @import '@/styles/constants.scss';
 
 .new_recipe_item_entry {
-  width: inherit;
+  width: 100%;
   background-color: $white !important;
-  height: 300px;
+  height: 450px;
   font-family: $font-style;
-  display: grid;
-  grid-template-columns: 40% 60%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 
   h3 {
     margin: 5px;
   }
 
-  div {
-    .select_store_item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      border: 1px solid $border-color;
-      border-radius: 5px;
-      box-shadow: $elevation-low;
+  .select_store_item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border: 1px solid $border-color;
+    border-radius: 5px;
+    box-shadow: $elevation-low;
 
-        .input_field {
-          margin: 5px;
-          color: $grey;
-        }
+      .input_field {
+        margin: 5px;
+        color: $grey;
+      }
 
-        .menu_items_filter {
-          height: calc(300px - 60px);
-          overflow-y: auto;
-          overflow-x: hidden;
-          display: flex;
-          flex-direction: column;
+      .menu_items_filter {
+        height: 450px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
 
-          .store_column {
-            >div {
-              display: flex;
-              align-items: center;
-              padding-left: 5px;
-              padding-right: 5px;
-              cursor: pointer;
-              height: 50px;
-              font-size: 16px;
-            }
+        .store_column {
 
-            >div:hover {
-              background-color: $light-grey;
-            }
-
-            .is_selected, .is_selected:hover {
-              background-color: $grey !important;
-              color: $white !important;
-            }
+          .is_selected, .is_selected:hover {
+            background-color: $border-color !important;
+            color: $black !important;
+            font-weight: bold;
           }
         }
+      }
     }
 
     .knock_off_entry {
@@ -174,7 +181,7 @@ export default {
       .frm_entry >div {
         display: grid;
         grid-template-columns: 40% 60%;
-        height: calc(300px - 35px);
+
         >div {
           .btn_add_knockoff {
             background-color: $blue !important;
@@ -183,6 +190,5 @@ export default {
         }
       }
     }
-  }
 }
 </style>

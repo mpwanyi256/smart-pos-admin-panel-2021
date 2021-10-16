@@ -10,37 +10,12 @@
 </template>
 <script>
 import NavBar from '@/components/nav/Navbar.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'home',
   components: {
     NavBar,
   },
-  data() {
-    return {
-      dayOpenPoll: null,
-    };
-  },
-  computed: {
-    ...mapGetters('auth', ['user']),
-  },
-  created() {
-    const setPolling = () => {
-      if (!this.user) {
-        clearInterval(this.polling);
-      } else {
-        this.getDayOpen(11);
-      }
-    };
-    this.polling = setInterval(() => {
-      setPolling();
-    }, 3000);
-  },
-  methods: {
-    ...mapActions('auth', ['getDayOpen']),
-  },
-
 };
 </script>
 <style scoped lang="scss">
@@ -54,17 +29,17 @@ export default {
   display: inline-flex;
   flex-direction: column;
   font-family: $font-style !important;
+  overflow-y: hidden;
 
   ::-webkit-scrollbar{
-    width: 8px;
+    width: 5px;
+    height: 5px;
   }
 
   ::-webkit-scrollbar-thumb {
       background: #696969;
       border-radius: 1ex;
       -webkit-border-radius: 1ex;
-      -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
   }
 
   ::-webkit-scrollbar-corner {
@@ -76,6 +51,7 @@ export default {
     top: 0;
     bottom: 0;
     height: calc(100vh - 52px);
+    overflow: hidden;
   }
 }
 </style>

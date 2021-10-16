@@ -13,8 +13,16 @@ export default {
     runningOrder: null,
     runningOrderId: null,
     loadedOrders: [],
+    paymentSettlements: [],
+    selectedTableId: null,
   },
   mutations: {
+    setWorkingTable(state, tableId) {
+      state.selectedTableId = tableId;
+    },
+    setpaymentSettlements(state, payload) {
+      state.paymentSettlements = payload;
+    },
     setOrders(state, payload) {
       state.loadedOrders = payload;
     },
@@ -37,9 +45,15 @@ export default {
     toggleLoading(state, payload) {
       state.loading = payload;
     },
+    loading(state, payload) {
+      state.loading = payload;
+    },
   },
   actions: {
 
+    setWorkingTable({ commit }, payload) {
+      commit('setWorkingTable', payload);
+    },
     setRunningOrderId({ commit }, payload) {
       commit('setRunningId', payload);
     },
@@ -55,6 +69,8 @@ export default {
       filters.append('user_id', payload.user_id);
       filters.append('date', payload.date);
       filters.append('time', payload.time);
+      filters.append('table_id', payload.table_id);
+      filters.append('outlet_id', payload.outlet_id);
       commit('toggleLoading', false);
       return API.smart(PATH, filters);
     },
@@ -67,6 +83,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_menu_items', payload.category_id);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       filters.append('item_name', payload.item_name);
       const menuItems = await API.smart(PATH, filters);
       if (!menuItems.error) commit('setMenuItems', menuItems.data);
@@ -79,6 +96,7 @@ export default {
       commit('toggleLoading', true);
       const filters = new FormData();
       filters.append('get_departments', payload);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const departments = await API.smart(PATH, filters);
       if (!departments.error) {
         commit('setDepartments', [{ id: 0, name: 'ALL' }, ...departments.data]);
@@ -100,8 +118,9 @@ export default {
     async getMenuCategories({ commit }) {
       const filters = new FormData();
       filters.append('get_menu_categories', true);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
       const categories = await API.smart(PATH, filters);
-      if (!categories.error) commit('setCategories', [{ id: 0, name: 'ALL', status: 0 }, ...categories.data]);
+      if (!categories.error) commit('setCategories', [{ id: 0, name: 'ALL', status: '0' }, ...categories.data]);
     },
 
     async updateMenuItemCategory({ commit }, payload) {
@@ -192,7 +211,9 @@ export default {
       filters.append('find_bill', payload.bill_no);
       filters.append('from', payload.from);
       filters.append('to', payload.to);
+      filters.append('status', payload.status || 0);
       filters.append('client_id', payload.client_id);
+      filters.append('company_id', localStorage.getItem('smart_company_id'));
 
       const Orders = await API.smart(SALES, filters);
       if (!Orders.error) commit('setOrders', Orders.data.orders);
@@ -200,6 +221,25 @@ export default {
       return Orders;
     },
 
+    async fetchsetpaymentSettlements({ commit }) {
+      commit('toggleLoading', true);
+      const filters = new FormData();
+      filters.append('fetch_payment_settlements', true);
+      const settlements = await API.smart(PATH, filters);
+      if (!settlements.error) commit('setpaymentSettlements', settlements.data);
+      commit('toggleLoading', false);
+    },
+
+    updateOrder({ commit }, payload) {
+      commit('loading', true);
+      const params = new FormData();
+      const updateKeys = Object.keys(payload);
+      updateKeys.forEach((key) => {
+        params.append(key, payload[`${key}`]);
+      });
+      commit('loading', false);
+      return API.smart(PATH, params);
+    },
   },
   getters: {
     loading: (state) => state.loading,

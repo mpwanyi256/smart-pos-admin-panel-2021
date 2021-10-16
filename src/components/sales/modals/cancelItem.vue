@@ -25,8 +25,8 @@
     </Basemodal>
 </template>
 <script>
-import Basemodal from '@/components/generics/Basemodal.vue';
 import { mapGetters } from 'vuex';
+import Basemodal from '@/components/generics/Basemodal.vue';
 
 export default {
   name: 'CancelOrderItemModal',

@@ -1,11 +1,11 @@
 <template>
   <Basemodal :title="item.name" :size="700" @close="$emit('close')">
   <template slot="action">
-    <BaseTooltip class="mr-3"
-      @button="deleteItem"
-      :message="`Delete ${item.name}`" icon="delete"
-      color="red"
-    />
+    <v-btn icon class="red" dark
+      @click="confirmDelete = true"
+    >
+      <v-icon>mdi-delete</v-icon>
+    </v-btn>
   </template>
     <div class="update_area">
         <div class="frm_entry">
@@ -58,22 +58,28 @@
           </div>
         </div>
         <div class="frm_entry">
-          <div class="label">&nbsp;</div>
-          <div class="actions">
-            <v-btn text @click="updateStoreItem">Update</v-btn>
+          <div>&nbsp;</div>
+          <div>
+            <v-btn class="float-right" @click="updateStoreItem">Update</v-btn>
           </div>
         </div>
         <BaseAlert v-if="error" alert="info" :message="error" />
         <LinearLoader v-if="loading" />
+        <ConfirmModal
+          v-if="confirmDelete"
+          :title="`Are you sure you want to delete ${name}?`"
+          @close="confirmDelete = false"
+          @yes="deleteItem"
+        />
     </div>
   </Basemodal>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Basemodal from '@/components/generics/Basemodal.vue';
 import BaseAlert from '@/components/generics/BaseAlert.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
-import BaseTooltip from '@/components/generics/BaseTooltip.vue';
-import { mapActions, mapGetters } from 'vuex';
+import ConfirmModal from '@/components/generics/ConfirmModal.vue';
 
 export default {
   name: 'UpdateStoreItem',
@@ -87,7 +93,7 @@ export default {
     Basemodal,
     BaseAlert,
     LinearLoader,
-    BaseTooltip,
+    ConfirmModal,
   },
   data() {
     return {
@@ -100,6 +106,7 @@ export default {
       categoryId: '',
       error: '',
       loading: false,
+      confirmDelete: false,
     };
   },
   computed: {
@@ -133,13 +140,13 @@ export default {
 
     deleteItem() {
       // eslint-disable-next-line no-restricted-globals
-      const confirmDelete = confirm('Are you sure you want to delete item?');
-      if (!confirmDelete) return;
+      // const confirmDelete = confirm('Are you sure you want to delete item?');
+      // if (!confirmDelete) return;
       this.loading = true;
       const updated = this.updateItem({ delete_store_item: this.item.id });
       this.loading = false;
       if (updated.error) this.error = updated.message;
-      else this.$emit('reload');
+      this.$emit('reload');
     },
   },
   async created() {

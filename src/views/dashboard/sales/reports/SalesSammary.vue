@@ -1,5 +1,11 @@
 <template>
     <div class="find_bill">
+      <template v-if="loading">
+        <div class="loading_page">
+          <h1>Loading</h1>
+        </div>
+      </template>
+      <template v-else>
         <div class="header_nav">
             <h3 class="mt-2">Fetch Sales summary</h3>
             <v-spacer></v-spacer>
@@ -26,13 +32,14 @@
           <LinearLoader v-if="loading" />
           <BaseTableComponent :headers="tableHeaders" :data="sales" />
         </div>
+      </template>
     </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import DatePickerBeta from '@/components/generics/DatePickerBeta.vue';
 import LinearLoader from '@/components/generics/Loading.vue';
 import BaseTableComponent from '@/components/generics/BaseTableComponent.vue';
-import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'SalesOverview',
@@ -76,7 +83,21 @@ export default {
   },
   computed: {
     ...mapGetters('sales', ['loading']),
+    ...mapGetters('auth', ['user']),
   },
+
+  watch: {
+    async user() {
+      await this.fetchSales();
+    },
+  },
+
+  created() {
+    this.$nextTick(async () => {
+      await this.fetchSales();
+    });
+  },
+
   methods: {
     ...mapActions('sales', ['fetchSalesSummary']),
 
@@ -119,6 +140,10 @@ export default {
         font-family: $font-style;
         min-height: 100%;
         border-left: 0.5px solid $border-color;
+        height: calc(100vh -52px);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
 
         .header_nav {
             height: 56px;
@@ -126,7 +151,6 @@ export default {
             padding: 5px;
             border-bottom: 0.5px solid $border-color;
             display: inline-flex;
-            // justify-content: center;
         }
 
         .search_filter {
@@ -152,6 +176,13 @@ export default {
                     height: 30px;
                 }
             }
+        }
+
+        .orders_table {
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 208px);
+          overflow-y: auto;
         }
     }
 </style>

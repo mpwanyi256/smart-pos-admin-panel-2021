@@ -1,7 +1,7 @@
 <template>
     <div class="order_items_header">
         <div class="item_name">
-            Item name
+            Item Name
         </div>
         <div class="item_price">Amount</div>
     </div>
@@ -15,7 +15,7 @@ export default {
 @import '@/styles/pos.scss';
 
     .order_items_header {
-        height: 80px;
+        height: 40px;
         width: inherit;
         background-color: $white;
         border: 1px solid $header;

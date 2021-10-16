@@ -1,5 +1,9 @@
 <template>
-    <v-dialog v-model="dialog" :width="size ? size : 500" persistent>
+    <v-dialog
+      v-model="dialog"
+      :width="size ? size : 500"
+      persistent
+      :fullscreen="fullscreen">
         <v-card class="modal_content">
             <v-card-title class="black--text">
                 {{ title ? title : '' }}
@@ -19,9 +23,16 @@ export default {
   props: {
     size: {
       type: Number,
+      required: false,
+      default: 500,
     },
     title: {
       type: String,
+    },
+    fullscreen: {
+      type: Boolean,
+      required: false,
+      default: () => false,
     },
   },
   data() {
@@ -34,17 +45,20 @@ export default {
 <style scoped lang="scss">
 @import '@/styles/pos.scss';
 
+  ::v-deep .v-text-field__details {
+    display: none;
+    height: 0;
+  }
+
 .modal_content {
   ::-webkit-scrollbar{
-    width: 8px;
+    width: 5px;
   }
 
   ::-webkit-scrollbar-thumb {
-      background: $blue;
+      background: $scrollbar-color;
       border-radius: 1ex;
       -webkit-border-radius: 1ex;
-      -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
   }
 
   ::-webkit-scrollbar-corner {

@@ -1,8 +1,9 @@
 <template>
-    <div class="menu_item" :class="{ 'hidden' : isHidden }">
+    <div class="menu_item">
         <div class="item_name">
             <template v-if="updateCategory">
-              <input type="text" v-model="updatedItemName" class="update_input" />
+              <input type="text" @keyup.enter="updateMenuCatItem"
+                v-model="updatedItemName" class="update_input" />
               <v-btn small @click="updateMenuCatItem">Update</v-btn>
               <v-btn small color="red darken-3" dark @click="cancelUpdate">cancel</v-btn>
             </template>
@@ -12,19 +13,12 @@
               </div>
             </template>
         </div>
-        <div class="item_action">
-            <v-btn small dark @click="$emit('changeStatus', categoryItem)"
-                class="toggle_hide_button"
-                :color="isHidden ? 'red darken-3' : 'green darken-3'">
-                {{ isHidden ? 'Show' : 'Hide' }}
-            </v-btn>
-        </div>
         <LinearLoader v-if="loading" />
     </div>
 </template>
 <script>
-import LinearLoader from '@/components/generics/Loading.vue';
 import { mapActions } from 'vuex';
+import LinearLoader from '@/components/generics/Loading.vue';
 
 export default {
   name: 'MenuCategoryItem',
@@ -80,17 +74,16 @@ export default {
 @import '../../styles/constants.scss';
 
     .menu_item {
-        min-height: 50px;
-        background-color: $white;
-        border: 0.5px solid $light-grey;
-        display: grid;
-        grid-template-columns: 70% 30%;
+        height: auto;
+        background-color: inherit;
+        display: inline-flex;
         justify-content: left;
         align-items: center;
         padding-left: 15px;
         padding-right: 15px;
         color: $black-text;
         size: 14px;
+        border: none !important;
 
         .item_name {
             padding-right: 15px;
@@ -106,6 +99,7 @@ export default {
 
             > div {
               width: 100%;
+              border: none;
             }
 
             .update_input {
@@ -125,7 +119,7 @@ export default {
             gap: 5px;
 
             .recipe_button {
-                background-color: $light-grey;
+              background-color: $light-grey;
             }
 
             .update_button {
@@ -141,7 +135,7 @@ export default {
     }
 
     .menu_item:hover {
-        border: 1px solid $border-color;
+        // border: 1px solid $border-color;
         cursor: pointer;
         color: $black;
     }
