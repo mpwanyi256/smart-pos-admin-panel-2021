@@ -22,7 +22,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 -
 
 ## The .htaccess would look like this
-`<IfModule mod_rewrite.c>
+``` .htaccess
+<IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /smartPOS
     RewriteRule ^smartPOS/index\.html$ - [L]
@@ -30,8 +31,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule . /smartPOS/index.html [L]
 </IfModule>
-`
+```
+
 - Note: If you are hosting the app on your server and the dist tolder contents are not at the root folder on your server, You will need to update the `vue.config.js` file and replace the public path file name.
 - Forexample, if your domain name is `https://www.mpwanyisamuel.com` and the url to the pos app on your server is `https://www.mpwanyisamuel.com/smartPOS`, Your public path inside the `vue.config.js` file would be `publicPath: '/smartPOS'`
-- And you will also need to do the same with the `ht.access` file on lines 27, 28 and 31.
-- If the app sits at the root of your server url, Your bublic path in the `vue.config.js` file would be `publicPath: '/'`and so will the lines 27, 28 and 31.
+- And you will also need to do the same with the `ht.access` at RewriteBase, RewriteRule values.
+- If the app sits at the root of your server url, Your bublic path in the `vue.config.js` file would be `publicPath: '/'`and the at RewriteBase, RewriteRule values values inside the ht.access file.
