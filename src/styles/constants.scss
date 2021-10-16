@@ -2,7 +2,6 @@ $white: white;
 $light-grey: #f4f7f7;
 $dark-grey: #7e8182;
 $grey: #525252;
-// $black: #000000;
 $blue: #2e5772;
 $running: #5c85a0;
 $settled: #1a2e3b;
@@ -17,72 +16,46 @@ $red: #ff2f56;
 $green: rgb(47, 119, 47);
 $border-color: #d6d6d6;
 $shadow: 1px 3px $light-grey;
-
-
-// fonts
 $display-font: 'Inter', sans-serif;
 $body-font: 'Inter', sans-serif;
 $pricing-font: 'Inter', sans-serif;
 $display-font-new: 'Inter', sans-serif;
-
-// shades of gray
 $black: #0b0d0e;
-$darkest-gray: #2d3438; // gray-20
+$darkest-gray: #2d3438;
 $darker-gray: #49556B;
-$dark-gray: #72838c; // gray-50,
-$gray: #aab5ba; // gray-70
-$light-gray: #e2e6e8; // gray-90, use for border color
-$lightest-gray: #f6f7f8; // gray-97
+$dark-gray: #72838c;
+$gray: #aab5ba;
+$light-gray: #e2e6e8;
+$lightest-gray: #f6f7f8;
 $white: white;
 $container-gray: #F6F6F6;
-
-// color states
 $primary-color: $black;
 $secondary-color: $dark-gray;
 $tertiary-color: $gray;
 $accent-color: #31a3dd;
 $border-color: $light-gray;
 $container-accent: #EFF8FC;
-
-// shades of blue
-// $blue: $accent-color;
 $light-blue: #c6eafc;
 $lighter-blue: #EFF8FC;
 $dark-blue: #186c96;
 $container-blue: $container-accent;
-
-// shades of green
 $green: #09b66d;
 $light-green: #b3fbdc;
 $lighter-green: #EBF9F3;
 $dark-green: #057646;
 $container-green: #EBF9F3;
-
-// shades of yellow
-// $yellow: #f5c023;
-// $light-yellow: #fcefc7;
-// $dark-yellow: #ae8407;
-// $container-yellow: #FEFAED;
-
-// shades of red
 $red: #ef2d56;
 $light-red: #fcdfe5;
 $dark-red: #ab0d2e;
 $container-red: #FDF3F8;
-
-// shades of violet
 $violet: #c04cfd;
 $light-violet: #efd2fe;
 $dark-violet: #8b02d3;
 $container-violet: #FAF5FD;
-
-// shades of orange
 $orange: #f4a259;
 $light-orange: #fce7d5;
 $dark-orange: #ca660d;
 $container-orange: #FEF7F2;
-
-//color states
 $blue-hover: #2294cd;
 $blue-disabled: #afdaf0;
 $blue-hover-semifilled: #dbeff9;
@@ -95,8 +68,6 @@ $green-hover-semifilled: #b3fbdd;
 $yellow-hover: #e0ad14;
 $yellow-disabled: #f6eac5;
 $yellow-hover-semifilled: #fef6e1;
-
-// these color variables below will be deprecated soon. use the new color variables above
 $gray-5: #0b0d0e;
 $gray-10: #161a1c;
 $gray-15: #22272a;
@@ -120,16 +91,6 @@ $gray-95: #f0f2f3;
 $gray-99: #fcfcfd;
 $accent-color-dark: #337ab7;
 $accent-color-light: #c6e5f5;
-
-// screen sizes
-$mobile-small: "screen and (max-width: 360px)";
-$mobile: "screen and (max-width: 576px)";
-$tablet: "screen and (max-width: 768px)";
-$laptop: "screen and (max-width: 1024px)";
-$laptop-medium: "screen and (max-width: 1200px)";
-$laptop-large: "screen and (max-width: 1440px)";
-
-// elevation (broad)
 $elevation-low: 0px 0px 1px rgba($black, 0.1), 0px 2px 4px rgba($black, 0.13);
 $elevation-mid: 0px 0px 2px rgba($black, 0.1), 0px 4px 8px rgba($black, 0.13);
 $elevation-high: 0px 1px 4px rgba($black, 0.1), 0px 8px 16px rgba($black, 0.13);
@@ -152,15 +113,3 @@ $elevation-yellow-low: 0px 0px 1px rgba($yellow, 0.3), 0px 2px 4px rgba($yellow,
 $elevation-yellow-mid: 0px 0px 2px rgba($yellow, 0.3), 0px 4px 8px rgba($yellow, 0.39);
 $elevation-yellow-high: 0px 1px 4px rgba($yellow, 0.3), 0px 8px 16px rgba($yellow, 0.39);
 $elevation-yellow-very-high: 0px 4px 16px rgba($yellow, 0.54), 0px 24px 64px rgba($yellow, 0.66);
-
-// elevation (common) (use these for cards, and dropdowns)
-$elevation-default: $elevation-low;
-$elevation-hover: $elevation-mid;
-$elevation-blue-default: $elevation-blue-low;
-$elevation-blue-hover: $elevation-blue-mid;
-$elevation-red-default: $elevation-red-low;
-$eleavtion-red-hover: $elevation-red-mid;
-$elevation-green-default: $elevation-green-low;
-$elevation-green-hover: $elevation-green-mid;
-$elevation-yellow-default: $elevation-yellow-low;
-$elevation-yellow-hover: $elevation-yellow-mid;
